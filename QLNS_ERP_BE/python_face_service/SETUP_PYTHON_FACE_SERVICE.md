@@ -1,139 +1,171 @@
-# Hướng Dẫn Setup Chi Tiết `python_face_service`
+# Detailed Setup Guide for `python_face_service`
 
-Tài liệu này hướng dẫn cài đặt và chạy dịch vụ nhận diện khuôn mặt bằng InsightFace trong thư mục `QLNS_ERP_BE/python_face_service`.
+This document explains how to install, configure, and run the InsightFace-based facial recognition service located in `QLNS_ERP_BE/python_face_service`.
 
-## 1. Mục tiêu
+## 1. Overview
 
-Service Python này cung cấp API xử lý khuôn mặt cho Backend C#:
+The Python service provides facial recognition APIs for the C# backend, including:
 
-- Trích xuất embedding (512 chiều)
-- So sánh 2 embedding
-- Nhận diện khuôn mặt từ danh sách nhân viên
-- Validate chất lượng ảnh
+- Extracting 512-dimensional face embeddings
+- Comparing two face embeddings
+- Identifying employees from a registered employee database
+- Validating image quality before recognition
 
-Cổng mặc định: `5000`
+**Default service port:** `5000`
 
 ---
 
-## 2. Yêu cầu hệ thống
+# 2. System Requirements
 
-### 2.1. Bắt buộc
+## 2.1 Required
 
-- Windows 10/11, macOS hoặc Linux
-- Python: **3.11.x** (khuyến nghị)
-- pip mới
+- Windows 10/11, macOS, or Linux
+- Python **3.11.x** (recommended)
+- Latest version of `pip`
 
-### 2.2. Khuyến nghị thêm
+## 2.2 Recommended
 
-- Dùng virtual environment (`venv`) để tránh xung đột thư viện
-- RAM tối thiểu 8GB
-- Kết nối mạng ổn định lần đầu để tải model InsightFace
+- Use a Python virtual environment (`venv`) to avoid dependency conflicts.
+- Minimum **8 GB RAM**.
+- Stable Internet connection during the first startup to download the InsightFace model.
 
-### 2.3. Kiểm tra nhanh
+## 2.3 Verify the Environment
 
 ```powershell
 python --version
 pip --version
 ```
 
-Kỳ vọng:
+Expected output:
 
-- Python hiển thị `3.11.x`
-
----
-
-## 3. Cấu trúc thư mục liên quan
-
-Trong `python_face_service` hiện có các file chính:
-
-- `app.py`: mã nguồn Flask API
-- `requirements.txt`: danh sách thư viện Python
-- `Dockerfile`: đóng gói container
-- `docker-compose.yml`: chạy service bằng Docker Compose
-- `start.bat`: script chạy nhanh trên Windows
-- `README.md`, `DOCKER_SETUP.md`: tài liệu tham khảo bổ sung
+- Python version **3.11.x**
 
 ---
 
-## 4. Setup theo cách Local (không Docker)
+# 3. Project Structure
 
-## 4.1. Di chuyển vào thư mục service
+The `python_face_service` directory contains the following important files:
+
+| File | Description |
+|------|-------------|
+| `app.py` | Flask application entry point |
+| `requirements.txt` | Python dependency list |
+| `Dockerfile` | Docker image configuration |
+| `docker-compose.yml` | Docker Compose configuration |
+| `start.bat` | Quick startup script for Windows |
+| `README.md` | Project overview |
+| `DOCKER_SETUP.md` | Docker installation guide |
+
+---
+
+# 4. Local Installation (Without Docker)
+
+## 4.1 Navigate to the Service Directory
 
 ```powershell
-cd C:\ĐỒ_ÁN_TN\QLNS\QLNS_ERP_BE\python_face_service
+cd C:\PROJECT\QLNS_ERP_BE\python_face_service
 ```
 
-## 4.2. Tạo và kích hoạt virtual environment
+Replace the path with your actual project location if necessary.
+
+---
+
+## 4.2 Create and Activate a Virtual Environment
 
 ```powershell
 python -m venv venv
+
 .\venv\Scripts\Activate
 ```
 
-Sau khi kích hoạt thành công, terminal sẽ có tiền tố `(venv)`.
+After activation, the terminal prompt should display:
 
-## 4.3. Nâng cấp công cụ cài gói
+```text
+(venv)
+```
+
+---
+
+## 4.3 Upgrade Package Management Tools
 
 ```powershell
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-## 4.4. Cài dependencies
+---
 
-Cách chuẩn theo file `requirements.txt`:
+## 4.4 Install Dependencies
+
+Install all required packages from `requirements.txt`:
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-Danh sách gói chính đang dùng:
+Main dependencies include:
 
-- flask>=3.0.0
-- flask-cors>=4.0.0
-- onnxruntime>=1.20.0
-- opencv-python>=4.8.0
-- numpy
-- pillow
-- scikit-learn
-- insightface==0.7.3
+- Flask
+- Flask-CORS
+- ONNX Runtime
+- OpenCV
+- NumPy
+- Pillow
+- Scikit-learn
+- InsightFace 0.7.3
 
-## 4.5. Chạy service
+---
+
+## 4.5 Start the Service
 
 ```powershell
 python app.py
 ```
 
-Khi chạy thành công, console hiển thị các dòng tương tự:
+If the service starts successfully, the console should display messages similar to:
 
-- Đang tải model ArcFace
-- Model đã sẵn sàng
-- Server chạy tại `http://localhost:5000`
+```text
+Loading ArcFace model...
+Model loaded successfully.
+Server running at http://localhost:5000
+```
 
 ---
 
-## 5. Setup theo cách Docker (khuyến nghị cho môi trường ổn định)
+# 5. Docker Installation (Recommended)
 
-## 5.1. Cài Docker Desktop
+Docker is recommended for a more stable and reproducible deployment environment.
 
-- Tải tại: https://www.docker.com/products/docker-desktop/
-- Mở Docker Desktop và chờ engine chạy xong
+## 5.1 Install Docker Desktop
 
-## 5.2. Build và chạy bằng Docker Compose
+Download Docker Desktop from:
+
+https://www.docker.com/products/docker-desktop/
+
+Launch Docker Desktop and wait until the Docker Engine is running.
+
+---
+
+## 5.2 Build and Start the Service
 
 ```powershell
-cd C:\ĐỒ_ÁN_TN\QLNS\QLNS_ERP_BE\python_face_service
+cd C:\PROJECT\QLNS_ERP_BE\python_face_service
+
 docker-compose up -d
 ```
 
-Lần đầu có thể mất vài phút do tải model.
+During the first startup, Docker may require several minutes to download the required InsightFace model.
 
-## 5.3. Kiểm tra logs
+---
+
+## 5.3 View Service Logs
 
 ```powershell
 docker-compose logs -f
 ```
 
-## 5.4. Dừng service
+---
+
+## 5.4 Stop the Service
 
 ```powershell
 docker-compose down
@@ -141,15 +173,15 @@ docker-compose down
 
 ---
 
-## 6. Kiểm tra service sau setup
+# 6. Verify the Installation
 
-## 6.1. Health check
+## 6.1 Health Check
 
 ```powershell
 curl http://localhost:5000/health
 ```
 
-Kỳ vọng JSON tương tự:
+Expected response:
 
 ```json
 {
@@ -160,18 +192,37 @@ Kỳ vọng JSON tương tự:
 }
 ```
 
-## 6.2. Test endpoint validate (gợi ý)
+---
 
-- Endpoint: `POST /api/face/validate`
-- Body: `{ "image": "<base64>" }`
+## 6.2 Validate an Image
 
-Nếu ảnh hợp lệ và có khuôn mặt, response có `hasFace: true`.
+Endpoint:
+
+```
+POST /api/face/validate
+```
+
+Example request body:
+
+```json
+{
+  "image": "<base64>"
+}
+```
+
+If a valid face is detected, the response should contain:
+
+```json
+{
+  "hasFace": true
+}
+```
 
 ---
 
-## 7. Tích hợp với Backend C#
+# 7. Backend Integration
 
-Trong backend (`QLNS_BE`), cấu hình URL service Python:
+Configure the Python service URL in the C# backend:
 
 ```json
 {
@@ -181,78 +232,114 @@ Trong backend (`QLNS_BE`), cấu hình URL service Python:
 }
 ```
 
-Sau đó chạy backend và kiểm tra log gọi API Python.
+After starting the backend application, verify that requests are successfully forwarded to the Python service.
 
 ---
 
-## 8. Danh sách API hiện có
+# 8. Available API Endpoints
 
-- `GET /health`
-- `POST /api/face/extract`
-- `POST /api/face/compare`
-- `POST /api/face/identify`
-- `POST /api/face/validate`
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/health` | Service health check |
+| POST | `/api/face/extract` | Extract facial embeddings |
+| POST | `/api/face/compare` | Compare two face embeddings |
+| POST | `/api/face/identify` | Identify a registered employee |
+| POST | `/api/face/validate` | Validate image quality |
 
 ---
 
-## 9. Lỗi thường gặp và cách xử lý
+# 9. Troubleshooting
 
-## 9.1. `No module named 'insightface'`
+## No module named `insightface`
 
 ```powershell
 pip install insightface==0.7.3
 ```
 
-## 9.2. Chạy được Python nhưng gọi API bị lỗi kết nối
+---
 
-- Kiểm tra service đã chạy chưa:
+## Unable to Connect to the Python Service
+
+Verify that the service is running:
 
 ```powershell
 curl http://localhost:5000/health
 ```
 
-- Nếu chưa chạy: chạy lại `python app.py` hoặc `docker-compose up -d`
+If the service is not running, execute:
 
-## 9.3. Lỗi không tương thích phiên bản Python
+```powershell
+python app.py
+```
 
-- Dùng Python 3.11.x
-- Tạo lại venv và cài lại dependencies
+or
+
+```powershell
+docker-compose up -d
+```
+
+---
+
+## Python Version Compatibility Issues
+
+Use **Python 3.11.x**.
+
+Recreate the virtual environment:
 
 ```powershell
 Deactivate
+
 Remove-Item -Recurse -Force venv
+
 python -m venv venv
+
 .\venv\Scripts\Activate
+
 pip install -r requirements.txt
 ```
 
-## 9.4. Port 5000 bị chiếm
+---
 
-- Tìm tiến trình:
+## Port 5000 Is Already in Use
+
+Find the process occupying the port:
 
 ```powershell
 netstat -ano | findstr :5000
 ```
 
-- Đổi port trong app hoặc giải phóng process đang chiếm cổng
+Terminate the process or configure the application to use another port.
 
 ---
 
-## 10. Quy trình nhanh cho máy mới
+# 10. Quick Setup on a New Machine
 
 ```powershell
-cd C:\ĐỒ_ÁN_TN\QLNS\QLNS_ERP_BE\python_face_service
+cd C:\PROJECT\QLNS_ERP_BE\python_face_service
+
 python -m venv venv
+
 .\venv\Scripts\Activate
+
 python -m pip install --upgrade pip setuptools wheel
+
 pip install -r requirements.txt
+
 python app.py
 ```
 
-Mở tab terminal mới để test:
+Open another terminal window and verify the service:
 
 ```powershell
 curl http://localhost:5000/health
 ```
 
-Nếu trả về `ready: true` thì setup thành công.
+If the response contains:
+
+```json
+{
+  "ready": true
+}
+```
+
+the installation has been completed successfully.
