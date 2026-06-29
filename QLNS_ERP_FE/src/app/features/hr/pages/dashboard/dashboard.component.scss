@@ -1,0 +1,448 @@
+// src/app/features/hr/pages/dashboard/dashboard.component.scss
+@use 'sass:color';
+
+// ===== Variables (Design System) =====
+$primary: #2563eb;
+$bg-page: #f3f6f9;
+$card-bg: #ffffff;
+$text-dark: #1e293b;
+$text-muted: #64748b;
+$border-color: #e2e8f0;
+
+// Color palette
+$primary-light: #60a5fa;
+$info: #06b6d4;
+$info-light: #22d3ee;
+$purple: #8b5cf6;
+$purple-light: #a78bfa;
+$success: #10b981;
+$success-light: #34d399;
+$warning: #f59e0b;
+$warning-light: #fbbf24;
+$danger: #ef4444;
+
+$slate-50: #f8fafc;
+$slate-100: #f1f5f9;
+$slate-200: #e2e8f0;
+$slate-300: #cbd5e1;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-700: #334155;
+$slate-800: #1e293b;
+
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-2xl: 20px;
+$radius-pill: 999px;
+
+// ===== Page Container =====
+.dash-page {
+  background: $bg-page;
+  min-height: 100%;
+  padding: 24px;
+}
+
+
+// ===== HEADER CARD (Design System) =====
+.header-card {
+  background: $card-bg;
+  border-radius: $radius-lg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-dark;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: $text-muted;
+  line-height: 1.6;
+}
+
+// ===== ACTION BUTTONS (Slide-in effect) =====
+.action-btn {
+  position: relative;
+  overflow: hidden;
+  background: $card-bg;
+  color: $text-dark;
+  border: 1px solid $border-color;
+  padding: 10px 20px;
+  border-radius: $radius-pill;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: $primary;
+    z-index: -1;
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: white;
+    border-color: $primary;
+
+    &::before {
+      width: 100%;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover {
+      color: $text-dark;
+      border-color: $border-color;
+
+      &::before {
+        width: 0;
+      }
+    }
+  }
+}
+
+.btn-pill { border-radius: $radius-pill; }
+
+
+// ===== KPI CARDS (White Cards with Slide-in Gradient) =====
+.kpi-card {
+  position: relative;
+  background: $card-bg;
+  border-radius: $radius-lg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+  border: 1px solid transparent;
+  z-index: 0;
+
+  // Slide-in gradient background
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    z-index: -1;
+    transform: translateX(-105%);
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    border-color: rgba($primary, 0.1);
+
+    &::before {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .kpi-icon-box {
+      background: rgba(255, 255, 255, 0.25) !important;
+      color: white !important;
+    }
+
+    .kpi-label,
+    .kpi-value,
+    .kpi-details {
+      color: white !important;
+    }
+  }
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.kpi-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-lg;
+  display: grid;
+  place-items: center;
+  font-size: 1.375rem;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.kpi-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: $text-muted;
+  transition: color 0.25s ease;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: $text-dark;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.25s ease;
+}
+
+.kpi-details {
+  font-size: 0.8125rem;
+  color: $text-muted;
+  transition: color 0.25s ease;
+}
+
+.dot-sep {
+  margin: 0 6px;
+  opacity: 0.7;
+}
+
+// KPI Color Variants (Gradient backgrounds on hover)
+.kpi-blue {
+  &::before {
+    background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
+  }
+}
+
+.kpi-icon-blue {
+  background: rgba($primary, 0.1);
+  color: $primary;
+}
+
+.kpi-purple {
+  &::before {
+    background: linear-gradient(135deg, $purple 0%, $purple-light 100%);
+  }
+}
+
+.kpi-icon-purple {
+  background: rgba($purple, 0.1);
+  color: $purple;
+}
+
+.kpi-orange {
+  &::before {
+    background: linear-gradient(135deg, $warning 0%, $warning-light 100%);
+  }
+}
+
+.kpi-icon-orange {
+  background: rgba($warning, 0.1);
+  color: color.adjust($warning, $lightness: -10%);
+}
+
+.kpi-green {
+  &::before {
+    background: linear-gradient(135deg, $success 0%, $success-light 100%);
+  }
+}
+
+.kpi-icon-green {
+  background: rgba($success, 0.1);
+  color: color.adjust($success, $lightness: -5%);
+}
+
+
+// ===== SKELETON =====
+.skeleton-card {
+  border-radius: $radius-lg;
+  background: $card-bg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.skeleton-chart {
+  height: 240px;
+  border-radius: $radius-lg;
+  background: linear-gradient(90deg, $slate-200 25%, $slate-100 50%, $slate-200 75%);
+  background-size: 200% 100%;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+// ===== CONTENT CARD (Charts & Generic Content) =====
+.content-card {
+  background: $card-bg;
+  border-radius: $radius-lg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+
+  &:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba($primary, 0.1);
+  }
+}
+
+.chart-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid $border-color;
+}
+
+.chart-box {
+  min-height: 280px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+// ===== INSIGHTS =====
+.insight {
+  background: $card-bg;
+  border-radius: $radius-lg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid transparent;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    border-color: rgba($primary, 0.1);
+  }
+
+  .card-body {
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+.insight-ic {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-lg;
+  display: grid;
+  place-items: center;
+  font-size: 1.125rem;
+  transition: transform 0.2s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.insight:hover .insight-ic {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+.insight-hoverline {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 10px;
+  height: 3px;
+  border-radius: $radius-pill;
+  background: rgba($info, 0.12);
+  transform: scaleX(0.5);
+  transform-origin: left;
+  transition: transform 0.2s ease, background 0.2s ease;
+  z-index: 2;
+}
+
+.insight:hover .insight-hoverline {
+  transform: scaleX(1);
+  background: rgba($info, 0.24);
+}
+
+// Tone colors
+.tone-primary { background: rgba($primary, 0.12); color: $primary; }
+.tone-success { background: rgba($success, 0.12); color: color.adjust($success, $lightness: -8%); }
+.tone-warning { background: rgba($warning, 0.14); color: color.adjust($warning, $lightness: -15%); }
+.tone-danger  { background: rgba($danger, 0.12); color: color.adjust($danger, $lightness: -5%); }
+.tone-info    { background: rgba($info, 0.12); color: color.adjust($info, $lightness: -8%); }
+
+// ===== ANIMATIONS =====
+@keyframes skeletonPulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+
+// ===== RESPONSIVE =====
+@media (max-width: 991.98px) {
+  .header-card {
+    padding: 20px;
+  }
+
+  .kpi-card {
+    padding: 16px 20px;
+  }
+
+  .kpi-value {
+    font-size: 1.75rem;
+  }
+
+  .chart-box {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .dash-page {
+    padding: 16px;
+  }
+
+  .header-card {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .kpi-card {
+    padding: 14px 16px;
+
+    .kpi-value {
+      font-size: 1.5rem;
+    }
+
+    .kpi-icon-box {
+      width: 40px;
+      height: 40px;
+      font-size: 1.125rem;
+    }
+  }
+
+  .content-card {
+    padding: 16px;
+  }
+
+  .chart-box {
+    min-height: 200px;
+  }
+}

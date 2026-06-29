@@ -1,0 +1,291 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="header-card">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div>
+                <h4 class="fw-bold mb-1">
+                    <i class="bi bi-shield-exclamation me-2 text-warning"></i>Cảnh báo tài khoản
+                </h4>
+                <p class="text-muted mb-0">Quản lý các tài khoản bị cảnh báo, cấm hoặc khóa do đăng nhập sai</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap align-items-start">
+                <button class="action-btn" (click)="loadAccounts()" [disabled]="loading">
+                    <i class="bi" [ngClass]="loading ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+                    <span class="ms-1">{{ loading ? 'Đang tải...' : 'Làm mới' }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="kpi-card kpi-warning">
+                <div class="kpi-icon">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Đang cảnh báo</div>
+                    <div class="kpi-value">{{ kpiWarning }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card kpi-danger">
+                <div class="kpi-icon">
+                    <i class="bi bi-slash-circle"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Bị cấm</div>
+                    <div class="kpi-value">{{ kpiBanned }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kpi-card kpi-info">
+                <div class="kpi-icon">
+                    <i class="bi bi-lock"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Đã khóa tạm thời</div>
+                    <div class="kpi-value">{{ kpiLocked }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMsg" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMsg }}
+        <button type="button" class="btn-close" (click)="errorMsg = ''"></button>
+    </div>
+
+    <!-- Content Card -->
+    <div class="content-card">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" *ngIf="loading">
+            <div class="spinner-container">
+                <div class="spinner-border" role="status"></div>
+                <div class="loading-text">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div class="flex-grow-1" style="max-width: 400px;">
+                <div class="search-box">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Tìm theo tên đăng nhập, họ tên..."
+                        [(ngModel)]="searchQ" (ngModelChange)="applyFilter()" />
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <select class="filter-select" [(ngModel)]="filterStatus" (ngModelChange)="applyFilter()">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="CANH_BAO">Cảnh báo</option>
+                    <option value="CAM">Bị cấm</option>
+                    <option value="BINH_THUONG">Bình thường</option>
+                </select>
+                <button class="btn-clear-filter" *ngIf="searchQ || filterStatus" (click)="clearFilters()">
+                    <i class="bi bi-x-circle me-1"></i>Xóa bộ lọc
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!loading && filtered.length === 0">
+            <i class="bi bi-shield-check empty-icon"></i>
+            <h5 class="empty-title">Không có tài khoản bị cảnh báo</h5>
+            <p class="empty-text">Tất cả tài khoản đang hoạt động bình thường</p>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive" *ngIf="!loading && filtered.length > 0">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tài khoản</th>
+                        <th>Trạng thái</th>
+                        <th>Lý do</th>
+                        <th>Người cảnh báo</th>
+                        <th>Ngày cảnh báo</th>
+                        <th>Login sai</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let account of filtered">
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="fw-semibold text-dark">{{ account.tenDangNhap }}</span>
+                                <span class="text-muted small" *ngIf="account.hoTen">{{ account.hoTen }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge" [ngClass]="getStatusBadgeClass(account.trangThaiCanhBao)">
+                                {{ getStatusLabel(account.trangThaiCanhBao) }}
+                            </span>
+                            <div class="mt-1" *ngIf="isLocked(account)">
+                                <span class="text-danger small">
+                                    <i class="bi bi-lock-fill me-1"></i>{{ getRemainingLockTime(account) }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-muted" *ngIf="!account.lyDoCanhBao">—</span>
+                            <span *ngIf="account.lyDoCanhBao" [title]="account.lyDoCanhBao">
+                                {{ account.lyDoCanhBao }}
+                            </span>
+                        </td>
+                        <td>{{ account.nguoiCanhBao || '—' }}</td>
+                        <td>
+                            <span class="text-muted small">
+                                {{ account.ngayCanhBao ? (account.ngayCanhBao | date:'dd/MM/yyyy HH:mm') : '—' }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge-count" [class.badge-danger]="account.soLanDangNhapSai >= 3"
+                                [class.badge-warning]="account.soLanDangNhapSai > 0 && account.soLanDangNhapSai < 3"
+                                [class.badge-light]="account.soLanDangNhapSai === 0">
+                                {{ account.soLanDangNhapSai }} lần
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <div class="action-buttons">
+                                <button class="btn-action btn-edit" (click)="openWarningModal(account)"
+                                    title="Chỉnh sửa cảnh báo">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn-action btn-unlock" (click)="openUnlockModal(account)"
+                                    title="Mở khóa / Gỡ cảnh báo">
+                                    <i class="bi bi-unlock-fill"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Warning Modal -->
+<div class="modal-backdrop" *ngIf="showWarningModal" (click)="closeWarningModal()"></div>
+<div class="modal-wrapper" *ngIf="showWarningModal">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                <i class="bi bi-shield-exclamation text-warning me-2"></i>Cảnh báo / Cấm tài khoản
+            </h5>
+            <button class="btn-close-modal" (click)="closeWarningModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="modal-body" *ngIf="selectedAccount">
+            <!-- Account Info -->
+            <div class="info-box mb-3">
+                <div class="info-row">
+                    <span class="info-label">Tài khoản:</span>
+                    <span class="info-value fw-semibold">{{ selectedAccount.tenDangNhap }}</span>
+                </div>
+                <div class="info-row" *ngIf="selectedAccount.hoTen">
+                    <span class="info-label">Họ tên:</span>
+                    <span class="info-value">{{ selectedAccount.hoTen }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Login sai:</span>
+                    <span class="info-value badge bg-danger">{{ selectedAccount.soLanDangNhapSai }} lần</span>
+                </div>
+            </div>
+
+            <!-- Status Options -->
+            <div class="form-group mb-3">
+                <label class="form-label fw-semibold">Trạng thái</label>
+                <div class="status-options">
+                    <label class="status-option">
+                        <input type="radio" name="status" value="BINH_THUONG" [(ngModel)]="warningStatus" />
+                        <div class="status-option-content">
+                            <i class="bi bi-check-circle text-success"></i>
+                            <span>Bình thường</span>
+                        </div>
+                    </label>
+                    <label class="status-option">
+                        <input type="radio" name="status" value="CANH_BAO" [(ngModel)]="warningStatus" />
+                        <div class="status-option-content">
+                            <i class="bi bi-exclamation-triangle text-warning"></i>
+                            <span>Cảnh báo</span>
+                        </div>
+                    </label>
+                    <label class="status-option">
+                        <input type="radio" name="status" value="CAM" [(ngModel)]="warningStatus" />
+                        <div class="status-option-content">
+                            <i class="bi bi-slash-circle text-danger"></i>
+                            <span>Cấm đăng nhập</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Reason Input (ẩn khi chọn Bình thường) -->
+            <div class="form-group" *ngIf="warningStatus !== 'BINH_THUONG'">
+                <label class="form-label fw-semibold">Lý do</label>
+                <textarea class="form-control" rows="3" placeholder="Nhập lý do cảnh báo hoặc cấm..."
+                    [(ngModel)]="warningReason"></textarea>
+            </div>
+            <div class="alert alert-success py-2" *ngIf="warningStatus === 'BINH_THUONG'">
+                <i class="bi bi-info-circle me-2"></i>Tài khoản sẽ được gỡ cảnh báo và reset hoàn toàn về bình thường.
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeWarningModal()">
+                <i class="bi bi-x-lg me-1"></i>Hủy
+            </button>
+            <button class="btn btn-primary" (click)="submitWarning()" [disabled]="submitting"
+                [ngClass]="warningStatus === 'BINH_THUONG' ? 'btn-success' : warningStatus === 'CAM' ? 'btn-danger' : 'btn-warning'">
+                <i class="bi" [ngClass]="submitting ? 'bi-hourglass-split' : 'bi-check-lg'"></i>
+                <span class="ms-1">{{ submitting ? 'Đang lưu...' : (warningStatus === 'BINH_THUONG' ? 'Gỡ cảnh báo' :
+                    warningStatus === 'CAM' ? 'Cấm tài khoản' : 'Cảnh báo') }}</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Unlock Modal -->
+<div class="modal-backdrop" *ngIf="showUnlockModal" (click)="closeUnlockModal()"></div>
+<div class="modal-wrapper" *ngIf="showUnlockModal">
+    <div class="modal-content modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                <i class="bi bi-unlock text-success me-2"></i>Mở khóa tài khoản
+            </h5>
+            <button class="btn-close-modal" (click)="closeUnlockModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <div class="modal-body" *ngIf="selectedAccount">
+            <div class="confirm-box">
+                <i class="bi bi-question-circle-fill confirm-icon"></i>
+                <p class="confirm-text">
+                    Bạn có chắc muốn <strong>mở khóa</strong> và <strong>gỡ cảnh báo</strong> cho tài khoản
+                    <strong class="text-primary">{{ selectedAccount.tenDangNhap }}</strong>?
+                </p>
+                <p class="text-muted small mb-0">
+                    Số lần đăng nhập sai sẽ được reset về 0
+                </p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeUnlockModal()">
+                <i class="bi bi-x-lg me-1"></i>Hủy
+            </button>
+            <button class="btn btn-success" (click)="submitUnlock()" [disabled]="submitting">
+                <i class="bi" [ngClass]="submitting ? 'bi-hourglass-split' : 'bi-unlock-fill'"></i>
+                <span class="ms-1">{{ submitting ? 'Đang xử lý...' : 'Mở khóa' }}</span>
+            </button>
+        </div>
+    </div>
+</div>

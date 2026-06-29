@@ -1,0 +1,278 @@
+@import 'src/scss/variables';
+
+// ─── Layout ─────────────────────────────────────────────────────────────────
+.page-container {
+  padding: 0;
+}
+
+// ─── Header ─────────────────────────────────────────────────────────────────
+.header-card {
+  background: #fff;
+  border-radius: $radius-xl;
+  padding: 1.4rem 1.75rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid $slate-200;
+  box-shadow: $shadow-sm;
+  border-left: 4px solid $primary;
+
+  h4 {
+    font-size: 1.2rem;
+    color: $slate-800;
+    letter-spacing: -0.2px;
+  }
+}
+
+// ─── Content card ───────────────────────────────────────────────────────────
+.content-card {
+  background: #fff;
+  border-radius: $radius-xl;
+  padding: 2rem;
+  border: 1px solid $slate-200;
+  box-shadow: $shadow-md;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $primary 0%, $primary-light 100%);
+    border-radius: $radius-xl $radius-xl 0 0;
+  }
+}
+
+// ─── Loading overlay ────────────────────────────────────────────────────────
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(2px);
+  border-radius: $radius-xl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+
+  .spinner-container {
+    text-align: center;
+    background: #fff;
+    border: 1px solid $slate-200;
+    border-radius: $radius-xl;
+    padding: 2rem 2.5rem;
+    box-shadow: $shadow-lg;
+
+    .spinner-border {
+      width: 2.25rem;
+      height: 2.25rem;
+      color: $primary;
+      border-width: 3px;
+    }
+
+    .loading-text {
+      margin-top: 0.75rem;
+      font-weight: 600;
+      font-size: $font-size-sm;
+      color: $slate-600;
+    }
+  }
+}
+
+// ─── Mode selector ──────────────────────────────────────────────────────────
+.mode-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mode-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  border: 2px solid $slate-200;
+  border-radius: $radius-xl;
+  cursor: pointer;
+  transition: border-color $transition-base, box-shadow $transition-base, background $transition-base;
+  background: $slate-50;
+  position: relative;
+
+  &:hover {
+    border-color: $primary-light;
+    background: #f0f4ff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+  }
+
+  &.selected {
+    border-color: $primary;
+    background: #eff6ff;
+    box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.08);
+  }
+
+  .mode-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: $radius-lg;
+    background: $slate-100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: background $transition-base;
+  }
+
+  &.selected .mode-icon,
+  &:hover .mode-icon {
+    background: #dbeafe;
+  }
+
+  .mode-check {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.65rem;
+    font-size: 1rem;
+    color: $primary;
+  }
+}
+
+// ─── Form controls ──────────────────────────────────────────────────────────
+.form-label {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $slate-700;
+}
+
+.form-select {
+  border-color: $slate-300;
+  border-radius: $radius-lg;
+  font-size: $font-size-sm;
+  color: $slate-800;
+
+  &:focus {
+    border-color: $primary-light;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+}
+
+// ─── Preview card ───────────────────────────────────────────────────────────
+.preview-card {
+  background: $slate-50;
+  border: 1px solid $slate-200;
+  border-radius: $radius-xl;
+  padding: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+// ─── Preview stats ──────────────────────────────────────────────────────────
+.preview-item {
+  background: #fff;
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+  padding: 0.85rem 1rem;
+  transition: box-shadow $transition-fast;
+
+  &:hover { box-shadow: $shadow-sm; }
+
+  .preview-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: $slate-400;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 0.3rem;
+  }
+
+  .preview-value {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: $slate-800;
+  }
+}
+
+// ─── Formula box ────────────────────────────────────────────────────────────
+.formula-box {
+  background: #fff;
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+  padding: 1.1rem 1.25rem;
+  border-left: 3px solid $primary-light;
+
+  .font-monospace {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.8rem;
+    line-height: 2.1;
+    color: $slate-700;
+  }
+}
+
+// ─── Total row ──────────────────────────────────────────────────────────────
+.total-row {
+  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+  border: 1px solid #bfdbfe;
+  border-radius: $radius-lg;
+  padding: 1rem 1.25rem;
+  margin-top: 0.75rem;
+}
+
+// ─── Notice box (replaces .alert.alert-info) ─────────────────────────────────
+.alert-info {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: $radius-lg;
+  color: $slate-700;
+  font-size: $font-size-sm;
+
+  i { color: $primary-light; }
+}
+
+.alert-success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  border-radius: $radius-lg;
+  color: $success-dark;
+  font-size: $font-size-sm;
+}
+
+// ─── Action buttons ──────────────────────────────────────────────────────────
+.d-flex.gap-3.mt-4 {
+  padding-top: 1.25rem;
+  border-top: 1px solid $slate-100;
+  margin-top: 1.5rem !important;
+}
+
+.btn-primary {
+  background: $primary;
+  border-color: $primary;
+  padding: 0.55rem 1.75rem;
+  font-weight: 600;
+  font-size: $font-size-sm;
+  border-radius: $radius-lg;
+  transition: background $transition-fast, box-shadow $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $primary-dark;
+    border-color: $primary-dark;
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.28);
+  }
+
+  &:disabled { opacity: 0.6; }
+}
+
+.btn-outline-secondary {
+  font-size: $font-size-sm;
+  border-radius: $radius-lg;
+  color: $slate-600;
+  border-color: $slate-300;
+  padding: 0.55rem 1.1rem;
+
+  &:hover {
+    background: $slate-100;
+    border-color: $slate-400;
+    color: $slate-800;
+  }
+}

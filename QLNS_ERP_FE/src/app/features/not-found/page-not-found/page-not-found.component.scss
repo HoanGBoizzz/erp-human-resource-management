@@ -1,0 +1,98 @@
+// Variables synced with other pages
+$primary-blue: #5c6bc0;
+$primary-blue-dark: #3f51b5;
+$text-primary: #333333;
+$text-secondary: #666666;
+$bg-page: #ffffff;
+
+.not-found-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-page;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  padding: 1rem;
+}
+
+.content-wrapper {
+  text-align: center;
+  max-width: 700px;
+  width: 100%;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.image-container {
+  margin-bottom: 2rem;
+  
+  .not-found-image {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: 1rem;
+  color: #999;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 500;
+}
+
+.btn-home {
+  display: inline-block;
+  background-color: $primary-blue;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba($primary-blue, 0.3);
+
+  &:hover {
+    background-color: $primary-blue-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba($primary-blue, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .description {
+    font-size: 0.9rem;
+    padding: 0 1rem;
+  }
+  
+  .image-container .not-found-image {
+    max-height: 250px;
+  }
+}

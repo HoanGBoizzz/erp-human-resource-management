@@ -1,0 +1,203 @@
+<div class="kiosk-container" [attr.data-mode]="currentMode">
+
+    <!-- Header -->
+    <div class="kiosk-header">
+        <div class="company-logo">
+            <i class="fas fa-building"></i>
+            <h1>HỆ THỐNG CHẤM CÔNG</h1>
+        </div>
+
+        <div class="current-time">
+            <div class="time">{{ currentTime | date:'HH:mm:ss' }}</div>
+            <div class="date">{{ currentTime | date:'EEEE, dd/MM/yyyy':'':'vi' }}</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="kiosk-content">
+
+        <!-- IDLE MODE: Choose Check-In or Check-Out -->
+        <div class="mode-selection" *ngIf="currentMode === 'idle'">
+            <h2>Xin Chào!</h2>
+            <p class="subtitle">Vui lòng chọn loại chấm công</p>
+
+            <div class="mode-buttons">
+                <button class="mode-btn check-in-btn" (click)="selectMode('check-in')">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>VÀO LÀM</span>
+                    <small>Check In</small>
+                </button>
+
+                <button class="mode-btn check-out-btn" (click)="selectMode('check-out')">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>TAN LÀM</span>
+                    <small>Check Out</small>
+                </button>
+
+                <button class="mode-btn check-in-ot-btn" (click)="selectMode('check-in-ot')">
+                    <i class="fas fa-business-time"></i>
+                    <span>TĂNG CA</span>
+                    <small>OT Check In</small>
+                </button>
+            </div>
+
+            <div class="instructions">
+                <i class="fas fa-info-circle"></i>
+                <p>Hướng mặt vào camera để nhận diện khuôn mặt tự động</p>
+            </div>
+        </div>
+
+        <!-- ACTIVE MODE: Webcam Capture -->
+        <div class="capture-mode" *ngIf="currentMode !== 'idle' && !showResult">
+            <div class="mode-badge" [ngClass]="modeColor">
+                <i class="fas" [ngClass]="modeIcon"></i>
+                {{ modeTitle }}
+            </div>
+
+            <!-- Webcam Preview -->
+            <div class="webcam-preview" *ngIf="isWebcamActive && !isProcessing">
+                <video #videoElement autoplay playsinline></video>
+                <canvas #canvasElement style="display: none;"></canvas>
+
+                <div class="face-guide">
+                    <div class="guide-frame"></div>
+                    <p class="guide-text">Đặt khuôn mặt vào khung hình</p>
+                </div>
+
+                <button class="capture-btn" (click)="captureAndProcess()">
+                    <i class="fas fa-camera"></i>
+                    CHỤP NGAY
+                </button>
+            </div>
+
+            <!-- Processing State -->
+            <div class="processing-state" *ngIf="isProcessing">
+                <!-- Spinner replaced with Progress Bar -->
+                <div class="loading-progress-container"
+                    style="width: 80%; max-width: 300px; height: 10px; background: rgba(255,255,255,0.3); border-radius: 5px; margin: 20px auto; overflow: hidden; position: relative;">
+                    <div class="loading-progress-bar" [style.width.%]="loadingProgress"
+                        style="height: 100%; background: #fff; transition: width 0.3s ease-in-out;">
+                    </div>
+                </div>
+                <h3>Đang Xử Lý {{ loadingProgress }}%</h3>
+                <p>Vui lòng chờ trong giây lát</p>
+
+                <div class="captured-preview" *ngIf="capturedImage">
+                    <img [src]="capturedImage" alt="Captured">
+                </div>
+            </div>
+
+            <button class="cancel-btn" (click)="cancel()" *ngIf="!isProcessing">
+                <i class="fas fa-times"></i> Hủy
+            </button>
+        </div>
+
+        <!-- RESULT DISPLAY -->
+        <div class="result-display" *ngIf="showResult && result">
+
+            <!-- Success Result -->
+            <div class="result-success" *ngIf="result.success">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+
+                <h2>{{ result.message }}</h2>
+
+                <div class="employee-info" *ngIf="result.tenNhanVien">
+                    <div class="employee-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3>{{ result.tenNhanVien }}</h3>
+                    <p class="employee-code">{{ result.maNhanVien }}</p>
+                </div>
+
+                <div class="attendance-details">
+                    <div class="detail-row" *ngIf="result.gioVao">
+                        <span class="label">Giờ Vào:</span>
+                        <span class="value">{{ result.gioVao }}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="result.gioRa">
+                        <span class="label">Giờ Ra:</span>
+                        <span class="value">{{ result.gioRa }}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="result.soGioLam">
+                        <span class="label">Số Giờ Làm:</span>
+                        <span class="value">{{ result.soGioLam | number:'1.1-1' }} giờ</span>
+                    </div>
+                    <div class="detail-row" *ngIf="result.confidence">
+                        <span class="label">Độ Chính Xác:</span>
+                        <span class="value">{{ (result.confidence * 100) | number:'1.0-0' }}%</span>
+                    </div>
+                </div>
+
+                <div class="timestamp">
+                    <i class="fas fa-clock"></i>
+                    {{ result.timestamp | date:'HH:mm:ss - dd/MM/yyyy' }}
+                </div>
+            </div>
+
+            <!-- Error Result -->
+            <div class="result-error" *ngIf="!result.success">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+
+                <h2>Chấm Công Thất Bại</h2>
+                <p class="error-message">{{ result.message }}</p>
+
+                <div class="error-suggestions">
+                    <p><strong>Gợi ý:</strong></p>
+                    <ul>
+                        <li>Kiểm tra ánh sáng</li>
+                        <li>Quay thẳng mặt vào camera</li>
+                        <li>Đảm bảo đã đăng ký khuôn mặt</li>
+                    </ul>
+                </div>
+
+                <button class="retry-btn" (click)="retake()">
+                    <i class="fas fa-redo"></i> Thử Lại
+                </button>
+            </div>
+
+            <!-- Auto Reset Countdown -->
+            <div class="auto-reset">
+                <p>Tự động quay lại sau <strong>{{ countdown }}</strong> giây</p>
+                <button class="btn-secondary" (click)="resetToIdle()">
+                    Quay Lại Ngay
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- OT CONFIRMATION DIALOG OVERLAY -->
+    <div class="ot-confirm-overlay" *ngIf="showOtConfirmDialog">
+        <div class="ot-confirm-dialog">
+            <div class="ot-dialog-icon">
+                <i class="fas fa-business-time"></i>
+            </div>
+            <h2>Thông Báo Tăng Ca</h2>
+            <p class="ot-dialog-message">
+                Bạn đã hoàn tất ca làm hôm nay.<br>
+                <strong>Bạn đang chuẩn bị vào tăng ca?</strong>
+            </p>
+            <div class="ot-dialog-preview" *ngIf="capturedImage">
+                <img [src]="capturedImage" alt="Ảnh chụp">
+            </div>
+            <div class="ot-dialog-actions">
+                <button class="ot-btn ot-btn-confirm" (click)="confirmOt()">
+                    <i class="fas fa-check"></i> Có, bắt đầu tăng ca
+                </button>
+                <button class="ot-btn ot-btn-reject" (click)="rejectOt()">
+                    <i class="fas fa-times"></i> Không, quay lại
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="kiosk-footer">
+        <p>&copy; 2026 Hệ Thống Quản Lý Nhân Sự ERP</p>
+    </div>
+
+</div>

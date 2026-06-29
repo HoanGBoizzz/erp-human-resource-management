@@ -1,0 +1,190 @@
+<div class="page-container">
+
+    <!-- HEADER -->
+    <div class="header-card">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h1 class="page-title"><i class="bi bi-clock-history me-2 text-danger"></i>Đơn xin đi muộn / về sớm</h1>
+                <p class="page-subtitle mb-0">Lập đơn xin phép đi muộn, về sớm hoặc cả hai trong ngày làm việc</p>
+            </div>
+            <button class="action-btn btn" (click)="openModal()">
+                <i class="bi bi-plus-lg me-2"></i>Tạo đơn mới
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-icon"><i class="bi bi-file-earmark-text"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Tổng đơn</span>
+                    <span class="kpi-value">{{ list.length }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-warning">
+                <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Chờ duyệt</span>
+                    <span class="kpi-value">{{ cntChoDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-success">
+                <div class="kpi-icon"><i class="bi bi-check-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Đã duyệt</span>
+                    <span class="kpi-value">{{ cntDaDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-danger">
+                <div class="kpi-icon"><i class="bi bi-x-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Từ chối</span>
+                    <span class="kpi-value">{{ cntTuChoi }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIST -->
+    <div class="content-card">
+        <div class="card-header-inner mb-3">
+            <h2 class="section-title"><i class="bi bi-list-ul me-2"></i>Danh sách đơn</h2>
+        </div>
+
+        <div class="empty-state" *ngIf="list.length === 0">
+            <i class="bi bi-inbox"></i>
+            <p>Chưa có đơn nào. Nhấn <strong>Tạo đơn mới</strong> để bắt đầu.</p>
+        </div>
+
+        <div class="table-responsive" *ngIf="list.length > 0">
+            <table class="table nlv-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Loại</th>
+                        <th>Ngày áp dụng</th>
+                        <th class="text-center">Khoảng thời gian</th>
+                        <th>Lý do</th>
+                        <th>Ngày tạo</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of list; let i = index">
+                        <td class="text-muted">{{ i + 1 }}</td>
+                        <td>
+                            <span class="d-flex align-items-center gap-2">
+                                <i [class]="loaiIconClass(item.loai)"></i>
+                                <span class="fw-600">{{ loaiLabel(item.loai) }}</span>
+                            </span>
+                        </td>
+                        <td class="fw-600">{{ item.ngayApDung | date:'dd/MM/yyyy' }}</td>
+                        <td class="text-center">
+                            <span class="time-range-badge">
+                                <i class="bi bi-clock me-1"></i>{{ thoiGianRange(item) }}
+                            </span>
+                        </td>
+                        <td class="text-truncate-col">{{ item.lyDo }}</td>
+                        <td class="text-muted small">{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td class="text-center">
+                            <span class="status-badge" [ngClass]="trangThaiClass(item.trangThai)">
+                                {{ trangThaiLabel(item.trangThai) }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1" (click)="openEditModal(item)"
+                                *ngIf="item.trangThai === 'CHO_DUYET'" title="Sửa đơn">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" (click)="delete(item.id)"
+                                [disabled]="item.trangThai === 'DA_DUYET'">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop-custom" *ngIf="showModal" (click)="closeModal()"></div>
+<div class="modal-panel" *ngIf="showModal" role="dialog" aria-modal="true">
+    <div class="modal-panel-header">
+        <h3>
+            <i class="bi" [ngClass]="isEditing ? 'bi-pencil-square text-warning' : 'bi-clock-history text-danger'"
+                class="me-2"></i>
+            {{ isEditing ? 'Sửa đơn đi muộn / về sớm' : 'Tạo đơn xin đi muộn / về sớm' }}
+        </h3>
+        <button class="btn-close-panel" (click)="closeModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-panel-body">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+
+            <!-- Loại đơn -->
+            <div class="form-group mb-3">
+                <label class="form-label required">Loại đơn</label>
+                <div class="loai-selector">
+                    <label class="loai-option" *ngFor="let opt of loaiOptions"
+                        [class.selected]="form.get('loai')?.value === opt.value">
+                        <input type="radio" formControlName="loai" [value]="opt.value" class="d-none">
+                        <i class="bi" [ngClass]="opt.icon"></i>
+                        <span>{{ opt.label }}</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Ngày áp dụng -->
+            <div class="form-group mb-3">
+                <label class="form-label required">Ngày áp dụng</label>
+                <input type="date" class="form-control" formControlName="ngayApDung"
+                    [class.is-invalid]="form.get('ngayApDung')?.invalid && form.get('ngayApDung')?.touched">
+                <div class="invalid-feedback">Chọn ngày áp dụng</div>
+            </div>
+
+            <!-- Khoảng thời gian -->
+            <div class="form-group mb-3">
+                <label class="form-label required">Khoảng thời gian</label>
+                <div class="time-range-row">
+                    <div class="flex-1">
+                        <label class="sub-label">Từ giờ</label>
+                        <input type="time" class="form-control" formControlName="thoiGianBatDau">
+                    </div>
+                    <span class="time-sep"><i class="bi bi-arrow-right"></i></span>
+                    <div class="flex-1">
+                        <label class="sub-label">Đến giờ</label>
+                        <input type="time" class="form-control" formControlName="thoiGianKetThuc">
+                    </div>
+                </div>
+                <div class="text-danger small mt-1" *ngIf="timeError">{{ timeError }}</div>
+            </div>
+
+            <!-- Lý do -->
+            <div class="form-group mb-4">
+                <label class="form-label required">Lý do</label>
+                <textarea class="form-control" formControlName="lyDo" rows="3"
+                    placeholder="Nêu rõ lý do xin đi muộn/về sớm..."
+                    [class.is-invalid]="form.get('lyDo')?.invalid && form.get('lyDo')?.touched"></textarea>
+                <div class="invalid-feedback">Vui lòng nhập lý do (tối đa 500 ký tự)</div>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Hủy</button>
+                <button type="submit" class="btn btn-danger text-white fw-600">
+                    <i class="bi" [ngClass]="isEditing ? 'bi-check-lg' : 'bi-send'" class="me-2"></i>
+                    {{ isEditing ? 'Cập nhật đơn' : 'Nộp đơn' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

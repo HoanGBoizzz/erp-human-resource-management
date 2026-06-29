@@ -1,0 +1,596 @@
+﻿/* yeu-cau-noi-lam-viec.component.scss  mirrors du-an design system */
+@import '../../../../../scss/variables';
+
+// 
+//  PAGE CONTAINER
+// 
+.page-container {
+  padding: $spacing-xl;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// 
+//  HEADER CARD  (identical to du-an)
+// 
+.header-card {
+  background: white;
+  border-radius: $radius-2xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-xl;
+  box-shadow: $shadow-md;
+  transition: $transition-smooth;
+
+  h4 { color: $slate-800; font-weight: 700; }
+  p  { color: $slate-600; }
+}
+
+// 
+//  ACTION BUTTON  (identical to du-an)
+// 
+.action-btn {
+  position: relative;
+  overflow: hidden;
+  background: white;
+  color: $slate-800;
+  border: 1px solid $slate-300;
+  border-radius: $radius-lg;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: $transition-smooth;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 100%;
+    background: $primary;
+    z-index: -1;
+    transition: width 0.3s ease;
+  }
+
+  &:hover:not(:disabled) {
+    color: white;
+    border-color: $primary;
+    &::before { width: 100%; }
+  }
+
+  &.btn-sm { padding: 6px 14px; font-size: $font-size-sm; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+// Search box
+.search-box {
+  position: relative;
+  .search-icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: $slate-500;
+    font-size: 0.875rem;
+    pointer-events: none;
+  }
+  .search-input {
+    padding-left: 36px;
+    border-radius: $radius-lg;
+    border: 1px solid $slate-200;
+    font-size: 0.875rem;
+    height: 40px;
+    width: 240px;
+    transition: $transition-fast;
+    &:focus {
+      outline: none;
+      border-color: $primary-light;
+      box-shadow: 0 0 0 3px rgba($primary, 0.12);
+    }
+  }
+}
+
+// 
+//  KPI CARD  (identical gradient-hover to du-an)
+// 
+.kpi-card {
+  position: relative;
+  background: white;
+  border-radius: $radius-2xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-md;
+  transition: $transition-smooth;
+  overflow: hidden;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: $gradient-primary;
+    transform: translateX(-105%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+  }
+
+  &:hover:not(.loading) {
+    transform: translateY(-4px);
+    box-shadow: $shadow-hover;
+    &::before { transform: translateX(0); }
+
+    .kpi-icon {
+      background: rgba(255,255,255,0.2) !important;
+      color: white !important;
+      transform: scale(1.1);
+    }
+    .kpi-label, .kpi-value { color: white !important; }
+  }
+
+  &.kpi-primary::before  { background: $gradient-primary; }
+  &.kpi-warning::before  { background: $gradient-warning; }
+  &.kpi-success::before  { background: $gradient-success; }
+  &.kpi-danger::before   { background: $gradient-danger; }
+
+  &.loading { opacity: 0.6; pointer-events: none; }
+}
+
+.kpi-icon {
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: $radius-lg;
+  font-size: 1.5rem;
+  transition: $transition-smooth;
+  flex-shrink: 0;
+
+  .kpi-primary & { background: rgba($primary, 0.1);  color: $primary; }
+  .kpi-warning & { background: rgba($warning, 0.12); color: $warning-dark; }
+  .kpi-success & { background: rgba($success, 0.12); color: $success-dark; }
+  .kpi-danger  & { background: rgba($danger,  0.12); color: $danger-dark; }
+}
+
+.kpi-content { flex: 1; min-width: 0; }
+
+.kpi-label {
+  font-size: $font-size-sm;
+  color: $slate-600;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: $slate-800;
+  line-height: 1.2;
+  margin-top: 2px;
+  transition: color 0.3s ease;
+}
+
+// 
+//  CONTENT CARD  (identical to du-an)
+// 
+.content-card {
+  background: white;
+  border-radius: $radius-2xl;
+  padding: $spacing-xl;
+  box-shadow: $shadow-md;
+  transition: $transition-smooth;
+  border: 1px solid transparent;
+  margin-bottom: $spacing-xl;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+    border-color: rgba($primary, 0.08);
+  }
+}
+
+// 
+//  TAB NAV
+// 
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid $slate-200;
+  padding-bottom: 0;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    color: $slate-600;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    border-radius: $radius-sm $radius-sm 0 0;
+    transition: $transition-smooth;
+
+    i { font-size: 0.95rem; }
+
+    &:hover  { color: $primary; background: rgba($primary, 0.04); }
+    &.active { color: $primary; font-weight: 600; border-bottom-color: $primary; }
+  }
+
+  .tab-badge {
+    min-width: 18px; height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: $danger;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// 
+//  TOOLBAR  (identical to du-an)
+// 
+.toolbar {
+  display: flex;
+  gap: $spacing-md;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+// Chip filter buttons
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  border-radius: $radius-pill;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  border: 1.5px solid $slate-200;
+  background: white;
+  color: $slate-600;
+  cursor: pointer;
+  transition: $transition-smooth;
+  white-space: nowrap;
+
+  &:hover { border-color: $primary; color: $primary; }
+  &.active {
+    background: $primary;
+    border-color: $primary;
+    color: white;
+    box-shadow: 0 2px 8px rgba($primary, 0.3);
+  }
+}
+
+.result-count { color: $slate-500; font-size: $font-size-sm; }
+
+// 
+//  LOADING / EMPTY STATE
+// 
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: $slate-500;
+  gap: 12px;
+  font-size: $font-size-sm;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: $slate-500;
+  i { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: 0.35; }
+  p { font-size: $font-size-sm; margin: 0; }
+}
+
+// 
+//  TABLE  (identical to du-an)
+// 
+.table {
+  thead tr th {
+    background: $slate-50;
+    color: $slate-600;
+    font-weight: 700;
+    font-size: $font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: $spacing-md $spacing-lg;
+    border-bottom: 2px solid $slate-200;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    transition: $transition-fast;
+    &:hover { background: rgba($primary, 0.04); }
+
+    td {
+      padding: $spacing-md $spacing-lg;
+      vertical-align: middle;
+      border-bottom: 1px solid $slate-100;
+    }
+  }
+}
+
+.row-idx  { color: $slate-500; font-variant-numeric: tabular-nums; width: 36px; }
+.nv-name-cell { font-weight: 600; color: $slate-800; line-height: 1.3; }
+.nv-code-cell { font-size: 0.78rem; color: $slate-500; line-height: 1.3; }
+
+.btn-detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: $radius-lg;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $primary;
+  background: rgba($primary, 0.08);
+  border: 1px solid rgba($primary, 0.2);
+  cursor: pointer;
+  transition: $transition-fast;
+  white-space: nowrap;
+  &:hover { background: $primary; color: white; }
+}
+
+// 
+//  STATUS / LOAI BADGES
+// 
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: $radius-pill;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.status-lg { padding: 5px 14px; font-size: $font-size-sm; }
+
+  &.badge-warning { background: rgba($warning, 0.15); color: $warning-dark; }
+  &.badge-success { background: rgba($success, 0.12); color: $success-dark; }
+  &.badge-danger  { background: rgba($danger,  0.12); color: $danger-dark; }
+}
+
+.loai-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: $radius-pill;
+  font-size: $font-size-xs;
+  font-weight: 600;
+
+  &.loai-di-muon  { background: rgba($warning, 0.15); color: $warning-dark; }
+  &.loai-ve-som   { background: rgba($danger,  0.12); color: $danger-dark; }
+  &.loai-ca-hai   { background: rgba($primary, 0.1);  color: $primary; }
+}
+
+// 
+//  MODAL  (identical structure to du-an)
+// 
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 1050;
+  width: 100vw; height: 100vh;
+  background-color: rgba($slate-900, 0.5);
+
+  &.fade  { opacity: 0; transition: opacity 0.15s linear; }
+  &.show  { opacity: 1; }
+}
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 1055;
+  width: 100%; height: 100%;
+  overflow-x: hidden; overflow-y: auto;
+  outline: 0;
+
+  &.show .modal-dialog {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .modal-dialog {
+    max-width: 860px;
+    transform: translateY(-30px);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  .modal-content {
+    border: none;
+    border-radius: $radius-2xl;
+    box-shadow: 0 10px 40px rgba($slate-900, 0.25);
+    overflow: hidden;
+  }
+
+  .modal-body {
+    padding: $spacing-xl;
+    overflow-y: auto;
+  }
+
+  .modal-footer {
+    padding: $spacing-lg $spacing-xl;
+    background: $slate-50;
+    border-top: 1px solid $slate-200;
+    gap: 10px;
+  }
+}
+
+// Colored modal header
+.modal-header-colored {
+  padding: 18px $spacing-xl;
+  border-bottom: none;
+
+  &.mh-primary { background: $primary; }
+  &.mh-warning { background: $warning-dark; }
+  &.mh-danger  { background: $danger; }
+
+  .modal-title  { color: white; font-size: 1.05rem; font-weight: 700; }
+  .modal-subtitle { color: rgba(255,255,255,0.72); font-size: $font-size-sm; margin-top: 2px; }
+  .modal-header-icon {
+    width: 40px; height: 40px;
+    border-radius: $radius-lg;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: white; flex-shrink: 0;
+  }
+}
+
+// NV identity strip
+.nv-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: $slate-50;
+  border-radius: $radius-lg;
+  border: 1px solid $slate-200;
+
+  .nv-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; font-weight: 700; color: white; flex-shrink: 0;
+    &.av-primary { background: $primary; }
+    &.av-warning { background: $warning-dark; }
+    &.av-danger  { background: $danger; }
+  }
+  .nv-meta { flex: 1; min-width: 0; }
+  .nv-name { font-size: 0.95rem; font-weight: 700; color: $slate-800; }
+  .nv-code { font-size: $font-size-xs; color: $slate-500; }
+}
+
+// Field section (info grid)
+.field-section {
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+  overflow: hidden;
+
+  .field-section-title {
+    padding: 8px 16px;
+    font-size: $font-size-xs;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $slate-600;
+    background: $slate-50;
+    border-bottom: 1px solid $slate-200;
+  }
+
+  .field-item        { padding: 12px 16px; }
+  .field-item-right  { border-right: 1px solid $slate-200; }
+  .field-top, .field-top-sm { border-top: 1px solid $slate-200; }
+  .field-hl          { background: rgba($primary, 0.04); }
+
+  .field-label {
+    font-size: $font-size-xs;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: $slate-500;
+    margin-bottom: 4px;
+  }
+  .field-value { font-size: 0.9rem; color: $slate-800; }
+}
+
+// Meta strip (green)
+.meta-strip {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: rgba($success, 0.08);
+  border: 1px solid rgba($success, 0.25);
+  border-radius: $radius-lg;
+  font-size: 0.85rem;
+  color: $success-dark;
+  i { font-size: 1rem; flex-shrink: 0; }
+}
+
+// Reject alert (red)
+.reject-alert {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px;
+  background: rgba($danger, 0.07);
+  border: 1px solid rgba($danger, 0.2);
+  border-radius: $radius-lg;
+  font-size: 0.875rem;
+  color: $danger-dark;
+  i { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+}
+
+// Approval panel
+.approval-panel {
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+  overflow: hidden;
+
+  .approval-panel-header {
+    padding: 10px 16px;
+    font-size: $font-size-xs;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $slate-600;
+    background: $slate-50;
+    border-bottom: 1px solid $slate-200;
+  }
+  .approval-panel-body { padding: 16px; }
+}
+
+.decision-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.decision-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 16px;
+  border-radius: $radius-lg;
+  border: 2px solid $slate-200;
+  background: white;
+  cursor: pointer;
+  transition: $transition-smooth;
+  font-weight: 600;
+
+  i    { font-size: 1.75rem; transition: color 0.2s; }
+  span { font-size: 0.925rem; }
+
+  &.db-approve {
+    color: $success-dark; i { color: $success-dark; }
+    &:hover:not([disabled]) { border-color: $success; background: rgba($success, 0.06); }
+    &.selected { border-color: $success; background: rgba($success, 0.1); box-shadow: 0 0 0 4px rgba($success, 0.12); }
+  }
+  &.db-reject {
+    color: $danger; i { color: $danger; }
+    &:hover:not([disabled]) { border-color: $danger; background: rgba($danger, 0.05); }
+    &.selected { border-color: $danger; background: rgba($danger, 0.08); box-shadow: 0 0 0 4px rgba($danger, 0.12); }
+  }
+  &[disabled] { opacity: 0.55; cursor: not-allowed; }
+}
+
+// 
+//  RESPONSIVE
+// 
+@media (max-width: 991.98px) {
+  .page-container { padding: $spacing-lg; }
+  .header-card    { padding: $spacing-lg; }
+  .content-card   { padding: $spacing-lg; }
+  .kpi-value      { font-size: 1.5rem; }
+  .search-input   { width: 180px; }
+}

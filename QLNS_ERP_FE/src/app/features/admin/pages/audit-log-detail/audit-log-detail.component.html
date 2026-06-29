@@ -1,0 +1,180 @@
+<!-- MODAL BACKDROP -->
+<div class="modal-backdrop fade" [class.show]="true" *ngIf="auditLog" (click)="onClose()">
+</div>
+
+<!-- MODAL DIALOG -->
+<div class="modal fade" [class.show]="true" [style.display]="'block'" tabindex="-1" role="dialog" aria-modal="true"
+    *ngIf="auditLog">
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" (click)="onModalClick($event)">
+
+            <!-- MODAL HEADER -->
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-file-text-fill me-2"></i>
+                    Chi tiết nhật ký #{{ auditLog.id }}
+                </h5>
+                <button type="button" class="btn-close" (click)="onClose()"></button>
+            </div>
+
+            <!-- MODAL BODY -->
+            <div class="modal-body">
+                <!-- Basic Info Section -->
+                <div class="info-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Thông tin cơ bản
+                    </h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Thời gian</label>
+                                <div class="info-value">
+                                    <i class="bi bi-clock me-2"></i>
+                                    {{ auditLog.thoiGian | date: 'dd/MM/yyyy HH:mm:ss' }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Hành động</label>
+                                <div class="info-value">
+                                    <span class="action-badge-new"
+                                        [style.background]="getActionGradient(auditLog.hanhDong)">
+                                        <i class="bi" [ngClass]="getActionIcon(auditLog.hanhDong)"></i>
+                                        {{ auditLog.hanhDong }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="info-item">
+                                <label class="info-label">Tài khoản thực hiện</label>
+                                <div class="info-value account-value">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    <span>{{ auditLog.tenDangNhap }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target Info Section -->
+                <div class="info-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-box me-2"></i>
+                        Thông tin đối tượng
+                    </h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Loại đối tượng</label>
+                                <div class="info-value">
+                                    <span class="table-badge-detail">{{ auditLog.bang }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">ID đối tượng</label>
+                                <div class="info-value" *ngIf="auditLog.doiTuongId">
+                                    <span class="id-badge-detail">#{{ auditLog.doiTuongId }}</span>
+                                </div>
+                                <div class="info-value text-muted fst-italic" *ngIf="!auditLog.doiTuongId">
+                                    Không có
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NEW: Tên đối tượng -->
+                        <div class="col-12" *ngIf="auditLog.tenDoiTuong">
+                            <div class="info-item">
+                                <label class="info-label">Tên đối tượng</label>
+                                <div class="info-value object-name-value">
+                                    <i class="bi bi-tag me-2"></i>
+                                    {{ auditLog.tenDoiTuong }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12" *ngIf="auditLog.truong">
+                            <div class="info-item">
+                                <label class="info-label">Trường thay đổi</label>
+                                <div class="info-value">
+                                    <span class="field-badge">{{ auditLog.truong }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change Details Section (for UPDATE actions) -->
+                <div class="info-section" *ngIf="auditLog.giaTriCu || auditLog.giaTriMoi">
+                    <h3 class="section-title">
+                        <i class="bi bi-arrow-left-right me-2"></i>
+                        Thay đổi giá trị
+                    </h3>
+                    <div class="change-comparison">
+                        <!-- Old Value -->
+                        <div class="value-box old-value">
+                            <label class="value-label">
+                                <i class="bi bi-x-circle me-2"></i>
+                                Giá trị cũ
+                            </label>
+                            <div class="value-content" *ngIf="auditLog.giaTriCu">
+                                <pre>{{ auditLog.giaTriCu }}</pre>
+                            </div>
+                            <div class="value-content text-muted fst-italic" *ngIf="!auditLog.giaTriCu">
+                                (Trống)
+                            </div>
+                        </div>
+
+                        <!-- Arrow -->
+                        <div class="change-arrow">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+
+                        <!-- New Value -->
+                        <div class="value-box new-value">
+                            <label class="value-label">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Giá trị mới
+                            </label>
+                            <div class="value-content" *ngIf="auditLog.giaTriMoi">
+                                <pre>{{ auditLog.giaTriMoi }}</pre>
+                            </div>
+                            <div class="value-content text-muted fst-italic" *ngIf="!auditLog.giaTriMoi">
+                                (Trống)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Note Section -->
+                <div class="info-section" *ngIf="auditLog.ghiChu">
+                    <h3 class="section-title">
+                        <i class="bi bi-chat-left-text me-2"></i>
+                        Ghi chú
+                    </h3>
+                    <div class="note-box">
+                        <i class="bi bi-info-circle"></i>
+                        <span>{{ auditLog.ghiChu }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL FOOTER -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="onClose()">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Đóng
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

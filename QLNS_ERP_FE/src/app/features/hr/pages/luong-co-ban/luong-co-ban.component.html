@@ -1,0 +1,179 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-title">
+            <i class="bi bi-person-check"></i>
+            <span>Lương cơ bản</span>
+        </div>
+        <div class="header-actions">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Tìm theo tên, mã NV, phòng ban..." [(ngModel)]="keyword"
+                    (ngModelChange)="applyFilter()" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-overlay" *ngIf="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper" *ngIf="!loading">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nhân viên</th>
+                    <th>Phòng ban</th>
+                    <th class="text-right">Lương cơ bản</th>
+                    <th class="text-right">Phụ cấp cố định</th>
+                    <th>Ngân hàng</th>
+                    <th>Hiệu lực từ</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of filtered; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                        <div class="nv-info">
+                            <strong>{{ item.hoTen }}</strong>
+                            <span class="ma-nv">{{ item.maNhanVien }}</span>
+                        </div>
+                    </td>
+                    <td>{{ item.tenPhongBan ?? '—' }}</td>
+                    <td class="text-right salary-col">{{ formatCurrency(item.luongCoBan) }}</td>
+                    <td class="text-right">{{ formatCurrency(item.phuCapCoDinh) }}</td>
+                    <td>
+                        <span *ngIf="item.tenNganHang">
+                            {{ item.tenNganHang }}<br />
+                            <small class="text-muted">{{ item.soTaiKhoanNganHang }}</small>
+                        </span>
+                        <span *ngIf="!item.tenNganHang" class="text-muted">—</span>
+                    </td>
+                    <td>{{ item.ngayBatDauHieuLuc | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-icon btn-edit" title="Cập nhật lương" (click)="openEdit(item)">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn-icon btn-info" title="Lịch sử lương" (click)="openHistory(item)">
+                                <i class="bi bi-clock-history"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngIf="filtered.length === 0">
+                    <td colspan="8" class="empty-row">Không có dữ liệu</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal: Cập nhật lương cơ bản -->
+<div class="modal-overlay" *ngIf="showModal" (click)="showModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3><i class="bi bi-person-check me-2"></i>Cập nhật lương cơ bản</h3>
+            <button class="btn-close" (click)="showModal = false"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="employee-badge">
+                <i class="bi bi-person-circle"></i>
+                <span>{{ selected?.hoTen }} — {{ selected?.maNhanVien }}</span>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="bi bi-info-circle"></i>
+                Cập nhật sẽ tạo bản ghi mới và vô hiệu hóa bản ghi lương hiện tại.
+            </div>
+
+            <form [formGroup]="form">
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Lương cơ bản (VND) <span class="required">*</span></label>
+                        <input type="number" class="form-control" formControlName="luongCoBan"
+                            placeholder="Ví dụ: 8000000" />
+                    </div>
+                    <div class="form-group half">
+                        <label>Phụ cấp cố định (VND)</label>
+                        <input type="number" class="form-control" formControlName="phuCapCoDinh"
+                            placeholder="Ví dụ: 500000" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Số tài khoản ngân hàng</label>
+                        <input type="text" class="form-control" formControlName="soTaiKhoanNganHang" />
+                    </div>
+                    <div class="form-group half">
+                        <label>Tên ngân hàng</label>
+                        <input type="text" class="form-control" formControlName="tenNganHang"
+                            placeholder="Vietcombank, Techcombank..." />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Chi nhánh</label>
+                        <input type="text" class="form-control" formControlName="chiNhanhNganHang" />
+                    </div>
+                    <div class="form-group half">
+                        <label>Ngày hiệu lực <span class="required">*</span></label>
+                        <input type="date" class="form-control" formControlName="ngayBatDauHieuLuc" />
+                    </div>
+                </div>
+            </form>
+
+            <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" (click)="showModal = false">Hủy</button>
+            <button class="btn-primary" (click)="save()" [disabled]="saving || form.invalid">
+                <i class="bi bi-check-lg me-1"></i>
+                {{ saving ? 'Đang lưu...' : 'Lưu thay đổi' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Lịch sử lương -->
+<div class="modal-overlay" *ngIf="showHistoryModal" (click)="showHistoryModal = false">
+    <div class="modal-box wide" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3><i class="bi bi-clock-history me-2"></i>Lịch sử lương — {{ selected?.hoTen }}</h3>
+            <button class="btn-close" (click)="showHistoryModal = false"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Lương cơ bản</th>
+                        <th>Phụ cấp</th>
+                        <th>Ngân hàng</th>
+                        <th>Từ ngày</th>
+                        <th>Đến ngày</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let h of history">
+                        <td class="salary-col">{{ formatCurrency(h.luongCoBan) }}</td>
+                        <td>{{ formatCurrency(h.phuCapCoDinh) }}</td>
+                        <td>{{ h.tenNganHang ?? '—' }}</td>
+                        <td>{{ h.ngayBatDauHieuLuc | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ h.ngayKetThucHieuLuc ? (h.ngayKetThucHieuLuc | date:'dd/MM/yyyy') : '—' }}</td>
+                        <td>
+                            <span class="badge" [class.badge-success]="h.dangApDung"
+                                [class.badge-secondary]="!h.dangApDung">
+                                {{ h.dangApDung ? 'Đang áp dụng' : 'Đã hết hiệu lực' }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

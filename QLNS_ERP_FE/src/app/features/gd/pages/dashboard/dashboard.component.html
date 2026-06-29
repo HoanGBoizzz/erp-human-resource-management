@@ -1,0 +1,184 @@
+﻿<div class="dashboard-page">
+
+  <!-- ===== HEADER CARD ===== -->
+  <div class="header-card">
+    <div class="header-content">
+
+      <!-- Left: Welcome -->
+      <div class="header-left">
+        <h2 class="welcome-title">Xin chào, Giám đốc</h2>
+        <p class="welcome-sub">Tổng quan vận hành tháng {{ month }}/{{ year }}</p>
+      </div>
+
+      <!-- Center: Action Buttons -->
+      <div class="header-actions">
+        <a class="action-btn" routerLink="/gd/duyet-du-an">
+          <i class="bi bi-kanban"></i>
+          <span>Duyệt dự án</span>
+          <span class="action-badge" *ngIf="data.duAnChoDuyet > 0">{{ data.duAnChoDuyet }}</span>
+        </a>
+        <a class="action-btn" routerLink="/gd/duyet-bang-luong">
+          <i class="bi bi-receipt"></i>
+          <span>Duyệt lương</span>
+          <span class="action-badge" *ngIf="data.bangLuongChoDuyet > 0">{{ data.bangLuongChoDuyet }}</span>
+        </a>
+        <a class="action-btn" routerLink="/gd/audit-log">
+          <i class="bi bi-file-earmark-text"></i>
+          <span>Audit log</span>
+        </a>
+      </div>
+
+      <!-- Right: Project approval circle + refresh -->
+      <div class="header-right">
+        <div class="attendance-widget">
+          <div class="circle-progress">
+            <svg viewBox="0 0 36 36">
+              <path class="circle-bg"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle-fill"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                [style.stroke-dasharray]="projectApprovalPercent() + ', 100'" />
+            </svg>
+            <div class="circle-text">{{ projectApprovalPercent() }}%</div>
+          </div>
+          <div class="attendance-label">DA đã xử lý</div>
+        </div>
+        <button class="refresh-btn" (click)="load()" [disabled]="loading">
+          <i class="bi bi-arrow-clockwise" [class.spin]="loading"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- ===== SKELETON LOADING ===== -->
+  <div class="skeleton-grid" *ngIf="loading">
+    <div class="skeleton-card" *ngFor="let _ of [1,2,3,4]">
+      <div class="skeleton-icon"></div>
+      <div class="skeleton-lines">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line long"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STATS CARDS ===== -->
+  <div class="stats-grid" *ngIf="!loading">
+
+    <!-- Card 1: Tổng nhân viên -->
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-info">
+        <div class="stat-value">{{ display.tongNhanVien }}</div>
+        <div class="stat-label">Tổng nhân viên</div>
+        <div class="stat-sub">
+          <span *ngIf="data.nghiViecTrongThang > 0" class="tag danger">
+            Nghỉ việc: {{ data.nghiViecTrongThang }}
+          </span>
+          <span *ngIf="data.nghiViecTrongThang === 0" class="tag success">Ổn định</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Bảng lương chờ duyệt -->
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="bi bi-clipboard-check-fill"></i></div>
+      <div class="stat-info">
+        <div class="stat-value">{{ display.bangLuongChoDuyet }}</div>
+        <div class="stat-label">Bảng lương chờ duyệt</div>
+        <div class="stat-sub">
+          <span class="tag warning" *ngIf="data.bangLuongChoDuyet > 0">Ưu tiên hôm nay</span>
+          <span class="tag success" *ngIf="data.bangLuongChoDuyet === 0">Đã xử lý hết</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Dự án chờ duyệt -->
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="bi bi-hourglass-split"></i></div>
+      <div class="stat-info">
+        <div class="stat-value">{{ display.duAnChoDuyet }}</div>
+        <div class="stat-label">Dự án chờ duyệt</div>
+        <div class="stat-sub">
+          <span class="tag success">Duyệt: {{ data.duAnDaDuyet }}</span>
+          <span class="tag danger">Từ chối: {{ data.duAnTuChoi }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Nhật ký dự án -->
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="bi bi-journal-text"></i></div>
+      <div class="stat-info">
+        <div class="stat-value">{{ display.nhatKyGanNhat }}</div>
+        <div class="stat-label">Nhật ký dự án</div>
+        <div class="stat-sub">
+          <span class="tag info">Tổng lương: {{ formatMoney(display.tongLuongThang) }} đ</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== INSIGHTS ===== -->
+  <div class="insights-grid" *ngIf="!loading && insights.length">
+    <div class="insight-item" *ngFor="let it of insights" [ngClass]="'tone-' + it.tone">
+      <div class="insight-icon"><i [class]="it.icon"></i></div>
+      <div class="insight-body">
+        <div class="insight-title">{{ it.title }}</div>
+        <div class="insight-desc">{{ it.desc }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CHARTS SECTION ===== -->
+  <div class="charts-grid" *ngIf="!loading">
+
+    <!-- Bar 1: Dự án -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">
+          <i class="bi bi-bar-chart"></i>
+          Dự án
+        </div>
+        <div class="chart-subtitle">Chờ duyệt Đã duyệt Từ chối</div>
+      </div>
+      <div class="chart-body">
+        <canvas #barDuAn></canvas>
+      </div>
+    </div>
+
+    <!-- Bar 2: Bảng lương -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">
+          <i class="bi bi-bar-chart-fill"></i>
+          Bảng lương
+        </div>
+        <div class="chart-subtitle">Chờ duyệt vs Đã xử lý</div>
+      </div>
+      <div class="chart-body">
+        <canvas #barLuong></canvas>
+      </div>
+    </div>
+
+    <!-- Pie: Tổng quan phê duyệt -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">
+          <i class="bi bi-pie-chart"></i>
+          Phê duyệt tổng quan
+        </div>
+        <div class="chart-subtitle">Tỷ lệ dự án & lương</div>
+      </div>
+      <div class="chart-body">
+        <canvas #pieStatus></canvas>
+      </div>
+    </div>
+
+  </div>
+
+</div>

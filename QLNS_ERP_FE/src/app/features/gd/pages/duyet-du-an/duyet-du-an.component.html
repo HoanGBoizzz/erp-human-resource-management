@@ -1,0 +1,494 @@
+<div class="page-container">
+
+    <!-- ========== HEADER CARD ========== -->
+    <div class="header-card">
+        <div
+            class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center justify-content-between">
+            <div>
+                <h4 class="mb-1 fw-bold">
+                    <i class="bi bi-briefcase me-2 text-primary"></i>
+                    Duyệt Dự án
+                </h4>
+                <p class="text-muted mb-0">Quản lý và phê duyệt các dự án từ phòng nhân sự</p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <button class="action-btn" (click)="loadAll()" [disabled]="loading">
+                    <i class="bi" [class.bi-arrow-clockwise]="!loading" [class.bi-hourglass-split]="loading"></i>
+                    <span class="ms-1">{{ loading ? 'Đang tải...' : 'Tải lại' }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="errorMsg" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMsg }}
+        <button type="button" class="btn-close" (click)="errorMsg = ''"></button>
+    </div>
+
+    <!-- ========== KPI CARDS (Hàng 1) ========== -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="kpi-card kpi-pending" [class.loading]="loading">
+                <div class="kpi-icon">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Chờ duyệt</div>
+                    <div class="kpi-value">{{ kpiPending }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="kpi-card kpi-approved" [class.loading]="loading">
+                <div class="kpi-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Đã duyệt</div>
+                    <div class="kpi-value">{{ kpiApproved }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="kpi-card kpi-rejected" [class.loading]="loading">
+                <div class="kpi-icon">
+                    <i class="bi bi-x-circle-fill"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Từ chối</div>
+                    <div class="kpi-value">{{ kpiRejected }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CHART (Hàng 2) ========== -->
+    <div class="content-card mb-4">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-bar-chart me-2 text-primary"></i>
+            Tổng quan dự án
+        </h5>
+
+        <div class="row g-3">
+            <div class="col-12">
+                <!-- Bar Chart Canvas -->
+                <div style="height: 280px; position: relative;">
+                    <canvas #statusChart></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== DANH SÁCH DỰ ÁN ========== -->
+    <div class="content-card">
+        <!-- Toolbar -->
+        <div class="toolbar flex-wrap">
+            <div class="d-flex gap-2">
+                <button class="action-btn btn-sm" [class.border-primary]="tab === 'PENDING'"
+                    [class.text-primary]="tab === 'PENDING'" (click)="setTab('PENDING')">
+                    Chờ duyệt
+                </button>
+                <button class="action-btn btn-sm" [class.border-primary]="tab === 'ALL'"
+                    [class.text-primary]="tab === 'ALL'" (click)="setTab('ALL')">
+                    Tất cả
+                </button>
+                <button class="action-btn btn-sm" [class.border-primary]="tab === 'MY_APPROVED'"
+                    [class.text-primary]="tab === 'MY_APPROVED'" (click)="setTab('MY_APPROVED')">
+                    Tôi đã duyệt
+                </button>
+            </div>
+
+            <div class="input-group ms-auto" style="max-width: 300px;">
+                <span class="input-group-text bg-white">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="text" class="form-control border-start-0"
+                    placeholder="Tìm theo mã, tên, người phụ trách..." [(ngModel)]="q" />
+            </div>
+        </div>
+
+        <!-- Loading Skeleton -->
+        <div *ngIf="loading" class="p-4">
+            <div class="placeholder-glow mb-2" *ngFor="let i of [1,2,3,4,5]">
+                <span class="placeholder col-12" style="height: 48px;"></span>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <!-- Table: PENDING / ALL -->
+        <div *ngIf="!loading && tab !== 'MY_APPROVED'" class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <colgroup>
+                    <col style="width: 12%;">
+                    <col style="width: 35%;">
+                    <col style="width: 23%;">
+                    <col style="width: 18%;">
+                    <col style="width: 12%;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>MÃ DỰ ÁN</th>
+                        <th>TÊN DỰ ÁN</th>
+                        <th>NGƯỜI PHỤ TRÁCH</th>
+                        <th>TRẠNG THÁI</th>
+                        <th class="text-end">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of filteredList()" class="cursor-pointer" (click)="openDetail(item.id)">
+                        <td class="fw-semibold">{{ item.maDuAn }}</td>
+                        <td>
+                            <div class="fw-semibold">{{ item.tenDuAn }}</div>
+                        </td>
+                        <td>
+                            <span>{{ item.tenNhanVienPhuTrach || '—' }}</span>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="badgeClass(item.trangThaiDuAn)">
+                                {{ getStatusLabel(item.trangThaiDuAn) }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="action-btn btn-sm" type="button"
+                                (click)="$event.stopPropagation(); openDetail(item.id)">
+                                <i class="bi bi-eye me-1"></i> Xem
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="filteredList().length === 0">
+                        <td colspan="5" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            Không có dữ liệu
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Table: MY APPROVED -->
+        <div *ngIf="!loading && tab === 'MY_APPROVED'" class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <colgroup>
+                    <col style="width: 12%;">
+                    <col style="width: 35%;">
+                    <col style="width: 23%;">
+                    <col style="width: 18%;">
+                    <col style="width: 12%;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>MÃ DỰ ÁN</th>
+                        <th>TÊN DỰ ÁN</th>
+                        <th>NGÀY DUYỆT</th>
+                        <th>TRẠNG THÁI</th>
+                        <th class="text-end">#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of listMyApproved" class="cursor-pointer" (click)="openDetail(item.id)">
+                        <td class="fw-semibold">{{ item.maDuAn }}</td>
+                        <td>
+                            <div class="fw-semibold">{{ item.tenDuAn }}</div>
+                        </td>
+                        <td>
+                            <span>{{ item.ngayDuyet | date:'dd/MM/yyyy HH:mm' }}</span>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="badgeClass(item.trangThaiDuAn)">
+                                {{ getStatusLabel(item.trangThaiDuAn) }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="action-btn btn-sm" type="button"
+                                (click)="$event.stopPropagation(); openDetail(item.id)">
+                                <i class="bi bi-eye me-1"></i> Xem
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="listMyApproved.length === 0">
+                        <td colspan="5" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            Không có dữ liệu
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- ========== MODAL CHI TIẾT (Standardized) ========== -->
+<div class="modal" [class.show]="showDetailModal" [style.display]="showDetailModal ? 'block' : 'none'" tabindex="-1"
+    (click)="closeDetailModal()">
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" *ngIf="detailLoading"
+                style="position: absolute; inset: 0; background: rgba(255,255,255,0.9); z-index: 10; display: flex; align-items: center; justify-content: center; border-radius: inherit;">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <div class="mt-2 text-muted small fw-medium">Đang tải dữ liệu...</div>
+                </div>
+            </div>
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-dark">
+                    <i class="bi bi-file-earmark-text me-2 text-primary"></i>
+                    Chi tiết dự án
+                </h5>
+                <button type="button" class="btn-close" (click)="closeDetailModal()"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" *ngIf="!detailLoading || selected.id > 0">
+
+                <!-- Project Header Info -->
+                <div class="d-flex align-items-start justify-content-between mb-4 pb-3 border-bottom">
+                    <div>
+                        <h5 class="fw-bold mb-1 text-dark">{{ selected.tenDuAn }}</h5>
+                        <div class="text-muted small">
+                            <i class="bi bi-hash"></i>
+                            <span class="font-monospace">{{ selected.maDuAn }}</span>
+                        </div>
+                    </div>
+                    <span class="badge rounded-pill px-3 py-2 fs-6" [ngClass]="badgeClass(selected.trangThaiDuAn)">
+                        {{ getStatusLabel(selected.trangThaiDuAn) }}
+                    </span>
+                </div>
+
+                <!-- Info Grid - 2x2 với style cải tiến -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <div class="info-card-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-person-badge"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-card-label">Người phụ trách</div>
+                                <div class="info-card-value">{{ selected.tenNvPhuTrach || '—' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <div class="info-card-icon bg-success-subtle text-success">
+                                <i class="bi bi-currency-dollar"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-card-label">Ngân sách dự án</div>
+                                <div class="info-card-value text-success">{{ selected.nganSach ? (selected.nganSach |
+                                    number) + ' VNĐ' : '—' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <div class="info-card-icon bg-info-subtle text-info">
+                                <i class="bi bi-calendar-event"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-card-label">Ngày bắt đầu</div>
+                                <div class="info-card-value">{{ selected.ngayBatDau | date:'dd/MM/yyyy' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <div class="info-card-icon bg-warning-subtle text-warning">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-card-label">Ngày kết thúc dự kiến</div>
+                                <div class="info-card-value">{{ selected.ngayKetThuc | date:'dd/MM/yyyy' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-dark mb-2">
+                        <i class="bi bi-file-text me-2"></i>Mô tả dự án
+                    </label>
+                    <div class="p-3 bg-light border rounded">
+                        <p class="mb-0 text-secondary" style="white-space: pre-line;">{{ selected.moTa || 'Không có mô
+                            tả' }}</p>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- Approval Section -->
+                <div class="mb-4" *ngIf="canProcess()">
+                    <div class="fw-bold mb-3 d-flex align-items-center">
+                        <i class="bi bi-shield-check me-2 text-primary fs-5"></i>Quyết định phê duyệt
+                    </div>
+
+                    <form [formGroup]="approveForm" (ngSubmit)="submitApprove()">
+                        <div class="d-flex gap-2 mb-3">
+                            <button class="btn flex-fill py-2" type="button"
+                                [class.btn-success]="approveForm.get('dongY')?.value === true"
+                                [class.btn-outline-success]="approveForm.get('dongY')?.value !== true"
+                                (click)="approveForm.patchValue({ dongY: true })" [disabled]="saving">
+                                <i class="bi bi-check-circle me-2"></i>Đồng ý duyệt
+                            </button>
+
+                            <button class="btn flex-fill py-2" type="button"
+                                [class.btn-danger]="approveForm.get('dongY')?.value === false"
+                                [class.btn-outline-danger]="approveForm.get('dongY')?.value !== false"
+                                (click)="approveForm.patchValue({ dongY: false })" [disabled]="saving">
+                                <i class="bi bi-x-circle me-2"></i>Từ chối
+                            </button>
+                        </div>
+
+                        <div *ngIf="approveForm.get('dongY')?.value === false" class="mb-3">
+                            <label class="form-label fw-semibold text-danger">
+                                Lý do từ chối <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" rows="3" formControlName="lyDoTuChoi"
+                                placeholder="Nhập lý do từ chối để nhân sự biết cần sửa đổi gì..."></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary px-4 fw-medium" [disabled]="saving">
+                                <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                                <i class="bi bi-send me-2" *ngIf="!saving"></i>
+                                Xác nhận
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Info Tabs -->
+                <div class="mt-4">
+                    <ul class="nav nav-tabs mb-3" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#members"
+                                type="button">
+                                <i class="bi bi-people me-1"></i>Thành viên
+                                <span class="badge bg-primary ms-1">{{ selected.thanhViens.length }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#files" type="button">
+                                <i class="bi bi-paperclip me-1"></i>Tài liệu
+                                <span class="badge bg-primary ms-1">{{ selected.files.length }}</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#history" type="button">
+                                <i class="bi bi-clock-history me-1"></i>Lịch sử
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- Members Tab -->
+                        <div class="tab-pane fade show active" id="members">
+                            <div class="member-list-container" *ngIf="selected.thanhViens.length > 0">
+                                <div class="member-card" *ngFor="let m of selected.thanhViens; let i = index">
+                                    <div class="member-card-number">
+                                        <span class="badge bg-primary rounded-circle">{{ i + 1 }}</span>
+                                    </div>
+                                    <div class="member-card-avatar">
+                                        <div class="avatar-circle bg-gradient-primary">
+                                            {{ (m.hoTen || 'U').charAt(0).toUpperCase() }}
+                                        </div>
+                                    </div>
+                                    <div class="member-card-info">
+                                        <div class="member-card-name">{{ m.hoTen }}</div>
+                                        <div class="member-card-role">
+                                            <i class="bi bi-briefcase me-1"></i>
+                                            {{ m.vaiTroTrongDuAn }}
+                                        </div>
+                                        <div class="member-card-meta" *ngIf="m.ngayThamGia">
+                                            <i class="bi bi-calendar-plus me-1"></i>
+                                            Tham gia: {{ m.ngayThamGia | date:'dd/MM/yyyy' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="empty-state" *ngIf="selected.thanhViens.length === 0">
+                                <i class="bi bi-person-plus fs-1 text-muted d-block mb-3"></i>
+                                <p class="text-muted mb-0">Chưa có thành viên tham gia dự án</p>
+                            </div>
+                        </div>
+
+                        <!-- Files -->
+                        <div class="tab-pane fade" id="files">
+                            <div class="list-group">
+                                <div class="list-group-item d-flex align-items-center gap-3"
+                                    *ngFor="let f of selected.files">
+                                    <i class="bi bi-file-earmark-text text-primary fs-4"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-semibold">{{ f.tenFile }}</div>
+                                        <div class="text-muted small">
+                                            {{ f.kichThuoc ? (f.kichThuoc / 1024 | number:'1.0-0') + ' KB' : '—' }} •
+                                            {{ f.ngayTao | date:'dd/MM/yyyy HH:mm' }}
+                                        </div>
+                                    </div>
+                                    <a [href]="getFileUrl(f.duongDanFile)" target="_blank" [attr.download]="f.tenFile"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="text-center text-muted py-3 fst-italic" *ngIf="selected.files.length === 0">Chưa
+                                có tài liệu đính kèm</p>
+                        </div>
+
+                        <!-- History -->
+                        <div class="tab-pane fade" id="history">
+                            <div class="timeline ps-2" *ngIf="selected.nhatKyTrangThais.length > 0">
+                                <div class="timeline-item pb-3 position-relative ps-4"
+                                    *ngFor="let log of selected.nhatKyTrangThais">
+                                    <div class="timeline-marker position-absolute start-0 top-0 translate-middle-x"
+                                        style="width: 12px; height: 12px; margin-top: 6px;"></div>
+                                    <div class="timeline-content">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="badge" [ngClass]="badgeClass(log.trangThaiMoi)">
+                                                {{ getStatusLabel(log.trangThaiMoi) }}
+                                            </span>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock me-1"></i>
+                                                {{ log.thoiGian | date:'dd/MM/yyyy HH:mm' }}
+                                            </small>
+                                        </div>
+                                        <div class="small fw-bold text-dark">
+                                            <i class="bi bi-person me-1 text-muted"></i>
+                                            {{ log.nguoiThucHien }}
+                                        </div>
+                                        <div class="small text-secondary fst-italic mt-1" *ngIf="log.ghiChu">
+                                            <i class="bi bi-chat-left-quote me-1"></i>{{ log.ghiChu }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="empty-state" *ngIf="selected.nhatKyTrangThais.length === 0">
+                                <i class="bi bi-clock-history fs-1 text-muted d-block mb-2"></i>
+                                <p class="text-muted mb-0">Chưa có lịch sử thay đổi trạng thái</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer bg-light" *ngIf="!canProcess()">
+                <button type="button" class="btn btn-secondary" (click)="closeDetailModal()">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="showDetailModal" *ngIf="showDetailModal"></div>

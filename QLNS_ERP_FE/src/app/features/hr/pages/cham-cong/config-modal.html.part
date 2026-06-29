@@ -1,0 +1,46 @@
+
+<!-- Config Modal -->
+<div class="modal-backdrop fade show" *ngIf="showConfigModal"></div>
+<div class="modal fade show d-block" *ngIf="showConfigModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cấu hình thời gian làm việc</h5>
+                <button type="button" class="btn-close" (click)="closeConfig()"></button>
+            </div>
+            <div class="modal-body">
+                <form #configForm="ngForm">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Giờ vào tiêu chuẩn</label>
+                            <input type="time" class="form-control" [(ngModel)]="config.gioVao" name="gioVao" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Giờ ra tiêu chuẩn</label>
+                            <input type="time" class="form-control" [(ngModel)]="config.gioRa" name="gioRa" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Cho phép đi muộn (phút)</label>
+                        <input type="number" class="form-control" [(ngModel)]="config.lateGraceMinutes" name="lateGraceMinutes" min="0">
+                        <small class="text-muted">Nếu check-in muộn hơn khoảng này sẽ bị tính là đi muộn.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Cho phép về sớm (phút)</label>
+                        <input type="number" class="form-control" [(ngModel)]="config.earlyLeaveGraceMinutes" name="earlyLeaveGraceMinutes" min="0">
+                        <small class="text-muted">Nếu check-out sớm hơn khoảng này sẽ bị tính là về sớm.</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeConfig()" [disabled]="saving">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="saveConfig()" [disabled]="saving">
+                    <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                    Lưu cấu hình
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

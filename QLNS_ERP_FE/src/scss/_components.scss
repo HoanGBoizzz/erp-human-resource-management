@@ -1,0 +1,376 @@
+// src/scss/_components.scss
+// ===== Reusable Component Styles =====
+
+@import 'variables';
+@import 'mixins';
+
+// ===== HERO SECTION =====
+.hero {
+  @include card-base($radius-xl);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  .card-body {
+    padding: $spacing-lg $spacing-xl;
+    position: relative;
+    z-index: 2;
+
+    @include mobile {
+      padding: $spacing-md;
+    }
+  }
+}
+
+.hero-glow {
+  position: absolute;
+  inset: -4px;
+  filter: blur(24px);
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-employee {
+  background:
+    radial-gradient(1000px 400px at 10% 20%, rgba($info, 0.12), transparent 50%),
+    radial-gradient(800px 400px at 90% 10%, rgba($purple, 0.1), transparent 50%),
+    radial-gradient(600px 300px at 50% 100%, rgba($success, 0.08), transparent 50%),
+    #ffffff;
+
+  .hero-glow {
+    background: linear-gradient(135deg, rgba($info, 0.15), rgba($purple, 0.1));
+  }
+}
+
+.hero-hr {
+  background:
+    radial-gradient(1000px 400px at 15% 15%, rgba($primary, 0.12), transparent 55%),
+    radial-gradient(800px 400px at 85% 10%, rgba($info, 0.1), transparent 50%),
+    radial-gradient(600px 300px at 60% 100%, rgba($warning, 0.08), transparent 50%),
+    #ffffff;
+
+  .hero-glow {
+    background: linear-gradient(135deg, rgba($primary, 0.18), rgba($info, 0.12), rgba($warning, 0.08));
+  }
+}
+
+.hero-gd {
+  background:
+    radial-gradient(1000px 400px at 20% 10%, rgba($slate-700, 0.1), transparent 50%),
+    radial-gradient(800px 400px at 80% 20%, rgba($purple, 0.08), transparent 50%),
+    radial-gradient(600px 300px at 50% 90%, rgba($success, 0.06), transparent 50%),
+    #ffffff;
+
+  .hero-glow {
+    background: linear-gradient(135deg, rgba($slate-600, 0.12), rgba($purple, 0.08));
+  }
+}
+
+.hero-title {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: $slate-800;
+
+  @include mobile {
+    font-size: $font-size-xl;
+  }
+}
+
+.hero-sub {
+  font-size: $font-size-sm;
+  color: $slate-500;
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+.hero-metric {
+  min-width: 200px;
+  text-align: right;
+
+  @include mobile {
+    text-align: left;
+    min-width: auto;
+  }
+}
+
+.metric-number {
+  font-size: $font-size-3xl;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: $slate-800;
+}
+
+// ===== KPI CARDS =====
+.kpi-card {
+  @include card-base($radius-xl);
+  @include card-hover(3px);
+  @include shimmer-effect;
+  position: relative;
+  overflow: hidden;
+
+  .card-body {
+    padding: $spacing-md $spacing-lg;
+    position: relative;
+    z-index: 2;
+  }
+
+  .kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $spacing-sm;
+  }
+
+  .kpi-title {
+    font-size: $font-size-sm;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+
+  .kpi-ic {
+    font-size: 1.5rem;
+    opacity: 0.9;
+    @include icon-bounce;
+  }
+
+  .kpi-value {
+    font-size: $font-size-3xl;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-top: $spacing-xs;
+    line-height: 1.1;
+  }
+
+  .kpi-sub {
+    font-size: $font-size-xs;
+    opacity: 0.85;
+    margin-top: $spacing-xs;
+  }
+
+  .kpi-chip {
+    margin-top: $spacing-sm;
+  }
+}
+
+// KPI Color variants (Pastel gradients)
+.kpi-primary {
+  background: $gradient-primary-pastel;
+  color: #ffffff;
+}
+
+.kpi-info {
+  background: $gradient-info-pastel;
+  color: #ffffff;
+}
+
+.kpi-purple {
+  background: $gradient-purple-pastel;
+  color: #ffffff;
+}
+
+.kpi-success {
+  background: $gradient-success-pastel;
+  color: #ffffff;
+}
+
+.kpi-warning {
+  background: $gradient-warning-pastel;
+  color: $slate-800;
+
+  .kpi-ic, .kpi-title, .kpi-sub { color: $slate-700; }
+}
+
+.kpi-slate {
+  background: linear-gradient(135deg, $slate-700, $slate-500);
+  color: #ffffff;
+}
+
+// ===== CHIPS & BADGES =====
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: $radius-pill;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+.chip-soft {
+  background: rgba(255, 255, 255, 0.25);
+
+  &.success { background: rgba($success, 0.15); color: $success-dark; }
+  &.warning { background: rgba($warning, 0.18); color: $warning-dark; }
+  &.danger { background: rgba($danger, 0.15); color: $danger-dark; }
+  &.info { background: rgba($info, 0.15); color: $info-dark; }
+}
+
+.badge-soft {
+  border-radius: $radius-pill;
+  padding: 8px 14px;
+  font-weight: 600;
+}
+
+// ===== BUTTONS =====
+.btn-pill {
+  border-radius: $radius-pill !important;
+  padding: 0.6rem 1.25rem !important;
+  font-weight: 600;
+  transition: transform $transition-fast, box-shadow $transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-soft {
+  transition: transform $transition-fast, box-shadow $transition-fast, background $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.btn-shine {
+  @include btn-shine;
+}
+
+// ===== SKELETON =====
+.skeleton-card {
+  @include card-base($radius-xl);
+}
+
+.skeleton-box {
+  @include skeleton-pulse;
+  border-radius: $radius-md;
+}
+
+.skeleton-chart {
+  height: 220px;
+  border-radius: $radius-md;
+  @include skeleton-pulse;
+}
+
+// ===== CHART CARDS =====
+.chart-card {
+  @include card-base($radius-xl);
+  @include card-hover(2px);
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md;
+  }
+
+  .chart-title {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $slate-700;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 240px;
+
+    @include mobile {
+      height: 200px;
+    }
+  }
+}
+
+// ===== TABLE =====
+.data-table {
+  .table {
+    margin-bottom: 0;
+
+    th {
+      font-size: $font-size-xs;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: $slate-500;
+      border-bottom-width: 2px;
+      padding: $spacing-md;
+    }
+
+    td {
+      padding: $spacing-md;
+      vertical-align: middle;
+      font-size: $font-size-sm;
+    }
+
+    tbody tr {
+      transition: background $transition-fast;
+
+      &:hover {
+        background: rgba($primary, 0.04);
+      }
+
+      &.active-row {
+        background: rgba($primary, 0.08);
+      }
+    }
+  }
+}
+
+// ===== MINI KPIs =====
+.mini-kpis {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+
+  @include mobile {
+    justify-content: flex-start;
+  }
+}
+
+// ===== ANIMATIONS =====
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+// Staggered animation for lists
+@for $i from 1 through 10 {
+  .animate-stagger-#{$i} {
+    animation: fadeInUp 0.4s ease forwards;
+    animation-delay: #{$i * 0.05}s;
+    opacity: 0;
+  }
+}
+
+// ===== DOT SEPARATOR =====
+.dot-sep {
+  margin: 0 6px;
+  opacity: 0.6;
+}

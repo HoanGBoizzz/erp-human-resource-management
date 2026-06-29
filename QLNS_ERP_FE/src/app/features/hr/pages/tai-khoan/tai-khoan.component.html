@@ -1,0 +1,641 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="header-card">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div>
+                <h4 class="fw-bold mb-1"><i class="bi bi-person-lock me-2 text-primary"></i>Quản lý tài khoản</h4>
+                <p class="text-muted mb-0">Danh sách tài khoản đăng nhập hệ thống</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="action-btn warning-btn" type="button" routerLink="/hr/canh-bao-tai-khoan">
+                    <i class="bi bi-shield-exclamation me-1"></i>Cảnh báo tài khoản
+                </button>
+                <button class="action-btn" type="button" (click)="openCreateModal()">
+                    <i class="bi bi-plus-lg me-1"></i>Thêm tài khoản
+                </button>
+                <button class="action-btn" (click)="loadList(true)" [disabled]="loadingList">
+                    <i class="bi" [ngClass]="loadingList ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+                    <span class="ms-1">{{ loadingList ? 'Đang tải...' : 'Tải lại' }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMsg" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMsg }}
+        <button type="button" class="btn-close" (click)="errorMsg = ''"></button>
+    </div>
+
+    <!-- Content Card -->
+    <div class="content-card">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" *ngIf="loadingList">
+            <div class="spinner-container">
+                <div class="spinner-border" role="status"></div>
+                <div class="loading-text">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+            <div class="flex-grow-1" style="max-width: 320px; min-width: 260px;">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0 rounded-3"
+                        placeholder="Tìm theo tên đăng nhập, họ tên..." [(ngModel)]="keyword"
+                        [ngModelOptions]="{standalone: true}" (keyup.enter)="pageIndex = 1; loadList()" />
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <select class="form-select rounded-3" style="width: 160px;" [(ngModel)]="statusFilter"
+                    [ngModelOptions]="{standalone: true}" (change)="applyStatusFilter()" [disabled]="loadingList">
+                    <option value="ALL">Tất cả trạng thái</option>
+                    <option value="ACTIVE">Hoạt động</option>
+                    <option value="INACTIVE">Vô hiệu hóa</option>
+                </select>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="text-muted small">Hiển thị</span>
+                    <select class="form-select rounded-3" style="width: 100px;" [(ngModel)]="pageSize"
+                        [ngModelOptions]="{standalone: true}" (change)="pageIndex = 1; loadList()"
+                        [disabled]="loadingList">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="20">20</option>
+                        <option [ngValue]="50">50</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Tên đăng nhập</th>
+                        <th>Vai trò</th>
+                        <th>Nhân viên</th>
+                        <th>Trạng thái</th>
+                        <th>Đăng nhập cuối</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of filtered" (click)="openDetail(item.id)"
+                        [class.table-active]="item.id === selectedId" style="cursor: pointer;">
+                        <td class="fw-semibold">{{ item.tenDangNhap }}</td>
+                        <td><span class="badge bg-primary-subtle text-primary">{{ item.tenVaiTro }}</span></td>
+                        <td>{{ item.hoTen || '—' }}</td>
+                        <td>
+                            <span [class]="getStatusBadge(item.trangThai)">{{ getStatusLabel(item.trangThai) }}</span>
+                        </td>
+                        <td><span class="text-muted small">{{ formatLastLogin(item.lanDangNhapCuoi) }}</span></td>
+                        <td class="text-end">
+                            <button class="action-btn btn-sm" type="button"
+                                (click)="$event.stopPropagation(); openDetail(item.id)">
+                                <i class="bi bi-eye me-1"></i>Xem
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filtered.length === 0">
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>Không có dữ liệu
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+            <div class="text-muted small">
+                Hiển thị {{ filtered.length }} / {{ totalCount }} tài khoản
+            </div>
+            <nav *ngIf="getTotalPages() > 1">
+                <ul class="pagination mb-0">
+                    <li class="page-item" [class.disabled]="pageIndex === 1">
+                        <a class="page-link" (click)="changePage(pageIndex - 1)">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li *ngFor="let page of getPageNumbers()" class="page-item" [class.active]="page === pageIndex">
+                        <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="pageIndex === getTotalPages()">
+                        <a class="page-link" (click)="changePage(pageIndex + 1)">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BACKDROP: Chi tiết -->
+<div class="modal-backdrop fade" [class.show]="showDetailModal" *ngIf="showDetailModal" (click)="closeDetailModal()">
+</div>
+
+<!-- MODAL: Chi tiết tài khoản -->
+<!-- ============================================== -->
+<div class="modal fade" [class.show]="showDetailModal" [style.display]="showDetailModal ? 'block' : 'none'"
+    tabindex="-1" *ngIf="showDetailModal">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" *ngIf="loadingDetail">
+                <div class="spinner-container">
+                    <div class="spinner-border" role="status"></div>
+                    <div class="loading-text">Đang tải chi tiết...</div>
+                </div>
+            </div>
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-person-lock me-2"></i>
+                    Chi tiết tài khoản
+                </h5>
+                <button type="button" class="btn-close" (click)="closeDetailModal()"></button>
+            </div>
+
+            <div class="modal-body" *ngIf="!loadingDetail && detail">
+                <!-- Header Info -->
+                <div class="detail-header mb-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <!-- Avatar: hiển thị ảnh nếu có, không thì hiển thị initials -->
+                                <div class="position-relative">
+                                    <img *ngIf="getAvatarUrl()" [src]="getAvatarUrl()"
+                                        class="avatar-image rounded-circle border"
+                                        style="width: 64px; height: 64px; object-fit: cover; background: #f8f9fa;"
+                                        alt="Avatar">
+                                    <div *ngIf="!getAvatarUrl()"
+                                        class="avatar-placeholder rounded-circle border d-flex align-items-center justify-content-center"
+                                        style="width: 64px; height: 64px; background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+                                        <span class="text-white fw-bold fs-4">{{ getInitial(detail.hoTen) }}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1" style="color: #1e293b;">{{ detail.tenDangNhap }}</h5>
+                                    <div class="text-muted small">
+                                        <i class="bi bi-hash me-1"></i>ID: {{ detail.id }}
+                                        <span *ngIf="detail.hoTen" class="ms-2">
+                                            <i class="bi bi-person me-1"></i>{{ detail.hoTen }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="badge bg-primary" style="font-size: 0.875rem; padding: 8px 16px;">
+                            <i class="bi bi-shield-check me-1"></i>{{ detail.tenVaiTro }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Thông tin cơ bản -->
+                <div class="info-section mb-4">
+                    <h6 class="section-title mb-3">
+                        <i class="bi bi-info-circle me-2"></i>Thông tin cơ bản
+                    </h6>
+
+                    <div class="info-card mb-3">
+                        <label class="info-label">
+                            <i class="bi bi-person-badge me-2"></i>Nhân viên được gán
+                        </label>
+                        <div class="info-value">
+                            {{ detail.hoTen || '— Chưa gán nhân viên' }}
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-card">
+                                <label class="info-label">
+                                    <i class="bi bi-toggle-on me-2"></i>Trạng thái
+                                </label>
+                                <div class="info-value">
+                                    <span [class]="getStatusBadge(detail.trangThai)">
+                                        {{ getStatusLabel(detail.trangThai) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card">
+                                <label class="info-label">
+                                    <i class="bi bi-clock-history me-2"></i>Đăng nhập cuối
+                                </label>
+                                <div class="info-value">
+                                    <div class="text-primary fw-semibold">{{ formatLastLogin(detail.lanDangNhapCuoi) }}
+                                    </div>
+                                    <small class="text-muted" *ngIf="detail.lanDangNhapCuoi">
+                                        {{ detail.lanDangNhapCuoi | date: 'dd/MM/yyyy HH:mm:ss' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- Thông tin hệ thống -->
+                <div class="info-section">
+                    <h6 class="section-title mb-3">
+                        <i class="bi bi-gear me-2"></i>Thông tin hệ thống
+                    </h6>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-card">
+                                <label class="info-label">
+                                    <i class="bi bi-calendar-plus me-2"></i>Ngày tạo
+                                </label>
+                                <div class="info-value">
+                                    {{ detail.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-card">
+                                <label class="info-label">
+                                    <i class="bi bi-calendar-check me-2"></i>Cập nhật cuối
+                                </label>
+                                <div class="info-value">
+                                    {{ detail.updatedAt | date: 'dd/MM/yyyy HH:mm' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- Thông tin đăng nhập -->
+                <div class="info-section">
+                    <h6 class="section-title mb-3">
+                        <i class="bi bi-key me-2"></i>Thông tin đăng nhập
+                    </h6>
+
+                    <div class="info-card">
+                        <!-- CASE 1: Có thể xem mật khẩu (canViewPassword = true từ BE) -->
+                        <ng-container *ngIf="detail.canViewPassword">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="info-label">
+                                        <i class="bi bi-person me-2"></i>Tên đăng nhập
+                                    </label>
+                                    <div class="info-value fw-semibold">{{ detail.tenDangNhap }}</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="info-label">
+                                        <i class="bi bi-lock me-2"></i>Mật khẩu
+                                    </label>
+                                    <div class="info-value">
+                                        <div *ngIf="!viewedTempPassword" class="d-flex align-items-center gap-2">
+                                            <span class="text-muted">••••••••••••</span>
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                (click)="viewTempPassword()" [disabled]="loadingTempPassword">
+                                                <i class="bi" [class.bi-eye]="!loadingTempPassword"
+                                                    [class.bi-arrow-clockwise]="loadingTempPassword"></i>
+                                                {{ loadingTempPassword ? 'Đang tải...' : 'Xem' }}
+                                            </button>
+                                        </div>
+                                        <div *ngIf="viewedTempPassword">
+                                            <code class="bg-light px-2 py-1 rounded">{{ viewedTempPassword }}</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <small class="text-success">
+                                    <i class="bi bi-info-circle me-1"></i>Tài khoản chưa đăng nhập, có thể xem mật khẩu
+                                </small>
+                                <button type="button" class="btn btn-sm btn-success" *ngIf="viewedTempPassword"
+                                    (click)="copyCredentials(detail.tenDangNhap, viewedTempPassword)">
+                                    <i class="bi bi-clipboard me-1"></i>Copy tài khoản & mật khẩu
+                                </button>
+                            </div>
+                        </ng-container>
+
+                        <!-- CASE 2: Chưa đăng nhập nhưng không có mật khẩu tạm (tài khoản cũ) -->
+                        <ng-container *ngIf="!detail.canViewPassword && !detail.lanDangNhapCuoi">
+                            <div class="row g-3 mb-2">
+                                <div class="col-md-6">
+                                    <label class="info-label">
+                                        <i class="bi bi-person me-2"></i>Tên đăng nhập
+                                    </label>
+                                    <div class="info-value fw-semibold">{{ detail.tenDangNhap }}</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="info-label">
+                                        <i class="bi bi-lock me-2"></i>Mật khẩu
+                                    </label>
+                                    <div class="info-value">
+                                        <span class="text-muted">••••••••••••</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="text-warning">
+                                <i class="bi bi-exclamation-triangle me-1"></i>Tài khoản cũ, không có mật khẩu tạm. Vui lòng Reset mật khẩu nếu cần.
+                            </small>
+                        </ng-container>
+
+                        <!-- CASE 3: Đã đăng nhập (không có mật khẩu tạm) -->
+                        <ng-container *ngIf="!detail.canViewPassword && detail.lanDangNhapCuoi">
+                            <div class="row g-3 mb-2">
+                                <div class="col-md-6">
+                                    <label class="info-label">
+                                        <i class="bi bi-person me-2"></i>Tên đăng nhập
+                                    </label>
+                                    <div class="info-value fw-semibold">{{ detail.tenDangNhap }}</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="info-label">
+                                        <i class="bi bi-lock me-2"></i>Mật khẩu
+                                    </label>
+                                    <div class="info-value">
+                                        <span class="text-muted">••••••••••••</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                <i class="bi bi-shield-check me-1"></i>Nhân viên đã đăng nhập và có thể đã đổi mật khẩu
+                            </small>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <!-- Cảnh báo quyền -->
+                <div class="alert alert-warning mt-4 mb-0" *ngIf="!canEditOrDelete(detail.vaiTroId)">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-shield-exclamation me-2" style="font-size: 1.25rem;"></i>
+                        <div>
+                            <strong>Không có quyền:</strong> Bạn chỉ có thể sửa/xóa tài khoản có vai trò cấp thấp hơn.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" *ngIf="!loadingDetail && detail">
+                <button type="button" class="btn btn-secondary" (click)="closeDetailModal()">
+                    <i class="bi bi-x-lg me-2"></i>Đóng
+                </button>
+                <button type="button" class="btn btn-danger" (click)="onDelete(detail.id)"
+                    [disabled]="!canEditOrDelete(detail.vaiTroId)">
+                    <i class="bi bi-trash me-2"></i>Xóa
+                </button>
+                <button type="button" class="btn btn-warning text-dark" (click)="openResetPasswordModal()"
+                    [disabled]="!canEditOrDelete(detail.vaiTroId)">
+                    <i class="bi bi-key me-2"></i>Reset mật khẩu
+                </button>
+                <button type="button" class="btn btn-primary" (click)="openEditModal()"
+                    [disabled]="!canEditOrDelete(detail.vaiTroId)">
+                    <i class="bi bi-pencil me-2"></i>Chỉnh sửa
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BACKDROP: Tạo mới -->
+<div class="modal-backdrop fade" [class.show]="showCreateModal" *ngIf="showCreateModal" (click)="closeCreateModal()">
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: Tạo tài khoản -->
+<!-- ============================================== -->
+<div class="modal fade" [class.show]="showCreateModal" [style.display]="showCreateModal ? 'block' : 'none'"
+    tabindex="-1" *ngIf="showCreateModal">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-plus-lg me-2"></i>Tạo tài khoản mới</h5>
+                <button type="button" class="btn-close" (click)="closeCreateModal()"></button>
+            </div>
+            <form [formGroup]="createForm" (ngSubmit)="onCreate()">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="tenDangNhap"
+                                placeholder="Nhập tên đăng nhập" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Vai trò <span class="text-danger">*</span></label>
+                            <select class="form-select" formControlName="vaiTroId">
+                                <option [ngValue]="null">-- Chọn vai trò --</option>
+                                <option *ngFor="let vt of vaiTros" [ngValue]="vt.id">{{ vt.tenVaiTro }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input [type]="showPasswordInCreateForm ? 'text' : 'password'" 
+                                    class="form-control" formControlName="matKhau"
+                                    placeholder="Nhập mật khẩu" readonly />
+                                <button type="button" class="btn btn-outline-secondary" 
+                                    (click)="showPasswordInCreateForm = !showPasswordInCreateForm"
+                                    title="Ẩn/Hiện mật khẩu">
+                                    <i class="bi" [class.bi-eye]="!showPasswordInCreateForm" 
+                                        [class.bi-eye-slash]="showPasswordInCreateForm"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" 
+                                    (click)="regeneratePassword()" title="Sinh mật khẩu mới">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted">Mật khẩu được sinh tự động (12 ký tự)</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                            <input [type]="showPasswordInCreateForm ? 'text' : 'password'" 
+                                class="form-control" formControlName="matKhauXacNhan"
+                                placeholder="Nhập lại mật khẩu" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Gán nhân viên</label>
+                            <select class="form-select" formControlName="nvHoSoId">
+                                <option [ngValue]="null">-- Không gán --</option>
+                                <!-- NV chưa có TK -->
+                                <optgroup label="📗 Chưa có tài khoản">
+                                    <option *ngFor="let nv of availableEmployees" [ngValue]="nv.id">
+                                        {{ nv.hoTen }} ({{ nv.maNhanVien }})
+                                    </option>
+                                </optgroup>
+                                <!-- NV đã có TK -->
+                                <optgroup label="🔒 Đã có tài khoản">
+                                    <option *ngFor="let nv of assignedEmployees" [ngValue]="nv.id" disabled
+                                        title="Đã gán cho: {{ nv.tenDangNhap }}">
+                                        {{ nv.hoTen }} ({{ nv.maNhanVien }}) - TK: {{ nv.tenDangNhap }}
+                                    </option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-select" formControlName="trangThai">
+                                <option [ngValue]="true">Hoạt động</option>
+                                <option [ngValue]="false">Vô hiệu hóa</option>
+                            </select>
+                        </div>
+                        <!-- Tạo NV mới nhanh -->
+                        <div class="col-12">
+                            <div class="card bg-light">
+                                <div class="card-body py-2">
+                                    <label class="form-label mb-1">
+                                        <i class="bi bi-person-plus me-1"></i>Hoặc tạo nhân viên mới nhanh
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" 
+                                            [(ngModel)]="newEmployeeName" [ngModelOptions]="{standalone: true}"
+                                            placeholder="Nhập họ tên nhân viên mới...">
+                                        <button type="button" class="btn btn-success" 
+                                            (click)="createQuickEmployee()" 
+                                            [disabled]="creatingEmployee || !newEmployeeName.trim()">
+                                            <i class="bi" [class.bi-plus-lg]="!creatingEmployee"
+                                                [class.bi-arrow-clockwise]="creatingEmployee"></i>
+                                            {{ creatingEmployee ? 'Đang tạo...' : 'Tạo & Gán' }}
+                                        </button>
+                                    </div>
+                                    <small class="text-muted">Mã nhân viên sẽ được tự động sinh</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">
+                        <i class="bi bi-x-lg me-2"></i>Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="saving || createForm.invalid">
+                        <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                        <i class="bi bi-check-lg me-2" *ngIf="!saving"></i>
+                        {{ saving ? 'Đang lưu...' : 'Tạo tài khoản' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BACKDROP: Chỉnh sửa -->
+<div class="modal-backdrop fade" [class.show]="showEditModal" *ngIf="showEditModal" (click)="closeEditModal()">
+</div>
+
+<!-- MODAL: Chỉnh sửa tài khoản -->
+<div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1"
+    *ngIf="showEditModal">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-pencil me-2"></i>Chỉnh sửa tài khoản</h5>
+                <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+            </div>
+            <form [formGroup]="editForm" (ngSubmit)="onUpdate()">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Vai trò <span class="text-danger">*</span></label>
+                            <select class="form-select" formControlName="vaiTroId">
+                                <option [ngValue]="null">-- Chọn vai trò --</option>
+                                <option *ngFor="let vt of vaiTros" [ngValue]="vt.id">{{ vt.tenVaiTro }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Gán nhân viên</label>
+                            <select class="form-select" formControlName="nvHoSoId">
+                                <option [ngValue]="null">-- Không gán --</option>
+                                <!-- NV chưa có TK -->
+                                <optgroup label="📗 Chưa có tài khoản">
+                                    <option *ngFor="let nv of availableEmployees" [ngValue]="nv.id">
+                                        {{ nv.hoTen }} ({{ nv.maNhanVien }})
+                                    </option>
+                                </optgroup>
+                                <!-- NV đã có TK (chỉ cho chọn NV đang gán cho TK hiện tại) -->
+                                <optgroup label="🔒 Đã có tài khoản">
+                                    <option *ngFor="let nv of assignedEmployees" [ngValue]="nv.id"
+                                        [disabled]="nv.taiKhoanId !== selectedId"
+                                        [title]="nv.taiKhoanId === selectedId ? 'Đang gán cho TK này' : 'Đã gán cho: ' + nv.tenDangNhap">
+                                        {{ nv.hoTen }} ({{ nv.maNhanVien }}) 
+                                        {{ nv.taiKhoanId === selectedId ? '✓ Hiện tại' : '- TK: ' + nv.tenDangNhap }}
+                                    </option>
+                                </optgroup>
+                            </select>
+                            <small class="text-muted" *ngIf="detail?.nvHoSoId">
+                                Đang gán: {{ detail?.hoTen }}
+                            </small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Trạng thái</label>
+                            <select class="form-select" formControlName="trangThai">
+                                <option [ngValue]="true">Hoạt động</option>
+                                <option [ngValue]="false">Vô hiệu hóa</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeEditModal()">
+                        <i class="bi bi-x-lg me-2"></i>Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="saving || editForm.invalid">
+                        <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                        <i class="bi bi-check-lg me-2" *ngIf="!saving"></i>
+                        {{ saving ? 'Đang lưu...' : 'Cập nhật' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL BACKDROP: Chỉnh sửa -->
+<div class="modal-backdrop fade" [class.show]="showEditModal" *ngIf="showEditModal" (click)="closeEditModal()">
+</div>
+
+<!-- MODAL BACKDROP: Reset Password -->
+<div class="modal-backdrop fade" [class.show]="showResetPasswordModal" *ngIf="showResetPasswordModal"
+    (click)="closeResetPasswordModal()">
+</div>
+
+<!-- MODAL: Reset Password -->
+<div class="modal fade" [class.show]="showResetPasswordModal"
+    [style.display]="showResetPasswordModal ? 'block' : 'none'" tabindex="-1" *ngIf="showResetPasswordModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-key me-2"></i>Reset mật khẩu</h5>
+                <button type="button" class="btn-close" (click)="closeResetPasswordModal()"></button>
+            </div>
+            <form [formGroup]="resetPasswordForm" (ngSubmit)="onResetPassword()">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Mật khẩu mới <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" formControlName="newPassword"
+                                placeholder="Nhập mật khẩu mới" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" formControlName="confirmPassword"
+                                placeholder="Nhập lại mật khẩu mới" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeResetPasswordModal()">
+                        <i class="bi bi-x-lg me-2"></i>Hủy
+                    </button>
+                    <button type="submit" class="btn btn-warning text-dark"
+                        [disabled]="saving || resetPasswordForm.invalid">
+                        <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                        <i class="bi bi-check-lg me-2" *ngIf="!saving"></i>
+                        {{ saving ? 'Đang xử lý...' : 'Reset mật khẩu' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

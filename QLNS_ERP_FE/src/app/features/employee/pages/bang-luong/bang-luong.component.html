@@ -1,0 +1,287 @@
+﻿<div class="page-container">
+
+    <!-- HEADER CARD -->
+    <div class="header-card">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h3 class="fw-bold mb-1"><i class="bi bi-cash-stack me-2"></i>Bảng lương của tôi</h3>
+                <p class="text-muted mb-0 small">Xem chi tiết lương hàng tháng, thưởng, phụ cấp và khấu trừ.</p>
+            </div>
+            <button class="btn btn-primary" (click)="load()" [disabled]="loading">
+                <i class="bi bi-arrow-clockwise" [class.spin]="loading"></i>
+                <span class="ms-2">Làm mới</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ERROR -->
+    <div class="alert alert-danger d-flex align-items-center" *ngIf="errorMsg">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span>{{ errorMsg }}</span>
+        <button type="button" class="btn-close ms-auto" (click)="errorMsg = ''"></button>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-icon"><i class="bi bi-wallet2"></i></div>
+                <div class="kpi-body">
+                    <div class="kpi-label">Tổng lương năm {{ thongKe.nam }}</div>
+                    <div class="kpi-value">{{ thongKe.tongLuongNam | number:'1.0-0' }}</div>
+                    <div class="kpi-sub">VNĐ</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card kpi-info">
+                <div class="kpi-icon"><i class="bi bi-calendar-check"></i></div>
+                <div class="kpi-body">
+                    <div class="kpi-label">Lương tháng gần nhất</div>
+                    <div class="kpi-value">
+                        {{ thongKe.luongThangGanNhat ? (thongKe.luongThangGanNhat | number:'1.0-0') : '' }}
+                    </div>
+                    <div class="kpi-sub">
+                        {{ thongKe.thangGanNhat ? 'Tháng ' + thongKe.thangGanNhat + '/' + thongKe.nam : '' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card kpi-success">
+                <div class="kpi-icon"><i class="bi bi-bar-chart-line"></i></div>
+                <div class="kpi-body">
+                    <div class="kpi-label">Lương trung bình / tháng</div>
+                    <div class="kpi-value">{{ luongTrungBinh | number:'1.0-0' }}</div>
+                    <div class="kpi-sub">VNĐ</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="kpi-card kpi-warning">
+                <div class="kpi-icon"><i class="bi bi-clock-history"></i></div>
+                <div class="kpi-body">
+                    <div class="kpi-label">Tổng OT năm</div>
+                    <div class="kpi-value">{{ thongKe.tongOtNam | number:'1.0-0' }}</div>
+                    <div class="kpi-sub">giờ &amp;nbsp;&amp;nbsp; {{ soThangDaTinh }} tháng đã tính</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTER CARD -->
+    <div class="content-card mb-4">
+        <div class="filter-row" [formGroup]="filterForm">
+            <div class="filter-item">
+                <label class="filter-label">Năm</label>
+                <input type="number" class="form-control form-control-sm" formControlName="nam" placeholder="2025">
+            </div>
+            <div class="filter-item">
+                <label class="filter-label">Tháng</label>
+                <select class="form-select form-select-sm" formControlName="thang">
+                    <option value="ALL">Tất cả</option>
+                    <option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="m">Tháng {{ m }}</option>
+                </select>
+            </div>
+            <div class="filter-item filter-item-wide">
+                <label class="filter-label">Trạng thái</label>
+                <select class="form-select form-select-sm" formControlName="trangThai">
+                    <option *ngFor="let o of trangThaiOptions" [value]="o.value">{{ o.label }}</option>
+                </select>
+            </div>
+            <div class="filter-item filter-item-search">
+                <label class="filter-label">Tìm kiếm</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input class="form-control" [formControl]="keywordCtrl" placeholder="Tháng/năm...">
+                </div>
+            </div>
+            <div class="filter-result">
+                <span class="badge bg-primary">{{ list.length }} kết quả</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SALARY LIST -->
+    <div class="content-card">
+
+        <div class="d-flex flex-column align-items-center justify-content-center py-5" *ngIf="loading">
+            <div class="spinner-border text-primary mb-3"></div>
+            <span class="text-muted small">Đang tải dữ liệu...</span>
+        </div>
+
+        <div class="empty-state" *ngIf="!loading && list.length === 0">
+            <i class="bi bi-inbox"></i>
+            <p>Không có dữ liệu lương phù hợp.</p>
+        </div>
+
+        <div *ngIf="!loading && list.length > 0" class="salary-list">
+            <div class="salary-row" *ngFor="let x of list" [class.expanded]="isExpanded(x)"
+                [class.row-approved]="x.trangThai === 'DA_DUYET' || x.trangThai === 'DA_KHOA'">
+
+                <div class="row-header" (click)="toggleExpand(x)">
+                    <div class="month-badge">
+                        <span class="month-num">{{ x.thang < 10 ? '0' + x.thang : x.thang }}</span>
+                                <span class="month-year">{{ x.nam }}</span>
+                    </div>
+                    <div class="row-info flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                            <span class="status-pill" [ngClass]="statusBadgeClass(x.trangThai)">
+                                <i class="bi"
+                                    [class.bi-check-circle-fill]="x.trangThai === 'DA_DUYET' || x.trangThai === 'DA_KHOA'"
+                                    [class.bi-hourglass-split]="x.trangThai === 'CHO_DUYET_GIAM_DOC'"
+                                    [class.bi-pencil-fill]="x.trangThai === 'TAM_TINH'"
+                                    [class.bi-x-circle-fill]="x.trangThai === 'TU_CHOI'"></i>
+                                {{ statusText(x.trangThai) }}
+                            </span>
+                            <span class="text-muted small">
+                                Công: <strong>{{ x.tongCong }}</strong> ngày
+                                <ng-container *ngIf="x.tongOt > 0">&nbsp;&nbsp; OT: <strong>{{ x.tongOt }}</strong>
+                                    giờ</ng-container>
+                            </span>
+                        </div>
+                        <div class="mini-formula">
+                            <span class="mf-base">{{ x.luongCoBan | number:'1.0-0' }}</span>
+                            <span class="mf-sep">+</span>
+                            <span class="mf-plus">{{ x.phuCapCoDinh | number:'1.0-0' }}</span>
+                            <ng-container *ngIf="x.thuong > 0">
+                                <span class="mf-sep">+</span>
+                                <span class="mf-bonus">{{ x.thuong | number:'1.0-0' }}</span>
+                            </ng-container>
+                            <ng-container *ngIf="x.khauTru > 0">
+                                <span class="mf-sep"></span>
+                                <span class="mf-deduct">{{ x.khauTru | number:'1.0-0' }}</span>
+                            </ng-container>
+                            <span class="mf-eq">=</span>
+                            <span class="mf-total">{{ x.tongLuong | number:'1.0-0' }} đ</span>
+                        </div>
+                    </div>
+                    <div class="row-net">
+                        <div class="net-value">{{ x.tongLuong | number:'1.0-0' }}</div>
+                        <div class="net-unit">VNĐ</div>
+                    </div>
+                    <div class="expand-icon">
+                        <i class="bi" [class.bi-chevron-down]="!isExpanded(x)"
+                            [class.bi-chevron-up]="isExpanded(x)"></i>
+                    </div>
+                </div>
+
+                <div class="detail-panel" *ngIf="isExpanded(x)">
+                    <div class="detail-divider"></div>
+
+                    <div class="formula-banner">
+                        <div class="formula-step step-base">
+                            <div class="fs-label">Lương cơ bản</div>
+                            <div class="fs-value">{{ x.luongCoBan | number:'1.0-0' }}</div>
+                        </div>
+                        <div class="formula-op op-plus"><i class="bi bi-plus-lg"></i></div>
+                        <div class="formula-step step-plus">
+                            <div class="fs-label">Phụ cấp</div>
+                            <div class="fs-value">{{ x.phuCapCoDinh | number:'1.0-0' }}</div>
+                        </div>
+                        <div class="formula-op op-plus"><i class="bi bi-plus-lg"></i></div>
+                        <div class="formula-step step-bonus">
+                            <div class="fs-label">Thưởng</div>
+                            <div class="fs-value">{{ x.thuong | number:'1.0-0' }}</div>
+                        </div>
+                        <div class="formula-op op-minus"><i class="bi bi-dash-lg"></i></div>
+                        <div class="formula-step step-deduct">
+                            <div class="fs-label">Khấu trừ</div>
+                            <div class="fs-value text-danger">{{ x.khauTru | number:'1.0-0' }}</div>
+                        </div>
+                        <div class="formula-op op-eq">=</div>
+                        <div class="formula-step step-total">
+                            <div class="fs-label">Thực lãnh</div>
+                            <div class="fs-value total-highlight">{{ x.tongLuong | number:'1.0-0' }} đ</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="di-icon di-primary"><i class="bi bi-person-badge"></i></div>
+                            <div>
+                                <div class="di-label">Lương cơ bản / tháng</div>
+                                <div class="di-val">{{ x.luongCoBan | number:'1.0-0' }}<span class="di-unit"> đ</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="di-icon di-info"><i class="bi bi-gift"></i></div>
+                            <div>
+                                <div class="di-label">Phụ cấp cố định</div>
+                                <div class="di-val">{{ x.phuCapCoDinh | number:'1.0-0' }}<span class="di-unit"> đ</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="di-icon di-success"><i class="bi bi-trophy"></i></div>
+                            <div>
+                                <div class="di-label">Thưởng / Phạt</div>
+                                <div class="di-val" [class.text-success]="x.thuong > 0">
+                                    {{ x.thuong | number:'1.0-0' }}<span class="di-unit"> đ</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="di-icon di-danger"><i class="bi bi-dash-circle"></i></div>
+                            <div>
+                                <div class="di-label">Tổng khấu trừ</div>
+                                <div class="di-val text-danger">{{ x.khauTru | number:'1.0-0' }}<span class="di-unit">
+                                        đ</span></div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="di-icon di-warning"><i class="bi bi-calendar3"></i></div>
+                            <div>
+                                <div class="di-label">Số ngày công</div>
+                                <div class="di-val">{{ x.tongCong }}<span class="di-unit"> ngày</span></div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="di-icon di-purple"><i class="bi bi-clock-history"></i></div>
+                            <div>
+                                <div class="di-label">Tổng giờ OT</div>
+                                <div class="di-val">{{ x.tongOt | number:'1.1-1' }}<span class="di-unit"> giờ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pct-section" *ngIf="x.tongLuong > 0">
+                        <div class="pct-title">Cơ cấu lương</div>
+                        <div class="pct-bar-row">
+                            <span class="pct-name">Lương CB</span>
+                            <div class="pct-track">
+                                <div class="pct-fill fill-base" [style.width.%]="pctOf(x.luongCoBan, x.tongLuong)">
+                                </div>
+                            </div>
+                            <span class="pct-val">{{ pctOf(x.luongCoBan, x.tongLuong) }}%</span>
+                        </div>
+                        <div class="pct-bar-row" *ngIf="x.phuCapCoDinh > 0">
+                            <span class="pct-name">Phụ cấp</span>
+                            <div class="pct-track">
+                                <div class="pct-fill fill-plus" [style.width.%]="pctOf(x.phuCapCoDinh, x.tongLuong)">
+                                </div>
+                            </div>
+                            <span class="pct-val">{{ pctOf(x.phuCapCoDinh, x.tongLuong) }}%</span>
+                        </div>
+                        <div class="pct-bar-row" *ngIf="x.thuong > 0">
+                            <span class="pct-name">Thưởng</span>
+                            <div class="pct-track">
+                                <div class="pct-fill fill-bonus" [style.width.%]="pctOf(x.thuong, x.tongLuong)"></div>
+                            </div>
+                            <span class="pct-val">{{ pctOf(x.thuong, x.tongLuong) }}%</span>
+                        </div>
+                        <div class="pct-bar-row" *ngIf="x.khauTru > 0">
+                            <span class="pct-name">Khấu trừ</span>
+                            <div class="pct-track">
+                                <div class="pct-fill fill-deduct" [style.width.%]="pctOf(x.khauTru, x.tongLuong)"></div>
+                            </div>
+                            <span class="pct-val text-danger">{{ pctOf(x.khauTru, x.tongLuong) }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,165 @@
+<div class="dashboard-page">
+    <!-- ===== HEADER CARD ===== -->
+    <div class="header-card">
+        <div class="header-content">
+            <!-- Left: Welcome -->
+            <div class="header-left">
+                <h2 class="welcome-title">Xin chào, {{ data.hoTen || 'Nhân viên' }}</h2>
+                <p class="welcome-sub">Tổng quan công việc tháng {{ month }}/{{ year }}</p>
+            </div>
+
+            <!-- Center: Action Buttons -->
+            <div class="header-actions">
+                <a class="action-btn" routerLink="/employee/nghi-phep">
+                    <i class="bi bi-send"></i>
+                    <span>Tạo đơn nghỉ</span>
+                </a>
+                <a class="action-btn" routerLink="/employee/luong">
+                    <i class="bi bi-receipt"></i>
+                    <span>Xem bảng lương</span>
+                </a>
+                <a class="action-btn" routerLink="/employee/du-an">
+                    <i class="bi bi-kanban"></i>
+                    <span>Dự án</span>
+                </a>
+            </div>
+
+            <!-- Right: Attendance Circle -->
+            <div class="header-right">
+                <div class="attendance-widget">
+                    <div class="circle-progress" [style.--progress]="attendancePercent()">
+                        <svg viewBox="0 0 36 36">
+                            <path class="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle-fill"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                [style.stroke-dasharray]="attendancePercent() + ', 100'" />
+                        </svg>
+                        <div class="circle-text">{{ attendancePercent() }}%</div>
+                    </div>
+                    <div class="attendance-label">Tỉ lệ đi làm</div>
+                </div>
+                <button class="refresh-btn" (click)="load()" [disabled]="loading">
+                    <i class="bi bi-arrow-clockwise" [class.spin]="loading"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+    <!-- ===== SKELETON LOADING ===== -->
+    <div class="skeleton-grid" *ngIf="loading">
+        <div class="skeleton-card" *ngFor="let _ of [1,2,3,4]">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton-lines">
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line long"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STATS CARDS ===== -->
+    <div class="stats-grid" *ngIf="!loading">
+        <!-- Card 1: Ngày đi làm -->
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="bi bi-calendar-check"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">{{ display.soNgayChamCong }}</div>
+                <div class="stat-label">Ngày đi làm</div>
+                <div class="stat-sub">Vắng: {{ display.soNgayVang }} ngày</div>
+            </div>
+        </div>
+
+        <!-- Card 2: Tổng OT -->
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i class="bi bi-lightning-charge"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">{{ display.tongOt }}</div>
+                <div class="stat-label">Tổng OT (giờ)</div>
+                <div class="stat-sub">Dự án: {{ display.soDuAnThamGia }}</div>
+            </div>
+        </div>
+
+        <!-- Card 3: Đơn nghỉ phép -->
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="bi bi-envelope-paper"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">{{ display.donChoDuyet }}</div>
+                <div class="stat-label">Đơn chờ duyệt</div>
+                <div class="stat-sub">
+                    <span class="tag success">Duyệt: {{ data.donDaDuyet }}</span>
+                    <span class="tag danger">Từ chối: {{ data.donTuChoi }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: Lương tạm tính -->
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">{{ formatMoney(display.tongLuong) }}</div>
+                <div class="stat-label">Lương tạm tính</div>
+                <div class="stat-sub">
+                    <span class="status-badge" [ngClass]="salaryBadgeClass(data.trangThaiLuong)">
+                        {{ salaryStatusText(data.trangThaiLuong) }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CHARTS SECTION ===== -->
+    <div class="charts-grid" *ngIf="!loading">
+        <!-- Bar Chart 1: Chấm công -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <div class="chart-title">
+                    <i class="bi bi-calendar-check"></i>
+                    Chấm công tháng
+                </div>
+                <div class="chart-subtitle">Đi làm vs Vắng</div>
+            </div>
+            <div class="chart-body">
+                <canvas #barChamCong></canvas>
+            </div>
+        </div>
+
+        <!-- Bar Chart 2: Đơn nghỉ phép -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <div class="chart-title">
+                    <i class="bi bi-envelope-paper"></i>
+                    Trạng thái đơn từ
+                </div>
+                <div class="chart-subtitle">Phân bố đơn nghỉ phép</div>
+            </div>
+            <div class="chart-body">
+                <canvas #barDonPhep></canvas>
+            </div>
+        </div>
+
+        <!-- Pie Chart: Tổng quan -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <div class="chart-title">
+                    <i class="bi bi-pie-chart"></i>
+                    Tổng quan tháng
+                </div>
+                <div class="chart-subtitle">OT · Dự án · Đơn phép</div>
+            </div>
+            <div class="chart-body">
+                <canvas #pieOverview></canvas>
+            </div>
+        </div>
+    </div>
+</div>

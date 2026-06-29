@@ -1,0 +1,276 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="header-card">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h4 class="fw-bold mb-1">
+                    <i class="bi bi-calculator me-2 text-primary"></i>Tính lương nhân viên
+                </h4>
+                <p class="text-muted mb-0">Tính lương cho từng nhân viên hoặc toàn bộ trong tháng</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" (click)="goToBangLuong()">
+                    <i class="bi bi-table me-1"></i>Xem bảng lương tháng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="errorMsg" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMsg }}
+        <button type="button" class="btn-close" (click)="errorMsg = ''"></button>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="content-card">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" *ngIf="processing">
+            <div class="spinner-container">
+                <div class="spinner-border" role="status"></div>
+                <div class="loading-text">Đang tính lương...</div>
+            </div>
+        </div>
+
+        <form [formGroup]="form">
+            <!-- Chọn mode -->
+            <div class="mb-4">
+                <div class="section-label mb-2">
+                    <i class="bi bi-sliders"></i> Phương thức tính lương
+                </div>
+                <div class="mode-selector">
+                    <div class="mode-card" [class.selected]="tinhLuongMode === 'all'"
+                        (click)="tinhLuongMode = 'all'; onModeChange()">
+                        <div class="mode-icon"><i class="bi bi-people-fill text-primary"></i></div>
+                        <div>
+                            <div class="fw-semibold">Tính tất cả nhân viên</div>
+                            <div class="small text-muted">Tính lương đồng loạt cho toàn bộ nhân viên trong tháng</div>
+                        </div>
+                        <div class="mode-check" *ngIf="tinhLuongMode === 'all'">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                    <div class="mode-card" [class.selected]="tinhLuongMode === 'individual'"
+                        (click)="tinhLuongMode = 'individual'; onModeChange()">
+                        <div class="mode-icon"><i class="bi bi-person-fill text-primary"></i></div>
+                        <div>
+                            <div class="fw-semibold">Chọn từng nhân viên</div>
+                            <div class="small text-muted">Chọn nhân viên cụ thể và xem tạm tính trước</div>
+                        </div>
+                        <div class="mode-check" *ngIf="tinhLuongMode === 'individual'">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="form-divider my-4" />
+
+            <!-- Tháng / Năm -->
+            <div class="row mb-4 g-3">
+                <div class="col-sm-6 col-md-4">
+                    <label class="form-label fw-semibold">
+                        Tháng <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" formControlName="thang" (change)="onNhanVienChange()">
+                        <option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]" [ngValue]="m">
+                            Tháng {{ m }} {{ getThangStatus(m, form.value.nam) }}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <label class="form-label fw-semibold">
+                        Năm <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" formControlName="nam" (change)="onNamChange()">
+                        <option *ngFor="let y of availableYears" [ngValue]="y">{{ y }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dropdown nhân viên (chỉ hiện khi mode individual) -->
+            <div class="mb-4" *ngIf="tinhLuongMode === 'individual'">
+                <label class="form-label fw-semibold">
+                    <i class="bi bi-person-badge me-1"></i>Chọn nhân viên <span class="text-danger">*</span>
+                </label>
+                <select class="form-select" formControlName="nvHoSoId" (change)="onNhanVienChange()"
+                    [disabled]="loadingNhanViens">
+                    <option [ngValue]="null">-- Chọn nhân viên --</option>
+                    <option *ngFor="let nv of nhanViens" [ngValue]="nv.id">
+                        {{ nv.hoTen }} ({{ nv.maNhanVien }})
+                        {{ getNhanVienStatus(nv.id, form.value.thang, form.value.nam) }}
+                    </option>
+                </select>
+                <div class="small text-muted mt-1" *ngIf="loadingNhanViens">
+                    <span class="spinner-border spinner-border-sm me-1"></span>
+                    Đang tải danh sách nhân viên...
+                </div>
+
+                <!-- Cảnh báo đã duyệt -->
+                <div *ngIf="form.value.nvHoSoId && isEmployeeApproved(form.value.nvHoSoId, form.value.thang, form.value.nam)"
+                    class="alert alert-danger d-flex align-items-center gap-2 mt-2 py-2 mb-0">
+                    <i class="bi bi-lock-fill"></i>
+                    <span>Bảng lương này đã được <strong>Giám đốc duyệt</strong>, không thể tính lại.</span>
+                </div>
+                <div *ngIf="form.value.nvHoSoId && isEmployeePending(form.value.nvHoSoId, form.value.thang, form.value.nam)"
+                    class="alert alert-warning d-flex align-items-center gap-2 mt-2 py-2 mb-0">
+                    <i class="bi bi-hourglass-split"></i>
+                    <span>Bảng lương này đang <strong>chờ Giám đốc duyệt</strong>, không thể tính lại.</span>
+                </div>
+            </div>
+
+            <!-- Preview tạm tính -->
+            <div *ngIf="tinhLuongMode === 'individual' && (loadingPreview || previewSalary)" class="preview-card mt-2">
+                <h6 class="fw-semibold mb-3 text-primary">
+                    <i class="bi bi-eye me-2"></i>Kết quả tạm tính
+                </h6>
+
+                <div *ngIf="loadingPreview" class="text-center py-4">
+                    <div class="spinner-border text-primary"></div>
+                    <div class="small text-muted mt-2">Đang tính toán...</div>
+                </div>
+
+                <div *ngIf="!loadingPreview && previewSalary">
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="preview-item">
+                                <div class="preview-label">Lương cơ bản</div>
+                                <div class="preview-value">{{ formatCurrency(previewSalary.luongCoBanTinh) }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="preview-item">
+                                <div class="preview-label">Phụ cấp</div>
+                                <div class="preview-value">{{ formatCurrency(previewSalary.phuCapTinh) }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="preview-item">
+                                <div class="preview-label">Tổng công</div>
+                                <div class="preview-value">{{ previewSalary.tongCong }} ngày</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="preview-item">
+                                <div class="preview-label">Tổng OT</div>
+                                <div class="preview-value">{{ previewSalary.tongOt }} giờ</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="preview-item">
+                                <div class="preview-label">Thưởng</div>
+                                <div class="preview-value text-success">{{ formatCurrency(previewSalary.thuong) }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="preview-item">
+                                <div class="preview-label">Khấu trừ</div>
+                                <div class="preview-value text-danger">{{ formatCurrency(previewSalary.khauTru) }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Công thức -->
+                    <div class="formula-box mb-3">
+                        <div class="formula-title">
+                            <i class="bi bi-calculator"></i>Chi tiết công thức tính lương
+                        </div>
+                        <div class="font-monospace">
+                            <span class="text-muted">Lương ngày</span>
+                            = Lương CB ÷ 26
+                            = {{ fmtNum(previewSalary.luongCoBanTinh) }} ÷ 26
+                            = <strong>{{ fmtNum(previewLuongNgay) }}</strong><br />
+
+                            <span class="text-muted">Lương theo công</span>
+                            = {{ fmtNum(previewLuongNgay) }} × {{ previewSalary.tongCong }} ngày
+                            = <strong>{{ fmtNum(previewLuongCong) }}</strong><br />
+
+                            <span [class.text-decoration-line-through]="previewSalary.coTinhOT === false"
+                                [class.opacity-50]="previewSalary.coTinhOT === false">
+                                <span class="text-muted">Lương OT</span>
+                                = {{ fmtNum(previewLuongNgay) }} ÷ 8 × {{ previewSalary.tongOt }}h × 1.5
+                                = <strong>{{ fmtNum(previewLuongOt) }}</strong>
+                            </span><span *ngIf="previewSalary.coTinhOT === false" class="badge bg-secondary ms-1"
+                                style="font-size:10px;vertical-align:middle">Tắt</span><br />
+
+                            <span [class.text-decoration-line-through]="previewSalary.coTinhPhuCap === false"
+                                [class.opacity-50]="previewSalary.coTinhPhuCap === false">
+                                <span class="text-muted">Phụ cấp</span>
+                                = <strong>{{ fmtNum(previewSalary.phuCapTinh) }}</strong>
+                                <span class="text-muted small ms-1">({{ phuCapBreakdownStr }})</span>
+                            </span><span *ngIf="previewSalary.coTinhPhuCap === false" class="badge bg-secondary ms-1"
+                                style="font-size:10px;vertical-align:middle">Tắt</span><br />
+
+                            <span [class.text-decoration-line-through]="previewSalary.coTinhThuong === false"
+                                [class.opacity-50]="previewSalary.coTinhThuong === false">
+                                <span class="text-muted">Thưởng</span>
+                                = <strong class="text-success">{{ fmtNum(previewSalary.thuong) }}</strong>
+                            </span><span *ngIf="previewSalary.coTinhThuong === false" class="badge bg-secondary ms-1"
+                                style="font-size:10px;vertical-align:middle">Tắt</span><br />
+
+                            <span [class.text-decoration-line-through]="previewSalary.coTinhKhauTru === false"
+                                [class.opacity-50]="previewSalary.coTinhKhauTru === false">
+                                <span class="text-muted">Khấu trừ</span>
+                                = <strong class="text-danger">{{ fmtNum(previewSalary.khauTru) }}</strong>
+                                <span class="text-danger small ms-1">({{ khauTruBreakdownStr }})</span>
+                            </span><span *ngIf="previewSalary.coTinhKhauTru === false" class="badge bg-secondary ms-1"
+                                style="font-size:10px;vertical-align:middle">Tắt</span><br />
+
+                            <strong class="text-primary">
+                                Tổng = {{ fmtNum(previewLuongCong) }} + {{ fmtNum(phuCapActual) }} + {{
+                                fmtNum(luongOtActual) }} + {{ fmtNum(thuongActual) }} − {{
+                                fmtNum(khauTruActual) }}
+                                = {{ fmtNum(previewSalary.tongLuong) }}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="total-row d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-bold" style="font-size:0.9rem;color:#334155">Tổng lương nhận</div>
+                            <div class="text-muted" style="font-size:0.7rem;margin-top:2px">
+                                Công {{ fmtNum(previewLuongCong) }}
+                                + PC {{ fmtNum(phuCapActual) }}
+                                + OT {{ fmtNum(luongOtActual) }}
+                                + TH {{ fmtNum(thuongActual) }}
+                                − KT {{ fmtNum(khauTruActual) }}
+                            </div>
+                        </div>
+                        <span style="font-size:1.5rem;font-weight:800;color:#1e3a8a;letter-spacing:-0.5px">{{
+                            formatCurrency(previewSalary.tongLuong) }}</span>
+                    </div>
+
+                    <div class="alert alert-success mt-3 mb-0">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Đã tính lương thành công! Dữ liệu đã được lưu vào hệ thống.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông báo tính tất cả -->
+            <div *ngIf="tinhLuongMode === 'all'" class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Lưu ý:</strong> Hệ thống sẽ tính lương cho
+                <strong>{{ nhanViens.length }}</strong> nhân viên đang làm việc trong tháng
+                <strong>{{ form.value.thang }}/{{ form.value.nam }}</strong>.
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3 mt-4">
+                <button type="button" class="btn btn-primary px-5" (click)="save()"
+                    [disabled]="processing || loadingPreview
+                        || (tinhLuongMode === 'individual' && !form.value.nvHoSoId)
+                        || (tinhLuongMode === 'individual' && form.value.nvHoSoId && (isEmployeeApproved(form.value.nvHoSoId, form.value.thang, form.value.nam) || isEmployeePending(form.value.nvHoSoId, form.value.thang, form.value.nam)))">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="processing || loadingPreview"></span>
+                    <i class="bi bi-calculator me-2" *ngIf="!processing && !loadingPreview"></i>
+                    <span *ngIf="tinhLuongMode === 'all'">Tính lương tất cả nhân viên</span>
+                    <span *ngIf="tinhLuongMode === 'individual' && !previewSalary">Xem tạm tính</span>
+                    <span *ngIf="tinhLuongMode === 'individual' && previewSalary">Xác nhận &amp; Tiếp tục</span>
+                </button>
+                <button type="button" class="btn btn-outline-secondary" (click)="goToBangLuong()">
+                    <i class="bi bi-table me-1"></i>Xem bảng lương tháng
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

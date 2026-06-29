@@ -1,0 +1,601 @@
+// =============================================================================
+// PROFILE SIDEBAR STYLES
+// Tổ chức theo các section: Overlay, Main Container, Header, Tabs, Content, 
+// Avatar, User Info, Forms, Utilities
+// =============================================================================
+
+// ============================
+// 1. OVERLAY
+// ============================
+.profile-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  animation: fadeIn 0.2s ease;
+}
+
+// ============================
+// 2. MAIN CONTAINER
+// ============================
+.profile-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 480px;
+  height: 100vh;
+  background: white;
+  box-shadow: -2px 0 16px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.3s ease;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+// ============================
+// 3. HEADER
+// ============================
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .btn-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+// ============================
+// 4. TABS NAVIGATION
+// ============================
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+
+  button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background: #f3f4f6;
+      color: #667eea;
+    }
+
+    &.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+      background: white;
+    }
+  }
+}
+
+// ============================
+// 5. CONTENT CONTAINER
+// ============================
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+// ============================
+// 6. LOADING STATE
+// ============================
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e5e7eb;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+// ============================
+// 7. AVATAR SECTION - Phần thông tin người dùng
+// ============================
+.avatar-section {
+  text-align: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+
+  // Avatar wrapper chứa ảnh và nút upload
+  .avatar-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+
+    // Ảnh avatar
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    // Placeholder khi không có ảnh
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: 600;
+      border: 4px solid #667eea;
+    }
+
+    // Nút upload avatar
+    .avatar-upload-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #667eea;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+
+      &:hover {
+        background: #5568d3;
+        transform: scale(1.1);
+      }
+
+      &.uploading {
+        i {
+          animation: spin 1s linear infinite;
+        }
+      }
+
+      input {
+        display: none;
+      }
+
+      i {
+        font-size: 1.125rem;
+      }
+    }
+  }
+
+  // Tên người dùng
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  // Badge vai trò
+  .role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+// ============================
+// 8. INFO GRID - Thông tin chi tiết
+// ============================
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  .info-item {
+    &.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #6b7280;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .value {
+      font-size: 0.9375rem;
+      color: #111827;
+      font-weight: 500;
+      word-break: break-word;
+    }
+  }
+}
+
+// Section title cho các phần con
+.section-title {
+  margin: 0 0 1rem;
+  padding-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #667eea;
+  border-bottom: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: #667eea;
+    border-radius: 2px;
+  }
+}
+
+// Info section container
+.info-section {
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+
+  h4 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #667eea;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: #667eea;
+      border-radius: 2px;
+    }
+  }
+
+  .info-item {
+    margin-bottom: 0.75rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// ============================
+// 9. FORM STYLES
+// ============================
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+    transition: all 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
+
+  .help-text {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    color: #6b7280;
+  }
+
+  .error {
+    margin-top: 0.25rem;
+
+    small {
+      color: #dc2626;
+      font-size: 0.8125rem;
+    }
+  }
+}
+
+// Password input với toggle visibility
+.password-input-wrapper {
+  position: relative;
+
+  input {
+    padding-right: 3rem;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #667eea;
+    }
+
+    i {
+      font-size: 1.125rem;
+    }
+  }
+}
+
+// ============================
+// 10. BANK ACCOUNT - STK Images
+// ============================
+.stk-preview {
+  .stk-image-wrapper {
+    margin-top: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9fafb;
+    
+    img {
+      width: 100%;
+      display: block;
+      object-fit: contain;
+      max-height: 400px;
+    }
+  }
+
+  .stk-upload-section {
+    margin-top: 1rem;
+    text-align: center;
+
+    .help-text {
+      font-size: 0.813rem;
+      color: #666;
+    }
+  }
+}
+
+.stk-image {
+  margin: 1rem 0;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+}
+
+// ============================
+// 11. ALERTS & NOTIFICATIONS
+// ============================
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+
+  &.alert-warning {
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    color: #92400e;
+
+    i {
+      color: #f59e0b;
+      font-size: 1.125rem;
+      margin-top: 0.125rem;
+    }
+  }
+}
+
+// ============================
+// 12. FORM ACTIONS (Buttons)
+// ============================
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &.btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      i.bi-arrow-clockwise {
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    &.btn-outline-primary {
+      background: transparent;
+      border: 1px solid #667eea;
+      color: #667eea;
+
+      &:hover:not(:disabled) {
+        background: rgba(102, 126, 234, 0.1);
+      }
+    }
+  }
+}
+
+// ============================
+// 13. ANIMATIONS
+// ============================
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ============================
+// 14. RESPONSIVE ADJUSTMENTS
+// ============================
+@media (max-width: 480px) {
+  .avatar-section {
+    .avatar-wrapper {
+      width: 100px;
+      height: 100px;
+
+      .avatar-upload-btn {
+        width: 36px;
+        height: 36px;
+      }
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}

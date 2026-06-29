@@ -1,0 +1,283 @@
+<div class="bao-cao-page" id="bao-cao-print">
+
+    <!-- Cover page ẩn, dùng cho PDF export -->
+    <div id="pdf-cover"
+        style="display:none; background:#fff; width:1100px; padding:80px 40px; text-align:center; font-family:Arial,sans-serif;">
+        <h1 style="font-size:36px; font-weight:700; color:#1e293b; margin-bottom:16px;">BÁO CÁO NHÂN SỰ - NĂM {{
+            selectedYear }}</h1>
+        <p style="font-size:16px; color:#64748b;">Xuất ngày: {{ todayStr }}</p>
+    </div>
+
+    <!-- ═══════════════════════ HEADER + FILTERS ═══════════════════════ -->
+    <div class="page-header no-print-hidden">
+        <div class="header-left">
+            <h2 class="page-title">
+                <i class="bi bi-bar-chart-line-fill me-2"></i>Báo cáo thống kê
+            </h2>
+            <p class="page-subtitle">Tổng hợp dữ liệu nhân sự, lương, phép &amp; dự án</p>
+        </div>
+        <div class="header-actions">
+            <div class="year-filter">
+                <label class="filter-label">Năm: </label>
+                <select class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="onYearChange()">
+                    <option *ngFor="let y of years" [ngValue]="y">{{ y }}</option>
+                </select>
+            </div>
+            <button class="btn btn-outline-danger btn-sm" (click)="exportPDF()" [disabled]="loading || exporting">
+                <span *ngIf="!exporting"><i class="bi bi-file-earmark-pdf me-1"></i>Xuất PDF</span>
+                <span *ngIf="exporting"><span class="spinner-border spinner-border-sm me-1"></span>Đang xuất...</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════ LOADING / ERROR ═══════════════════════ -->
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2 text-muted">Đang tải dữ liệu...</p>
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+
+    <div *ngIf="!loading && !errorMsg">
+
+        <!-- ═══════════════════ SECTION 1: NHÂN SỰ ═══════════════════════ -->
+        <div class="report-section" id="section-nhan-su">
+            <div class="section-header">
+                <i class="bi bi-people-fill"></i>
+                <h3>1. Nhân sự</h3>
+            </div>
+
+            <!-- Metric cards -->
+            <div class="metric-row">
+                <div class="metric-card primary">
+                    <div class="metric-value">{{ metNhanSu.total }}</div>
+                    <div class="metric-label">Tổng nhân viên</div>
+                </div>
+                <div class="metric-card success">
+                    <div class="metric-value">{{ metNhanSu.dangLam }}</div>
+                    <div class="metric-label">Đang làm việc</div>
+                    <div class="metric-percent">{{ getPercent(metNhanSu.dangLam, metNhanSu.total) }}</div>
+                </div>
+                <div class="metric-card danger">
+                    <div class="metric-value">{{ metNhanSu.nghiViec }}</div>
+                    <div class="metric-label">Nghỉ việc</div>
+                    <div class="metric-percent">{{ getPercent(metNhanSu.nghiViec, metNhanSu.total) }}</div>
+                </div>
+                <div class="metric-card info">
+                    <div class="metric-value">{{ nhanSuByPhongBan.length }}</div>
+                    <div class="metric-label">Số phòng ban</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h4 class="chart-title">Tỉ lệ nhân viên</h4>
+                    <ngx-charts-pie-chart [view]="pieView" [results]="nhanSuPie" [scheme]="colorNhanSu" [legend]="false"
+                        [labels]="true" [trimLabels]="false" [doughnut]="false">
+                    </ngx-charts-pie-chart>
+                </div>
+                <div class="chart-card chart-card--wide">
+                    <h4 class="chart-title">Nhân viên theo phòng ban</h4>
+                    <ngx-charts-bar-vertical [view]="barView" [results]="nhanSuByPhongBan" [scheme]="colorPhongBan"
+                        [xAxis]="true" [yAxis]="true" [legend]="false" [showXAxisLabel]="false" [showYAxisLabel]="true"
+                        yAxisLabel="Số NV" [animations]="true">
+                    </ngx-charts-bar-vertical>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SECTION 2: LƯƠNG ═════════════════════════ -->
+        <div class="report-section" id="section-luong">
+            <div class="section-header">
+                <i class="bi bi-cash-coin"></i>
+                <h3>2. Bảng lương năm {{ selectedYear }}</h3>
+            </div>
+
+            <!-- Metric cards -->
+            <div class="metric-row">
+                <div class="metric-card primary">
+                    <div class="metric-value">{{ formatCurrency(metLuong.tongQuyLuong) }}</div>
+                    <div class="metric-label">Tổng quỹ lương (VND)</div>
+                </div>
+                <div class="metric-card success">
+                    <div class="metric-value">{{ formatCurrency(metLuong.luongTB) }}</div>
+                    <div class="metric-label">Lương trung bình / bảng</div>
+                </div>
+                <div class="metric-card warning">
+                    <div class="metric-value">{{ formatCurrency(metLuong.tongOt) }}</div>
+                    <div class="metric-label">Tổng chi OT (VND)</div>
+                </div>
+                <div class="metric-card info">
+                    <div class="metric-value">{{ metLuong.soNguoi }}</div>
+                    <div class="metric-label">Bảng lương đã tạo</div>
+                </div>
+            </div>
+
+            <!-- Charts: 2 cột nằm ngang -->
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h4 class="chart-title">Quỹ lương theo tháng</h4>
+                    <ngx-charts-line-chart [view]="lineView" [results]="luongTheoThang" [scheme]="colorLuong"
+                        [xAxis]="true" [yAxis]="true" [legend]="true" [legendTitle]="''" [showXAxisLabel]="true"
+                        [showYAxisLabel]="true" xAxisLabel="Tháng" yAxisLabel="VND" [yAxisTickFormatting]="formatMoney"
+                        [animations]="true">
+                    </ngx-charts-line-chart>
+                </div>
+                <div class="chart-card">
+                    <h4 class="chart-title">Lương trung bình theo phòng ban</h4>
+                    <ngx-charts-bar-vertical [view]="barView" [results]="luongByPhongBan" [scheme]="colorPhongBan"
+                        [xAxis]="true" [yAxis]="true" [legend]="false" [showYAxisLabel]="true"
+                        [yAxisTickFormatting]="formatMoney" yAxisLabel="VND">
+                    </ngx-charts-bar-vertical>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SECTION 3: ĐƠN PHÉP ═════════════════════ -->
+        <div class="report-section" id="section-don-phep">
+            <div class="section-header">
+                <i class="bi bi-calendar-check-fill"></i>
+                <h3>3. Đơn nghỉ phép năm {{ selectedYear }}</h3>
+            </div>
+
+            <!-- Metric cards -->
+            <div class="metric-row">
+                <div class="metric-card primary">
+                    <div class="metric-value">{{ metDonPhep.total }}</div>
+                    <div class="metric-label">Tổng đơn xin phép</div>
+                </div>
+                <div class="metric-card warning">
+                    <div class="metric-value">{{ metDonPhep.choDuyet }}</div>
+                    <div class="metric-label">Chờ duyệt</div>
+                    <div class="metric-percent">{{ getPercent(metDonPhep.choDuyet, metDonPhep.total) }}</div>
+                </div>
+                <div class="metric-card success">
+                    <div class="metric-value">{{ metDonPhep.daDuyet }}</div>
+                    <div class="metric-label">Đã duyệt</div>
+                    <div class="metric-percent">{{ getPercent(metDonPhep.daDuyet, metDonPhep.total) }}</div>
+                </div>
+                <div class="metric-card danger">
+                    <div class="metric-value">{{ metDonPhep.tuChoi }}</div>
+                    <div class="metric-label">Từ chối</div>
+                    <div class="metric-percent">{{ getPercent(metDonPhep.tuChoi, metDonPhep.total) }}</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h4 class="chart-title">Tỉ lệ trạng thái đơn phép</h4>
+                    <ngx-charts-pie-chart [view]="pieView" [results]="donPhepPie" [scheme]="colorDonPhep"
+                        [legend]="false" [labels]="true" [trimLabels]="false" [doughnut]="true">
+                    </ngx-charts-pie-chart>
+                </div>
+                <div class="chart-card chart-card--wide">
+                    <h4 class="chart-title">Số đơn theo loại phép</h4>
+                    <ngx-charts-bar-vertical [view]="barView" [results]="donPhepByLoai" [scheme]="colorDonPhep"
+                        [xAxis]="true" [yAxis]="true" [legend]="false" [showYAxisLabel]="true" yAxisLabel="Số đơn">
+                    </ngx-charts-bar-vertical>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SECTION 4: DỰ ÁN ════════════════════════ -->
+        <div class="report-section" id="section-du-an">
+            <div class="section-header">
+                <i class="bi bi-kanban-fill"></i>
+                <h3>4. Dự án</h3>
+            </div>
+
+            <!-- Metric cards -->
+            <div class="metric-row">
+                <div class="metric-card primary">
+                    <div class="metric-value">{{ metDuAn.total }}</div>
+                    <div class="metric-label">Tổng dự án</div>
+                </div>
+                <div class="metric-card warning">
+                    <div class="metric-value">{{ metDuAn.dangNhap }}</div>
+                    <div class="metric-label">Đang nhập liệu</div>
+                </div>
+                <div class="metric-card info">
+                    <div class="metric-value">{{ metDuAn.choDuyet }}</div>
+                    <div class="metric-label">Chờ duyệt GĐ</div>
+                </div>
+                <div class="metric-card success">
+                    <div class="metric-value">{{ metDuAn.daDuyet }}</div>
+                    <div class="metric-label">Đã duyệt</div>
+                    <div class="metric-percent">{{ getPercent(metDuAn.daDuyet, metDuAn.total) }}</div>
+                </div>
+                <div class="metric-card danger">
+                    <div class="metric-value">{{ metDuAn.tuChoi }}</div>
+                    <div class="metric-label">Từ chối</div>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h4 class="chart-title">Phân bổ trạng thái dự án</h4>
+                    <ngx-charts-pie-chart [view]="pieView" [results]="duAnPie" [scheme]="colorDuAn" [legend]="false"
+                        [labels]="true" [trimLabels]="false" [doughnut]="false">
+                    </ngx-charts-pie-chart>
+                </div>
+                <div class="chart-card">
+                    <h4 class="chart-title">Số lượng dự án theo trạng thái</h4>
+                    <ngx-charts-bar-vertical [view]="barView" [results]="duAnPie" [scheme]="colorDuAn" [xAxis]="true"
+                        [yAxis]="true" [legend]="false" [showYAxisLabel]="true" yAxisLabel="Số dự án">
+                    </ngx-charts-bar-vertical>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SECTION 5: ĐỀ XUẤT GIÁM ĐỐC ════════════ -->
+        <div class="report-section" id="section-de-xuat">
+            <div class="section-header">
+                <i class="bi bi-file-earmark-check-fill"></i>
+                <h3>5. Đề xuất Giám đốc năm {{ selectedYear }}</h3>
+            </div>
+
+            <!-- Metric cards -->
+            <div class="metric-row">
+                <div class="metric-card primary">
+                    <div class="metric-value">{{ metDeXuat.total }}</div>
+                    <div class="metric-label">Tổng đề xuất</div>
+                </div>
+                <div class="metric-card secondary">
+                    <div class="metric-value">{{ metDeXuat.nhap }}</div>
+                    <div class="metric-label">Nháp / Thu hồi</div>
+                </div>
+                <div class="metric-card warning">
+                    <div class="metric-value">{{ metDeXuat.choDuyet }}</div>
+                    <div class="metric-label">Chờ duyệt</div>
+                </div>
+                <div class="metric-card success">
+                    <div class="metric-value">{{ metDeXuat.daDuyet }}</div>
+                    <div class="metric-label">Đã duyệt</div>
+                    <div class="metric-percent">{{ getPercent(metDeXuat.daDuyet, metDeXuat.total) }}</div>
+                </div>
+                <div class="metric-card danger">
+                    <div class="metric-value">{{ metDeXuat.tuChoi }}</div>
+                    <div class="metric-label">Từ chối</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h4 class="chart-title">Tỉ lệ trạng thái đề xuất</h4>
+                    <ngx-charts-pie-chart [view]="pieView" [results]="deXuatPie" [scheme]="colorDeXuat" [legend]="false"
+                        [labels]="true" [trimLabels]="false" [doughnut]="true">
+                    </ngx-charts-pie-chart>
+                </div>
+                <div class="chart-card chart-card--wide">
+                    <h4 class="chart-title">Số đề xuất theo tháng</h4>
+                    <ngx-charts-bar-vertical [view]="barView" [results]="deXuatTheoThang" [scheme]="colorDeXuat"
+                        [xAxis]="true" [yAxis]="true" [legend]="false" [showYAxisLabel]="true" yAxisLabel="Số đề xuất">
+                    </ngx-charts-bar-vertical>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end !loading -->
+</div>

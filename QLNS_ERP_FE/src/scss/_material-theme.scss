@@ -1,0 +1,134 @@
+// ============================
+// ANGULAR MATERIAL CUSTOM THEME
+// ============================
+
+@use '@angular/material' as mat;
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+@include mat.core();
+
+// ============================
+// CUSTOM COLOR PALETTE
+// ============================
+// Định nghĩa màu chủ đạo của dự án QLNS ERP
+$primary-palette: (
+  50: #e3f2fd,
+  100: #bbdefb,
+  200: #90caf9,
+  300: #64b5f6,
+  400: #42a5f5,
+  500: #2196f3,  // Primary color
+  600: #1e88e5,
+  700: #1976d2,
+  800: #1565c0,
+  900: #0d47a1,
+  A100: #82b1ff,
+  A200: #448aff,
+  A400: #2979ff,
+  A700: #2962ff,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$accent-palette: (
+  50: #fce4ec,
+  100: #f8bbd0,
+  200: #f48fb1,
+  300: #f06292,
+  400: #ec407a,
+  500: #e91e63,  // Accent color
+  600: #d81b60,
+  700: #c2185b,
+  800: #ad1457,
+  900: #880e4f,
+  A100: #ff80ab,
+  A200: #ff4081,
+  A400: #f50057,
+  A700: #c51162,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+// ============================
+// TYPOGRAPHY (Optional)
+// ============================
+// Tùy chỉnh typography để phù hợp với design system hiện tại
+$custom-typography: mat.define-typography-config(
+  $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  $headline-1: mat.define-typography-level(2rem, 2.5rem, 600),
+  $headline-2: mat.define-typography-level(1.75rem, 2.25rem, 600),
+  $headline-3: mat.define-typography-level(1.5rem, 2rem, 600),
+  $headline-4: mat.define-typography-level(1.25rem, 1.75rem, 600),
+  $headline-5: mat.define-typography-level(1.125rem, 1.5rem, 600),
+  $headline-6: mat.define-typography-level(1rem, 1.5rem, 600),
+  $body-1: mat.define-typography-level(1rem, 1.5rem, 400),
+  $body-2: mat.define-typography-level(0.875rem, 1.25rem, 400),
+  $button: mat.define-typography-level(0.875rem, 0.875rem, 500),
+  $caption: mat.define-typography-level(0.75rem, 1rem, 400),
+);
+
+// ============================
+// DEFINE THEME
+// ============================
+$qlns-primary: mat.define-palette($primary-palette);
+$qlns-accent: mat.define-palette($accent-palette);
+$qlns-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$qlns-theme: mat.define-light-theme((
+  color: (
+    primary: $qlns-primary,
+    accent: $qlns-accent,
+    warn: $qlns-warn,
+  ),
+  typography: $custom-typography,
+  density: 0,
+));
+
+// Include theme styles for core and each component used in your app.
+@include mat.all-component-themes($qlns-theme);
+
+// ============================
+// DARK THEME (Optional)
+// ============================
+// Uncomment để enable dark theme
+// .dark-theme {
+//   $dark-theme: mat.define-dark-theme((
+//     color: (
+//       primary: $qlns-primary,
+//       accent: $qlns-accent,
+//       warn: $qlns-warn,
+//     )
+//   ));
+//   @include mat.all-component-colors($dark-theme);
+// }

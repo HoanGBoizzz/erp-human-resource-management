@@ -1,0 +1,493 @@
+@import '../../../../../scss/variables';
+@import '../../../../../scss/mixins';
+
+// ================================
+// MODAL BACKDROP (Bootstrap Standard)
+// ================================
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;              // Bootstrap standard z-index
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  &.fade {
+    opacity: 0;
+    transition: opacity 0.15s linear;
+  }
+
+  &.show {
+    opacity: 1;
+  }
+}
+
+// ================================
+// MODAL CONTAINER (Bootstrap Standard)
+// ================================
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1055;              // Bootstrap standard z-index
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+
+  &.fade {
+    transition: opacity 0.15s linear;
+  }
+
+  &.fade:not(.show) {
+    opacity: 0;
+  }
+
+  &.show {
+    opacity: 1;
+  }
+}
+
+// ================================
+// MODAL DIALOG
+// ================================
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 1.75rem auto;
+  pointer-events: none;
+  max-width: 900px;            // Large modal
+
+  &.modal-dialog-scrollable {
+    max-height: calc(100% - 3.5rem);
+
+    .modal-content {
+      max-height: calc(100vh - 3.5rem);
+      overflow: hidden;
+    }
+
+    .modal-body {
+      overflow-y: auto;
+    }
+  }
+}
+
+// ================================
+// MODAL CONTENT
+// ================================
+.modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: $card-bg;
+  background-clip: padding-box;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;   // 12px từ Design System
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  outline: 0;
+}
+
+// ================================
+// MODAL HEADER (Bootstrap Standard)
+// ================================
+.modal-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid $border-color;
+  border-radius: $radius-lg $radius-lg 0 0;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+  .modal-title {
+    margin: 0;
+    font-size: 1.125rem;         // 18px
+    font-weight: 600;
+    color: $text-dark;
+    line-height: 1.4;
+
+    i {
+      color: $primary;
+    }
+  }
+
+  .btn-close {
+    padding: 8px;
+    margin: -8px -8px -8px auto;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    border: 0;
+    border-radius: $radius-sm;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// ================================
+// MODAL BODY (Bootstrap Standard)
+// ================================
+.modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 24px;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg-page;
+    border-radius: $radius-full;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $border-color;
+    border-radius: $radius-full;
+
+    &:hover {
+      background: darken($border-color, 10%);
+    }
+  }
+}
+
+// ================================
+// INFO SECTION
+// ================================
+.info-section {
+  margin-bottom: 28px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid $border-color;
+
+    i {
+      color: $primary;
+    }
+  }
+}
+
+// ================================
+// INFO ITEM
+// ================================
+.info-item {
+  .info-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .info-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $text-dark;
+    display: flex;
+    align-items: center;
+
+    i {
+      color: $primary;
+      font-size: 1.1rem;
+    }
+
+    &.account-value {
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: $radius-md;
+      border: 1px solid $border-color;
+    }
+
+    &.object-name-value {
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-radius: $radius-md;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+
+      i {
+        color: #059669;
+      }
+    }
+  }
+}
+
+// ================================
+// BADGES
+// ================================
+.action-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: $radius-full;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// Action Badge - NEW DESIGN with gradient and icon
+.action-badge-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: $radius-full;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+  i {
+    font-size: 0.9rem;
+  }
+}
+
+.table-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: $text-dark;
+  border-radius: $radius-md;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.table-badge-detail {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  color: #4338ca;
+  border-radius: $radius-md;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.id-badge-detail {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: $text-dark;
+  border-radius: $radius-md;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+.field-badge {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, $primary 0%, darken($primary, 10%) 100%);
+  padding: 6px 14px;
+  border-radius: $radius-md;
+}
+
+// ================================
+// NOTE BOX - NEW DESIGN
+// ================================
+.note-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: $radius-lg;
+  border-left: 4px solid #f59e0b;
+
+  i {
+    color: #d97706;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  span {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #92400e;
+    font-weight: 500;
+  }
+}
+
+// ================================
+// CHANGE COMPARISON
+// ================================
+.change-comparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 20px;
+  align-items: start;
+
+  .value-box {
+    background: $bg-page;
+    border-radius: $radius-lg;
+    padding: 16px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+
+    .value-label {
+      display: flex;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+
+      i {
+        font-size: 1rem;
+      }
+    }
+
+    .value-content {
+      pre {
+        margin: 0;
+        padding: 12px;
+        background: white;
+        border: 1px solid $border-color;
+        border-radius: $radius-md;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+    }
+
+    &.old-value {
+      border-color: rgba($error, 0.2);
+
+      .value-label {
+        color: $error;
+      }
+
+      &:hover {
+        border-color: $error;
+        box-shadow: 0 4px 12px rgba($error, 0.15);
+      }
+    }
+
+    &.new-value {
+      border-color: rgba($success, 0.2);
+
+      .value-label {
+        color: $success;
+      }
+
+      &:hover {
+        border-color: $success;
+        box-shadow: 0 4px 12px rgba($success, 0.15);
+      }
+    }
+  }
+
+  .change-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+
+    i {
+      font-size: 2rem;
+      color: $primary;
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+// ================================
+// NOTE CONTENT (Legacy)
+// ================================
+.note-content {
+  background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+  border-left: 4px solid #f59e0b;
+  padding: 16px 20px;
+  border-radius: $radius-lg;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #92400e;
+  font-weight: 500;
+}
+
+// ================================
+// MODAL FOOTER (Bootstrap Standard)
+// ================================
+.modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid $border-color;
+  border-radius: 0 0 $radius-lg $radius-lg;
+  background: $bg-page;
+  gap: 8px;
+
+  .btn {
+    margin: 0;
+  }
+}
+
+// ================================
+// RESPONSIVE
+// ================================
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 16px;
+  }
+
+  .change-comparison {
+    grid-template-columns: 1fr;
+
+    .change-arrow {
+      margin-top: 0;
+      margin-bottom: 0;
+
+      i {
+        transform: rotate(90deg);
+      }
+    }
+  }
+}

@@ -1,0 +1,101 @@
+.material-ui-showcase {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.showcase-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1976d2;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: #64748b;
+  }
+}
+
+.showcase-section {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #0f172a;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.component-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+
+  &.form-demo {
+    flex-direction: column;
+    align-items: stretch;
+
+    mat-form-field {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+
+  mat-card {
+    height: 100%;
+  }
+}
+
+.header-image {
+  background-image: url('https://via.placeholder.com/40');
+  background-size: cover;
+}
+
+.tab-content {
+  padding: 1.5rem;
+  min-height: 150px;
+}
+
+.table-container {
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+}
+
+// Material overrides để match design system hiện tại
+::ng-deep {
+  .mat-mdc-raised-button {
+    border-radius: 8px !important;
+  }
+
+  .mat-mdc-card {
+    border-radius: 12px !important;
+  }
+
+  .mat-mdc-form-field {
+    .mat-mdc-text-field-wrapper {
+      border-radius: 8px !important;
+    }
+  }
+}

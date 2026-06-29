@@ -1,0 +1,329 @@
+<div class="cham-cong-container">
+    <!-- Header Card -->
+    <div class="header-card">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="page-title">Quản lý chấm công</h1>
+                <p class="page-subtitle">Xem và quản lý bảng công nhân viên theo tháng</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="d-inline-flex align-items-center gap-3">
+                    <button class="btn btn-outline-secondary" (click)="openConfig()">
+                        <i class="bi bi-gear-fill me-2"></i>Cài đặt
+                    </button>
+                    <div class="year-selector">
+                        <label class="form-label mb-0 me-2">Năm:</label>
+                        <select class="form-select" [formControl]="yearCtrl" (change)="onYearChange()">
+                            <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+                        </select>
+                    </div>
+                    <div class="month-selector">
+                        <label class="form-label mb-0 me-2">Tháng:</label>
+                        <select class="form-select" [(ngModel)]="selectedMonth" (change)="onMonthChange()">
+                            <option *ngFor="let month of allMonths" [value]="month.value">{{ month.label }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="errorMsg">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMsg }}
+        <button type="button" class="btn-close" (click)="errorMsg = ''"></button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="text-center py-5" *ngIf="loadingList">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Đang tải...</span>
+        </div>
+        <p class="text-muted mt-2">Đang tải danh sách tháng...</p>
+    </div>
+
+    <!-- No Data -->
+    <div class="empty-state" *ngIf="!loadingList && months.length === 0">
+        <i class="bi bi-calendar-x empty-icon"></i>
+        <h5>Chưa có dữ liệu</h5>
+        <p class="text-muted">Chưa có bảng công nào cho năm {{ yearCtrl.value }}</p>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="calendar-section" *ngIf="!loadingDetail">
+        <!-- Statistics Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card stat-primary">
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Ngày chấm công</span>
+                        <span class="stat-value">{{ stats.totalDays }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card stat-warning">
+                    <div class="stat-icon">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Trễ</span>
+                        <span class="stat-value">{{ stats.lateIn }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card stat-info">
+                    <div class="stat-icon">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Về sớm</span>
+                        <span class="stat-value">{{ stats.earlyOut }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card stat-danger">
+                    <div class="stat-icon">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-label">Không ghi nhận</span>
+                        <span class="stat-value">{{ stats.noRecord }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lock/Unlock Actions -->
+        <div class="actions-bar" *ngIf="selectedMonthId">
+            <div class="lock-status">
+                <i class="bi" [class.bi-lock-fill]="isLocked()" [class.bi-unlock-fill]="!isLocked()"></i>
+                <span>{{ isLocked() ? 'Bảng công đã được chốt' : 'Bảng công chưa chốt' }}</span>
+            </div>
+            <button class="btn" [class.btn-danger]="!isLocked()" [class.btn-success]="isLocked()"
+                (click)="lockToggle(!isLocked())" [disabled]="loadingDetail">
+                <i class="bi" [class.bi-lock]="!isLocked()" [class.bi-unlock]="isLocked()"></i>
+                {{ isLocked() ? 'Mở chốt công' : 'Chốt công' }}
+            </button>
+        </div>
+        <div class="alert alert-info" *ngIf="!selectedMonthId">
+            <i class="bi bi-info-circle me-2"></i>
+            Chưa có dữ liệu chấm công cho tháng này
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-card">
+            <!-- Weekday Headers -->
+            <div class="calendar-weekdays">
+                <div class="weekday-cell" *ngFor="let day of weekDays">{{ day }}</div>
+            </div>
+
+            <!-- Calendar Days -->
+            <div class="calendar-grid">
+                <div class="calendar-day" *ngFor="let day of calendarDays" [class.other-month]="!day.isCurrentMonth"
+                    [class.today]="day.isToday" [class.weekend]="day.isWeekend"
+                    [class.has-attendance]="day.hasAttendance"
+                    [class.clickable]="day.isCurrentMonth && day.hasAttendance" (click)="onDayClick(day)">
+                    <span class="day-number">{{ day.dayNumber }}</span>
+                    <span class="attendance-indicator" *ngIf="day.hasAttendance"></span>
+                    <span class="attendance-count" *ngIf="day.hasAttendance && day.isCurrentMonth">
+                        {{ day.attendance.length }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Detail -->
+    <div class="text-center py-5" *ngIf="loadingDetail">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Đang tải...</span>
+        </div>
+        <p class="text-muted mt-2">Đang tải chi tiết bảng công...</p>
+    </div>
+</div>
+
+<!-- Day Detail Modal -->
+<div class="modal fade show d-block" *ngIf="showDayDetail" tabindex="-1" (click)="closeDayDetail()">
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title">Chi tiết chấm công</h5>
+                    <p class="modal-subtitle" *ngIf="selectedDate">
+                        {{ formatDateDisplay(selectedDate.toISOString()) }}
+                    </p>
+                </div>
+                <button type="button" class="btn-close" (click)="closeDayDetail()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã NV</th>
+                                <th>Tên nhân viên</th>
+                                <th>Giờ vào</th>
+                                <th>Giờ ra</th>
+                                <th>Trạng thái</th>
+                                <th>Ghi chú</th>
+                                <th style="width: 120px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let att of selectedDayAttendance">
+                                <td>{{ att.nvHoSoId || '—' }}</td>
+                                <td>
+                                    <div class="employee-info">
+                                        <span class="employee-name">{{ att.hoTen || '—' }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="time-badge">{{ formatTime(att.gioVao) }}</span>
+                                </td>
+                                <td>
+                                    <span class="time-badge">{{ formatTime(att.gioRa) }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge" [ngClass]="statusBadgeClass(att.trangThai)">
+                                        {{ statusText(att.trangThai) }}
+                                    </span>
+                                </td>
+                                <td>{{ att.ghiChu || '—' }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-outline-primary"
+                                            (click)="editAttendance(att)" [disabled]="isLocked()" title="Sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            (click)="deleteAttendance(att)" [disabled]="isLocked()" title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngIf="selectedDayAttendance.length === 0">
+                                <td colspan="7" class="text-center text-muted">Không có dữ liệu</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeDayDetail()">
+                    <i class="bi bi-x-circle me-2"></i>Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Attendance Modal -->
+<div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'" tabindex="-1"
+    role="dialog">
+    <div class="modal-backdrop fade" [class.show]="showEditModal" style="z-index: 9998;" (click)="closeEditModal()">
+    </div>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="z-index: 10010;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title">Sửa chấm công</h5>
+                    <p class="modal-subtitle" *ngIf="editingAttendance">
+                        {{ editingAttendance.hoTen }} - {{ formatDateDisplay(editingAttendance.ngay) }}
+                    </p>
+                </div>
+                <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+                <form *ngIf="editingAttendance">
+                    <div class="mb-3">
+                        <label class="form-label">Giờ vào</label>
+                        <input type="time" class="form-control" [(ngModel)]="editForm.gioVao" name="gioVao">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Giờ ra</label>
+                        <input type="time" class="form-control" [(ngModel)]="editForm.gioRa" name="gioRa">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Số giờ OT</label>
+                        <input type="number" class="form-control" [(ngModel)]="editForm.soGioOt" name="soGioOt" min="0"
+                            step="0.5">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" [(ngModel)]="editForm.trangThai" name="trangThai">
+                            <option value="DI_LAM">Đi làm</option>
+                            <option value="LATE_IN">Trễ</option>
+                            <option value="EARLY_OUT">Về sớm</option>
+                            <option value="NGHI">Nghỉ</option>
+                            <option value="NGHI_PHEP">Nghỉ phép</option>
+                            <option value="NO_RECORD">Chưa chấm</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú</label>
+                        <textarea class="form-control" [(ngModel)]="editForm.ghiChu" name="ghiChu" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeEditModal()" [disabled]="saving">
+                    <i class="bi bi-x-circle me-2"></i>Hủy
+                </button>
+                <button type="button" class="btn btn-primary" (click)="saveEdit()" [disabled]="saving">
+                    <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                    <i *ngIf="!saving" class="bi bi-check-circle me-2"></i>Lưu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Config Modal -->
+<div class="modal-backdrop fade show" *ngIf="showConfigModal"></div>
+<div class="modal fade show d-block" *ngIf="showConfigModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cấu hình thời gian làm việc</h5>
+                <button type="button" class="btn-close" (click)="closeConfig()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Giờ vào chuẩn</label>
+                    <input type="time" class="form-control" [(ngModel)]="config.gioVao">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Giờ ra chuẩn</label>
+                    <input type="time" class="form-control" [(ngModel)]="config.gioRa">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phút cho phép đi muộn</label>
+                    <input type="number" class="form-control" [(ngModel)]="config.lateGraceMinutes">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Phút cho phép về sớm</label>
+                    <input type="number" class="form-control" [(ngModel)]="config.earlyLeaveGraceMinutes">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeConfig()">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="saveConfig()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+<header class="topbar">
+    <div class="left">
+        <i class="bi bi-search"></i>
+        <input placeholder="Tìm kiếm nhanh..." />
+    </div>
+
+    <div class="right">
+        <!-- Notification Bell with Dropdown -->
+        <div class="notification-wrapper">
+            <button class="notification-btn" (click)="toggleNotifications(); $event.stopPropagation()">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge" *ngIf="unreadCount > 0">
+                    {{ unreadCount > 99 ? '99+' : unreadCount }}
+                </span>
+            </button>
+
+            <!-- Notification Dropdown -->
+            <div class="notification-dropdown" *ngIf="showNotificationDropdown">
+                <div class="dropdown-header">
+                    <span class="dropdown-title">Thông báo</span>
+                    <button class="mark-all-btn" *ngIf="notifications.length > 0" (click)="markAllAsRead()">
+                        Đánh dấu tất cả đã đọc
+                    </button>
+                </div>
+
+                <div class="dropdown-body">
+                    <div class="notification-item" *ngFor="let n of notifications" (click)="onNotificationClick(n)">
+                        <div class="notification-icon" [ngClass]="'type-' + n.type">
+                            <i class="bi" [ngClass]="{
+                                'bi-check-circle': n.type === 'DA_DUYET',
+                                'bi-x-circle': n.type === 'TU_CHOI',
+                                'bi-hourglass-split': n.type === 'YEU_CAU_DUYET',
+                                'bi-bell': n.type === 'THONG_BAO'
+                            }"></i>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">{{ n.title }}</div>
+                            <div class="notification-message" *ngIf="n.message">{{ n.message }}</div>
+                            <div class="notification-time">{{ formatTimeAgo(n.createdAt) }}</div>
+                        </div>
+                    </div>
+
+                    <div class="empty-notifications" *ngIf="notifications.length === 0">
+                        <i class="bi bi-bell-slash"></i>
+                        <span>Không có thông báo mới</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="user" (click)="openProfileSidebar()">
+            <!-- Avatar: hiển thị ảnh nếu có, không thì hiển thị chữ cái đầu -->
+            <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Avatar" class="user-avatar" />
+            <div *ngIf="!avatarUrl" class="user-avatar-placeholder">
+                {{ getInitials() }}
+            </div>
+            <div>
+                <div class="name">{{ user?.username }}</div>
+                <div class="role">{{ user?.role || 'Nhân viên' }}</div>
+            </div>
+            <i class="bi bi-chevron-down"></i>
+        </div>
+    </div>
+</header>
+
+<!-- Profile Sidebar -->
+<app-profile-sidebar *ngIf="showProfileSidebar" (close)="closeProfileSidebar()"></app-profile-sidebar>

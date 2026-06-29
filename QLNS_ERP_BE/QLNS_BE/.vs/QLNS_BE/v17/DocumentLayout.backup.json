@@ -1,0 +1,1007 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\hubs\\notificationhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\hubs\\notificationhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\duancontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\duancontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\duanservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\duanservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\luongservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\luongservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\noilamviecservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\noilamviecservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\phongbanservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\phongbanservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\facedataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\facedataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\luongcobancontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\luongcobancontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\chamcongservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\chamcongservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\facerecognition\\insightfacepythonservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\facerecognition\\insightfacepythonservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\facerecognition\\ifacerecognitionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\facerecognition\\ifacerecognitionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\COMPUTER\\AppData\\Roaming\\Microsoft\\UserSecrets\\a4be72be-b5fa-40a4-a79c-fc0df2cc9a49\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\thongbaocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\thongbaocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\notificationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\notificationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\qlns_be.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\qlns_be.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\admin\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\admin\\rolescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\admin\\permissionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\admin\\permissionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\yeucaudieuchuyenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\yeucaudieuchuyenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\nhanviencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\nhanviencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\donphepcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\donphepcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\accountwarningservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\accountwarningservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\admin\\accountwarningcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\admin\\accountwarningcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\chamcongcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\chamcongcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\chamcong\\lockbangcongrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\chamcong\\lockbangcongrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\chamcong\\chamcongofemployeedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\chamcong\\chamcongofemployeedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\sql\\add_ten_doi_tuong_column.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\sql\\add_ten_doi_tuong_column.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\luongcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\luongcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\entities\\nvhoso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\entities\\nvhoso.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\entities\\bangluongthang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\entities\\bangluongthang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\luong\\bangluongthangdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\luong\\bangluongthangdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\luong\\tinhluongrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\luong\\tinhluongrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\nhanvien\\nhanvienupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\nhanvien\\nhanvienupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\auditlogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\auditlogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\auditlog\\auditlogdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\auditlog\\auditlogdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\entities\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\entities\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\entities\\thamsohethong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\entities\\thamsohethong.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\admin\\thamsohethongcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\admin\\thamsohethongcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\thamsohethongservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\thamsohethongservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\pageresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\pageresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\roleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\admin\\accountscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\admin\\accountscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\auth\\loginresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\auth\\loginresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\auth\\loginrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\auth\\loginrequestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\services\\nhanvienservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\nhanvienservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\security\\jwttokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\security\\jwttokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\controllers\\mecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\controllers\\mecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\entities\\taikhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\entities\\taikhoan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\role\\roleupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\role\\roleupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\role\\rolecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\role\\rolecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\role\\rolelistitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\role\\rolelistitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\\u0111\u1ED3_\u00E1n_tn\\qlns_erp_be\\qlns_be\\qlns_be\\models\\entities\\vaitro.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\entities\\vaitro.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 922,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "NhanVienUpdateDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\NhanVien\\NhanVienUpdateDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\NhanVien\\NhanVienUpdateDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\NhanVien\\NhanVienUpdateDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\NhanVien\\NhanVienUpdateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T07:09:28.836Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "NhanVienController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\NhanVienController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\NhanVienController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\NhanVienController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\NhanVienController.cs",
+              "ViewState": "AgIAACUBAAAAAAAAAIAwwDsBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T04:12:53.319Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NotificationHub.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Hubs\\NotificationHub.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Hubs\\NotificationHub.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Hubs\\NotificationHub.cs",
+              "RelativeToolTip": "QLNS_BE\\Hubs\\NotificationHub.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-08T14:52:32.474Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PhongBanService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\PhongBanService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\PhongBanService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\PhongBanService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\PhongBanService.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAACwAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-23T15:13:46.366Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "InsightFacePythonService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\FaceRecognition\\InsightFacePythonService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\FaceRecognition\\InsightFacePythonService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\FaceRecognition\\InsightFacePythonService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\FaceRecognition\\InsightFacePythonService.cs",
+              "ViewState": "AgIAAAMCAAAAAAAAAAAswCcCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-11T01:40:30.928Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "DonPhepController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\DonPhepController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\DonPhepController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\DonPhepController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\DonPhepController.cs",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAAALMAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T08:18:28.639Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "RolesController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\RolesController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\Admin\\RolesController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\RolesController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\Admin\\RolesController.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAADMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:55:03.52Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LuongService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\LuongService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\LuongService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\LuongService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\LuongService.cs",
+              "ViewState": "AgIAAFYBAAAAAAAAAAAtwGEBAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T07:49:00.453Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DuAnService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\DuAnService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\DuAnService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\DuAnService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\DuAnService.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAcwE0AAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:15:48.291Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DuAnController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\DuAnController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\DuAnController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\DuAnController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\DuAnController.cs",
+              "ViewState": "AgIAAG4BAAAAAAAAAAAowFIBAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T08:07:20.072Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NoiLamViecService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\NoiLamViecService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\NoiLamViecService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\NoiLamViecService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\NoiLamViecService.cs",
+              "ViewState": "AgIAAAwCAAAAAAAAAAAUwBcCAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-27T05:27:39.205Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LuongCoBanController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\LuongCoBanController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\LuongCoBanController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\LuongCoBanController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\LuongCoBanController.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAADIAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-24T08:02:03.324Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ChamCongService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\ChamCongService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\ChamCongService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\ChamCongService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\ChamCongService.cs",
+              "ViewState": "AgIAADcBAAAAAAAAAAAkwEoBAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:50:33.716Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "QLNS_BE\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAOgDAAAAAAAAAAAAAAAEAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T08:41:44.11Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FaceDataService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\FaceDataService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\FaceDataService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\FaceDataService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\FaceDataService.cs",
+              "ViewState": "AgIAALgBAAAAAAAAAAAAwHcBAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-09T02:46:06.253Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\appsettings.json",
+              "RelativeDocumentMoniker": "QLNS_BE\\appsettings.json",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\appsettings.json",
+              "RelativeToolTip": "QLNS_BE\\appsettings.json",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABQAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-08T09:44:28.495Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "IFaceRecognitionService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\FaceRecognition\\IFaceRecognitionService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\FaceRecognition\\IFaceRecognitionService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\FaceRecognition\\IFaceRecognitionService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\FaceRecognition\\IFaceRecognitionService.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAkwDkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-11T03:07:31.942Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "QLNS_BE.http",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\QLNS_BE.http",
+              "RelativeDocumentMoniker": "QLNS_BE\\QLNS_BE.http",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\QLNS_BE.http",
+              "RelativeToolTip": "QLNS_BE\\QLNS_BE.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2026-01-16T06:52:20.47Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "QLNS_BE\\appsettings.Development.json",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\appsettings.Development.json",
+              "RelativeToolTip": "QLNS_BE\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-10T04:29:32.647Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Program.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Program.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Program.cs",
+              "RelativeToolTip": "QLNS_BE\\Program.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAkwC8AAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:58:46.159Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "NotificationController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\NotificationController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\NotificationController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\NotificationController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\NotificationController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-16T07:15:57.437Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "secrets.json",
+              "DocumentMoniker": "C:\\Users\\COMPUTER\\AppData\\Roaming\\Microsoft\\UserSecrets\\a4be72be-b5fa-40a4-a79c-fc0df2cc9a49\\secrets.json",
+              "RelativeDocumentMoniker": "..\\..\\..\\Users\\COMPUTER\\AppData\\Roaming\\Microsoft\\UserSecrets\\a4be72be-b5fa-40a4-a79c-fc0df2cc9a49\\secrets.json",
+              "ToolTip": "C:\\Users\\COMPUTER\\AppData\\Roaming\\Microsoft\\UserSecrets\\a4be72be-b5fa-40a4-a79c-fc0df2cc9a49\\secrets.json",
+              "RelativeToolTip": "..\\..\\..\\Users\\COMPUTER\\AppData\\Roaming\\Microsoft\\UserSecrets\\a4be72be-b5fa-40a4-a79c-fc0df2cc9a49\\secrets.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-10T02:48:45.532Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ThongBaoController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\ThongBaoController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\ThongBaoController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\ThongBaoController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\ThongBaoController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAUwDUAAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-16T07:16:21.641Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "YeuCauDieuChuyenService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\YeuCauDieuChuyenService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\YeuCauDieuChuyenService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\YeuCauDieuChuyenService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\YeuCauDieuChuyenService.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAF0AAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T14:59:21.021Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "NotificationService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\NotificationService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\NotificationService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\NotificationService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\NotificationService.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAGgAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-11T15:57:19.174Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "PermissionsController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\PermissionsController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\Admin\\PermissionsController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\PermissionsController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\Admin\\PermissionsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-16T02:13:07.395Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "AccountWarningService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\AccountWarningService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\AccountWarningService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\AccountWarningService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\AccountWarningService.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAADIAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-10T09:47:05.811Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "ChamCongController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\ChamCongController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\ChamCongController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\ChamCongController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\ChamCongController.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAqwDwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-08T09:00:47.438Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "ChamCongOfEmployeeDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\ChamCong\\ChamCongOfEmployeeDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\ChamCong\\ChamCongOfEmployeeDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\ChamCong\\ChamCongOfEmployeeDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\ChamCong\\ChamCongOfEmployeeDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-08T08:27:04.488Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "AccountWarningController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\AccountWarningController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\Admin\\AccountWarningController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\AccountWarningController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\Admin\\AccountWarningController.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAADgAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-08T17:53:54.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "LockBangCongRequestDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\ChamCong\\LockBangCongRequestDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\ChamCong\\LockBangCongRequestDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\ChamCong\\LockBangCongRequestDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\ChamCong\\LockBangCongRequestDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-08T08:26:56.044Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "add_ten_doi_tuong_column.sql",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\SQL\\add_ten_doi_tuong_column.sql",
+              "RelativeDocumentMoniker": "QLNS_BE\\SQL\\add_ten_doi_tuong_column.sql",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\SQL\\add_ten_doi_tuong_column.sql",
+              "RelativeToolTip": "QLNS_BE\\SQL\\add_ten_doi_tuong_column.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-01-07T08:40:57.677Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "BangLuongThang.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\BangLuongThang.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Entities\\BangLuongThang.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\BangLuongThang.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Entities\\BangLuongThang.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T07:54:19.335Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "NvHoSo.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\NvHoSo.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Entities\\NvHoSo.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\NvHoSo.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Entities\\NvHoSo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T07:53:54.296Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "BangLuongThangDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Luong\\BangLuongThangDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Luong\\BangLuongThangDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Luong\\BangLuongThangDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Luong\\BangLuongThangDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T07:52:57.125Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "LuongController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\LuongController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\LuongController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\LuongController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\LuongController.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAJQAAABgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T07:35:24.732Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "TinhLuongRequestDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Luong\\TinhLuongRequestDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Luong\\TinhLuongRequestDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Luong\\TinhLuongRequestDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Luong\\TinhLuongRequestDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T07:51:11.919Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "AuditLogDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\AuditLog\\AuditLogDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\AuditLog\\AuditLogDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\AuditLog\\AuditLogDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\AuditLog\\AuditLogDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T15:34:58.142Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "AuditLogService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\AuditLogService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\AuditLogService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\AuditLogService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\AuditLogService.cs",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAAwIMAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T14:43:17.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 52,
+              "Title": "NhanVienService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\NhanVienService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\NhanVienService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\NhanVienService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\NhanVienService.cs",
+              "ViewState": "AgIAAC4BAAAAAAAAAAAewDUBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T04:18:54.59Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "AuditLog.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\AuditLog.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Entities\\AuditLog.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\AuditLog.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Entities\\AuditLog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T14:05:12.315Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 54,
+              "Title": "MeController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\MeController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\MeController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\MeController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\MeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T04:12:59.854Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "PageResultDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\PageResultDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\PageResultDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\PageResultDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\PageResultDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T14:07:37.383Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "ThamSoHeThongController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\ThamSoHeThongController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\Admin\\ThamSoHeThongController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\ThamSoHeThongController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\Admin\\ThamSoHeThongController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T14:40:15.672Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "AccountService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\AccountService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\AccountService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\AccountService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\AccountService.cs",
+              "ViewState": "AgIAAOoAAAAAAAAAAAAAAJIAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T14:41:09.772Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "ThamSoHeThongService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\ThamSoHeThongService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\ThamSoHeThongService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\ThamSoHeThongService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\ThamSoHeThongService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:34:36.528Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "RoleService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\RoleService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\RoleService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\RoleService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\RoleService.cs",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAAAIMAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:17:28.885Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "DashboardService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\DashboardService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\DashboardService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\DashboardService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\DashboardService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:15:52.805Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 55,
+              "Title": "TaiKhoan.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\TaiKhoan.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Entities\\TaiKhoan.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\TaiKhoan.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Entities\\TaiKhoan.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T03:46:02.997Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "ThamSoHeThong.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\ThamSoHeThong.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Entities\\ThamSoHeThong.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\ThamSoHeThong.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Entities\\ThamSoHeThong.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T14:05:01.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "AccountsController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\AccountsController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\Admin\\AccountsController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\Admin\\AccountsController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\Admin\\AccountsController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACQAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T03:18:43.171Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\AuthService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\AuthService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\AuthService.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAF4AAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T03:58:09.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "LoginResponseDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Auth\\LoginResponseDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Auth\\LoginResponseDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Auth\\LoginResponseDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Auth\\LoginResponseDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T03:46:27.772Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "LoginRequestDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Auth\\LoginRequestDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Auth\\LoginRequestDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Auth\\LoginRequestDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Auth\\LoginRequestDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-06T03:16:41.241Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 53,
+              "Title": "JwtTokenService.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Security\\JwtTokenService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Security\\JwtTokenService.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Security\\JwtTokenService.cs",
+              "RelativeToolTip": "QLNS_BE\\Security\\JwtTokenService.cs",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAIwGAAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T03:53:48.994Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Controllers\\DashboardController.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "QLNS_BE\\Controllers\\DashboardController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T09:05:56.789Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 56,
+              "Title": "RoleUpdateDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleUpdateDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleUpdateDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleUpdateDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleUpdateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:34:05.732Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 57,
+              "Title": "RoleCreateDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleCreateDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleCreateDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleCreateDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:33:44.243Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 59,
+              "Title": "VaiTro.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\VaiTro.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Entities\\VaiTro.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Entities\\VaiTro.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Entities\\VaiTro.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:17:32.575Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 58,
+              "Title": "RoleListItemDto.cs",
+              "DocumentMoniker": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleListItemDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleListItemDto.cs",
+              "ToolTip": "C:\\\u0110\u1ED2_\u00C1N_TN\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleListItemDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleListItemDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-05T02:11:49.581Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 184,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

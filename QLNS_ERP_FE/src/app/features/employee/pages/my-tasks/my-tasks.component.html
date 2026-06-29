@@ -1,0 +1,200 @@
+<div class="my-tasks-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="bi bi-list-task"></i>
+                Task của tôi
+            </h1>
+            <button class="btn-refresh" (click)="loadTasks()" [disabled]="loading">
+                <i class="bi bi-arrow-clockwise" [class.spin]="loading"></i>
+                Làm mới
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+        <div class="kpi-card kpi-primary">
+            <div class="kpi-icon"><i class="bi bi-clipboard-check"></i></div>
+            <div class="kpi-content">
+                <div class="kpi-label">Tổng task</div>
+                <div class="kpi-value">{{ kpiTotal }}</div>
+            </div>
+        </div>
+        <div class="kpi-card kpi-success">
+            <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+            <div class="kpi-content">
+                <div class="kpi-label">Đang thực hiện</div>
+                <div class="kpi-value">{{ kpiInProgress }}</div>
+            </div>
+        </div>
+        <div class="kpi-card kpi-warning">
+            <div class="kpi-icon"><i class="bi bi-check-circle"></i></div>
+            <div class="kpi-content">
+                <div class="kpi-label">Hoàn thành</div>
+                <div class="kpi-value">{{ kpiCompleted }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+        <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Tìm kiếm task..." [(ngModel)]="searchQ" (ngModelChange)="applyFilter()">
+        </div>
+        <div class="filter-group">
+            <select class="filter-select" [(ngModel)]="filterStatus" (ngModelChange)="applyFilter()">
+                <option value="">Tất cả trạng thái</option>
+                <option *ngFor="let status of trangThaiOptions" [value]="status">
+                    {{ getTrangThaiLabel(status) }}
+                </option>
+            </select>
+            <select class="filter-select" [(ngModel)]="filterUuTien" (ngModelChange)="applyFilter()">
+                <option value="">Tất cả ưu tiên</option>
+                <option *ngFor="let priority of uuTienOptions" [value]="priority">
+                    {{ getUuTienLabel(priority) }}
+                </option>
+            </select>
+            <button class="btn-clear" (click)="clearFilters()" *ngIf="searchQ || filterStatus || filterUuTien">
+                <i class="bi bi-x-lg"></i> Xóa lọc
+            </button>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="alert alert-danger" *ngIf="errorMsg">
+        <i class="bi bi-exclamation-triangle"></i> {{ errorMsg }}
+    </div>
+
+    <!-- Loading Skeleton -->
+    <div class="skeleton-container" *ngIf="loading">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3]"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!loading && filtered.length === 0">
+        <i class="bi bi-inbox"></i>
+        <h3>Chưa có task nào</h3>
+        <p>Bạn chưa được giao task nào hoặc không có task phù hợp với bộ lọc.</p>
+    </div>
+
+    <!-- Task List -->
+    <div class="task-list" *ngIf="!loading && filtered.length > 0">
+        <div class="task-card" *ngFor="let task of filtered" [class.overdue]="isOverdue(task)">
+            <div class="task-header">
+                <div class="task-title-row">
+                    <h3 class="task-title">{{ task.tieuDe }}</h3>
+                    <div class="task-badges">
+                        <span class="badge" [ngClass]="getTrangThaiBadgeClass(task.trangThai)">
+                            {{ getTrangThaiLabel(task.trangThai) }}
+                        </span>
+                        <span class="badge" [ngClass]="getUuTienBadgeClass(task.uuTien)">
+                            {{ getUuTienLabel(task.uuTien) }}
+                        </span>
+                    </div>
+                </div>
+                <div class="task-project">
+                    <i class="bi bi-folder"></i> {{ task.duAnTen }}
+                </div>
+            </div>
+
+            <div class="task-body">
+                <p class="task-desc" *ngIf="task.moTa">{{ task.moTa }}</p>
+
+                <div class="task-meta">
+                    <div class="meta-item">
+                        <i class="bi bi-person"></i>
+                        <span>Người giao: {{ task.nguoiGiaoTen }}</span>
+                    </div>
+                    <div class="meta-item" *ngIf="task.ngayBatDau">
+                        <i class="bi bi-calendar-event"></i>
+                        <span>Bắt đầu: {{ task.ngayBatDau | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                    <div class="meta-item" *ngIf="task.ngayKetThuc" [class.text-danger]="isOverdue(task)">
+                        <i class="bi bi-calendar-x"></i>
+                        <span>Hạn: {{ task.ngayKetThuc | date:'dd/MM/yyyy' }}</span>
+                        <span class="overdue-label" *ngIf="isOverdue(task)">Quá hạn!</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="task-progress">
+                    <div class="progress-header">
+                        <span>Tiến độ</span>
+                        <span class="progress-percent">{{ task.phanTramHoanThanh }}%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" [ngClass]="getProgressBarClass(task.phanTramHoanThanh)"
+                            [style.width.%]="task.phanTramHoanThanh"></div>
+                    </div>
+                </div>
+
+                <div class="task-note" *ngIf="task.ghiChu">
+                    <i class="bi bi-sticky"></i>
+                    <span>{{ task.ghiChu }}</span>
+                </div>
+            </div>
+
+            <div class="task-footer">
+                <button class="btn-update" (click)="openUpdateModal(task)"
+                    [disabled]="task.trangThai === 'HOAN_THANH' || task.trangThai === 'HUY'">
+                    <i class="bi bi-pencil-square"></i> Cập nhật tiến độ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Task Modal -->
+    <div class="modal-overlay" *ngIf="showUpdateModal" (click)="closeUpdateModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2><i class="bi bi-pencil-square"></i> Cập nhật Task</h2>
+                <button class="btn-close-modal" (click)="closeUpdateModal()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" *ngIf="updatingTask">
+                <div class="task-info-summary">
+                    <h4>{{ updatingTask.tieuDe }}</h4>
+                    <p class="project-name"><i class="bi bi-folder"></i> {{ updatingTask.duAnTen }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <select class="form-control" [(ngModel)]="updateForm.trangThai">
+                        <option *ngFor="let status of trangThaiOptions" [value]="status">
+                            {{ getTrangThaiLabel(status) }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tiến độ hoàn thành: {{ updateForm.phanTramHoanThanh }}%</label>
+                    <input type="range" class="form-range" min="0" max="100" step="5"
+                        [(ngModel)]="updateForm.phanTramHoanThanh">
+                    <div class="progress mt-2">
+                        <div class="progress-bar" [ngClass]="getProgressBarClass(updateForm.phanTramHoanThanh || 0)"
+                            [style.width.%]="updateForm.phanTramHoanThanh"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <textarea class="form-control" rows="3" [(ngModel)]="updateForm.ghiChu"
+                        placeholder="Thêm ghi chú về tiến độ công việc..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" (click)="closeUpdateModal()" [disabled]="saving">Hủy</button>
+                <button class="btn-save" (click)="saveUpdate()" [disabled]="saving">
+                    <span class="spinner-border spinner-border-sm" *ngIf="saving"></span>
+                    {{ saving ? 'Đang lưu...' : 'Lưu thay đổi' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

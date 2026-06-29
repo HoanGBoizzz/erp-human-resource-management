@@ -1,0 +1,203 @@
+<div class="page-container">
+
+    <!-- HEADER -->
+    <div class="header-card">
+        <div>
+            <h1 class="page-title">
+                <i class="bi bi-bar-chart-line me-2 text-primary"></i>Thống kê tổng hợp
+            </h1>
+            <p class="page-subtitle mb-0">Tổng quan số lượng phiếu và đơn từ tất cả hạng mục nơi làm việc</p>
+        </div>
+    </div>
+
+    <!-- KPI TỔNG QUAN -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-icon"><i class="bi bi-files"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Tổng tất cả</span>
+                    <span class="kpi-value">{{ totalAll }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-warning">
+                <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Chờ duyệt</span>
+                    <span class="kpi-value">{{ totalChoDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-success">
+                <div class="kpi-icon"><i class="bi bi-check-all"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Đã duyệt</span>
+                    <span class="kpi-value">{{ totalDaDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-danger">
+                <div class="kpi-icon"><i class="bi bi-x-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Từ chối</span>
+                    <span class="kpi-value">{{ totalTuChoi }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BIỂU ĐỒ CỘT -->
+    <div class="content-card mb-4">
+        <div class="card-header-inner mb-4">
+            <h2 class="section-title">
+                <i class="bi bi-bar-chart me-2 text-primary"></i>Biểu đồ phân loại theo hạng mục
+            </h2>
+            <p class="section-sub">Hover vào cột để xem chi tiết số lượng từng trạng thái</p>
+        </div>
+
+        <!-- Chart empty state -->
+        <div class="empty-state" *ngIf="totalAll === 0">
+            <i class="bi bi-bar-chart"></i>
+            <p>Chưa có dữ liệu để hiển thị biểu đồ. Hãy tạo phiếu hoặc đơn trước.</p>
+        </div>
+
+        <div class="chart-wrapper" *ngIf="totalAll > 0">
+            <canvas #barChart></canvas>
+        </div>
+    </div>
+
+    <!-- CHI TIẾT TỪNG HẠNG MỤC -->
+    <div class="row g-3">
+
+        <!-- Đề xuất dụng cụ -->
+        <div class="col-12 col-md-4">
+            <div class="detail-card tools-card">
+                <div class="detail-header">
+                    <div class="detail-icon tools"><i class="bi bi-tools"></i></div>
+                    <div>
+                        <h3 class="detail-title">Đề xuất dụng cụ</h3>
+                        <span class="detail-total">{{ deXuat.total }} phiếu</span>
+                    </div>
+                </div>
+                <div class="detail-bars">
+                    <div class="bar-row">
+                        <span class="bar-label">Chờ duyệt</span>
+                        <div class="bar-track">
+                            <div class="bar-fill warning"
+                                [style.width]="deXuat.total > 0 ? (deXuat.choDuyet/deXuat.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val warning">{{ deXuat.choDuyet }}</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Đã duyệt</span>
+                        <div class="bar-track">
+                            <div class="bar-fill success"
+                                [style.width]="deXuat.total > 0 ? (deXuat.daDuyet/deXuat.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val success">{{ deXuat.daDuyet }}</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Từ chối</span>
+                        <div class="bar-track">
+                            <div class="bar-fill danger"
+                                [style.width]="deXuat.total > 0 ? (deXuat.tuChoi/deXuat.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val danger">{{ deXuat.tuChoi }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tạm ứng -->
+        <div class="col-12 col-md-4">
+            <div class="detail-card money-card">
+                <div class="detail-header">
+                    <div class="detail-icon money"><i class="bi bi-cash-coin"></i></div>
+                    <div>
+                        <h3 class="detail-title">Phiếu tạm ứng</h3>
+                        <span class="detail-total">{{ tamUng.total }} phiếu</span>
+                    </div>
+                </div>
+                <div class="detail-bars">
+                    <div class="bar-row">
+                        <span class="bar-label">Chờ duyệt</span>
+                        <div class="bar-track">
+                            <div class="bar-fill warning"
+                                [style.width]="tamUng.total > 0 ? (tamUng.choDuyet/tamUng.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val warning">{{ tamUng.choDuyet }}</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Đã duyệt</span>
+                        <div class="bar-track">
+                            <div class="bar-fill success"
+                                [style.width]="tamUng.total > 0 ? (tamUng.daDuyet/tamUng.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val success">{{ tamUng.daDuyet }}</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Từ chối</span>
+                        <div class="bar-track">
+                            <div class="bar-fill danger"
+                                [style.width]="tamUng.total > 0 ? (tamUng.tuChoi/tamUng.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val danger">{{ tamUng.tuChoi }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Đi muộn/về sớm -->
+        <div class="col-12 col-md-4">
+            <div class="detail-card time-card">
+                <div class="detail-header">
+                    <div class="detail-icon time"><i class="bi bi-clock-history"></i></div>
+                    <div>
+                        <h3 class="detail-title">Đi muộn / Về sớm</h3>
+                        <span class="detail-total">{{ diMuon.total }} đơn</span>
+                    </div>
+                </div>
+                <div class="detail-bars">
+                    <div class="bar-row">
+                        <span class="bar-label">Chờ duyệt</span>
+                        <div class="bar-track">
+                            <div class="bar-fill warning"
+                                [style.width]="diMuon.total > 0 ? (diMuon.choDuyet/diMuon.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val warning">{{ diMuon.choDuyet }}</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Đã duyệt</span>
+                        <div class="bar-track">
+                            <div class="bar-fill success"
+                                [style.width]="diMuon.total > 0 ? (diMuon.daDuyet/diMuon.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val success">{{ diMuon.daDuyet }}</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">Từ chối</span>
+                        <div class="bar-track">
+                            <div class="bar-fill danger"
+                                [style.width]="diMuon.total > 0 ? (diMuon.tuChoi/diMuon.total*100)+'%' : '0%'">
+                            </div>
+                        </div>
+                        <span class="bar-val danger">{{ diMuon.tuChoi }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /row -->
+</div>

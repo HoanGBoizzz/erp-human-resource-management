@@ -1,0 +1,305 @@
+<div class="page-container">
+
+    <!-- ╔════════════════════════════════════════╗
+       ║            HEADER CARD                ║
+       ╚════════════════════════════════════════╝ -->
+    <div class="header-card">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h4 class="page-title mb-1">
+                    <i class="bi bi-patch-check me-2 text-primary"></i>Duyệt đề xuất
+                </h4>
+                <p class="page-subtitle mb-0">Xem xét và phê duyệt các đề xuất từ bộ phận HR</p>
+            </div>
+            <button class="btn action-btn" (click)="loadList()">
+                <i class="bi bi-arrow-clockwise me-2"></i>Làm mới
+            </button>
+        </div>
+    </div>
+
+    <!-- ╔════════════════════════════════════════╗
+       ║              KPI CARDS                ║
+       ╚════════════════════════════════════════╝ -->
+    <div class="row g-4 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-icon"><i class="bi bi-collection"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Tổng đề xuất</span>
+                    <span class="kpi-value">{{ kpiTong }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-warning" (click)="statusFilter='CHO_DUYET'; applyFilter()" style="cursor:pointer">
+                <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Chờ duyệt</span>
+                    <span class="kpi-value">{{ kpiChoDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-success" (click)="statusFilter='DA_DUYET'; applyFilter()" style="cursor:pointer">
+                <div class="kpi-icon"><i class="bi bi-check2-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Đã duyệt</span>
+                    <span class="kpi-value">{{ kpiDaDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-danger" (click)="statusFilter='TU_CHOI'; applyFilter()" style="cursor:pointer">
+                <div class="kpi-icon"><i class="bi bi-x-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Từ chối</span>
+                    <span class="kpi-value">{{ kpiTuChoi }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ╔════════════════════════════════════════╗
+       ║             LIST TABLE                ║
+       ╚════════════════════════════════════════╝ -->
+    <div class="content-card">
+
+        <!-- Loading overlay -->
+        <div class="loading-overlay" *ngIf="loading">
+            <div class="spinner-container">
+                <div class="spinner-border" role="status"></div>
+                <div class="loading-text">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <div class="search-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" class="form-control search-input" [(ngModel)]="q" (ngModelChange)="applyFilter()"
+                    placeholder="Tìm theo tên, người tạo...">
+            </div>
+            <div class="filter-group">
+                <select class="form-select" [(ngModel)]="statusFilter" (ngModelChange)="applyFilter()">
+                    <option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive mt-3">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên đề xuất</th>
+                        <th>Người tạo</th>
+                        <th>Ngày đề xuất</th>
+                        <th>Ngày gửi duyệt</th>
+                        <th>File</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of filtered; trackBy: trackById; let i = index">
+                        <td class="text-muted">{{ i + 1 }}</td>
+                        <td>
+                            <div class="item-name">{{ item.tenDeXuat }}</div>
+                            <div class="item-desc text-muted" *ngIf="item.moTa">
+                                {{ item.moTa | slice:0:60 }}{{ item.moTa.length > 60 ? '...' : '' }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="creator-badge">
+                                <i class="bi bi-person me-1"></i>{{ item.tenNguoiTao ?? '—' }}
+                            </span>
+                        </td>
+                        <td>{{ item.ngayDeXuat | date:'dd/MM/yyyy' }}</td>
+                        <td class="text-muted">
+                            {{ item.ngayGuiDuyet ? (item.ngayGuiDuyet | date:'dd/MM/yyyy HH:mm') : '—' }}
+                        </td>
+                        <td>
+                            <a *ngIf="item.tepTinUrl" [href]="getFileUrl(item.tepTinUrl)" target="_blank"
+                                class="file-link" title="{{ item.tepTinTenGoc }}">
+                                <i class="bi bi-paperclip"></i>
+                                {{ (item.tepTinTenGoc ?? '') | slice:0:18 }}
+                            </a>
+                            <span *ngIf="!item.tepTinUrl" class="text-muted">—</span>
+                        </td>
+                        <td>
+                            <span class="status-badge" [ngClass]="BADGE[item.trangThai]">
+                                {{ LABEL[item.trangThai] }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-view" (click)="openDetail(item.id)"
+                                [ngClass]="item.trangThai === 'CHO_DUYET' ? 'btn-view-pending' : 'btn-view-normal'">
+                                <i class="bi bi-eye me-1"></i>
+                                {{ item.trangThai === 'CHO_DUYET' ? 'Xem & Duyệt' : 'Xem' }}
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filtered.length === 0 && !loading">
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                            Không có đề xuất nào
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║          DETAIL + APPROVE MODAL                     ║
+     ╚══════════════════════════════════════════════════════╝ -->
+
+<div class="modal-backdrop fade" [class.show]="showDetailModal" *ngIf="showDetailModal" (click)="closeDetail()"></div>
+
+<div class="modal fade" [class.show]="showDetailModal" [style.display]="showDetailModal ? 'block' : 'none'"
+    tabindex="-1" *ngIf="showDetailModal">
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- Loading overlay -->
+            <div class="loading-overlay" *ngIf="detailLoading">
+                <div class="spinner-container">
+                    <div class="spinner-border" role="status"></div>
+                    <div class="loading-text">Đang tải chi tiết...</div>
+                </div>
+            </div>
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-file-earmark-check me-2 text-primary"></i>
+                    Chi tiết đề xuất
+                </h5>
+                <button type="button" class="btn-close" (click)="closeDetail()"></button>
+            </div>
+
+            <div class="modal-body" *ngIf="!detailLoading && selectedDetail">
+
+                <!-- ── Thông tin đề xuất ── -->
+                <div class="info-section mb-4">
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div>
+                            <h5 class="fw-bold mb-1">{{ selectedDetail.tenDeXuat }}</h5>
+                            <div class="text-muted small">
+                                <i class="bi bi-person me-1"></i>{{ selectedDetail.tenNguoiTao }}
+                            </div>
+                        </div>
+                        <span class="status-badge" [ngClass]="BADGE[selectedDetail.trangThai]">
+                            {{ LABEL[selectedDetail.trangThai] }}
+                        </span>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="detail-label">Ngày đề xuất</label>
+                            <div class="detail-value">{{ selectedDetail.ngayDeXuat | date:'dd/MM/yyyy' }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="detail-label">Ngày gửi duyệt</label>
+                            <div class="detail-value">
+                                {{ selectedDetail.ngayGuiDuyet ? (selectedDetail.ngayGuiDuyet | date:'dd/MM/yyyy HH:mm')
+                                : '—' }}
+                            </div>
+                        </div>
+
+                        <div class="col-12" *ngIf="selectedDetail.moTa">
+                            <label class="detail-label">Mô tả</label>
+                            <div class="detail-value detail-desc">{{ selectedDetail.moTa }}</div>
+                        </div>
+
+                        <div class="col-12" *ngIf="selectedDetail.tepTinUrl">
+                            <label class="detail-label">File đính kèm</label>
+                            <div class="detail-value">
+                                <a [href]="getFileUrl(selectedDetail.tepTinUrl)" target="_blank" class="file-link">
+                                    <i class="bi bi-paperclip me-1"></i>{{ selectedDetail.tepTinTenGoc }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr *ngIf="selectedDetail.trangThai === 'DA_DUYET' || selectedDetail.trangThai === 'TU_CHOI'">
+
+                <!-- ── Kết quả duyệt (nếu đã xử lý) ── -->
+                <div class="result-section mb-4"
+                    *ngIf="selectedDetail.trangThai === 'DA_DUYET' || selectedDetail.trangThai === 'TU_CHOI'">
+                    <div class="result-banner"
+                        [ngClass]="selectedDetail.trangThai === 'DA_DUYET' ? 'result-approved' : 'result-rejected'">
+                        <i class="bi"
+                            [ngClass]="selectedDetail.trangThai === 'DA_DUYET' ? 'bi-check-circle' : 'bi-x-circle'"></i>
+                        <div>
+                            <div class="result-title">
+                                {{ selectedDetail.trangThai === 'DA_DUYET' ? 'Đã phê duyệt' : 'Đã từ chối' }}
+                            </div>
+                            <div class="result-meta" *ngIf="selectedDetail.tenNguoiDuyet">
+                                Bởi {{ selectedDetail.tenNguoiDuyet }}
+                                | {{ selectedDetail.ngayDuyet | date:'dd/MM/yyyy HH:mm' }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-value detail-reject mt-2" *ngIf="selectedDetail.lyDoTuChoi">
+                        <strong>Lý do từ chối:</strong> {{ selectedDetail.lyDoTuChoi }}
+                    </div>
+                </div>
+
+                <hr *ngIf="canApprove()">
+
+                <!-- ── Form duyệt / từ chối ── -->
+                <div class="approve-section" *ngIf="canApprove()">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-check2-square me-2 text-primary"></i>Quyết định phê duyệt
+                    </h6>
+
+                    <div class="alert alert-warning alert-sm" *ngIf="!canApprove()">
+                        Đề xuất không ở trạng thái chờ duyệt.
+                    </div>
+
+                    <div class="d-flex gap-2 mb-3">
+                        <button type="button" class="btn flex-fill approve-btn"
+                            [class.btn-approve-active]="approveForm.get('dongY')?.value === true"
+                            [class.btn-approve-inactive]="approveForm.get('dongY')?.value !== true"
+                            (click)="setDongY(true)" [disabled]="saving">
+                            <i class="bi bi-hand-thumbs-up me-1"></i>Đồng ý duyệt
+                        </button>
+                        <button type="button" class="btn flex-fill reject-btn"
+                            [class.btn-reject-active]="approveForm.get('dongY')?.value === false"
+                            [class.btn-reject-inactive]="approveForm.get('dongY')?.value !== false"
+                            (click)="setDongY(false)" [disabled]="saving">
+                            <i class="bi bi-hand-thumbs-down me-1"></i>Từ chối
+                        </button>
+                    </div>
+
+                    <!-- Lý do từ chối -->
+                    <div *ngIf="approveForm.get('dongY')?.value === false" class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Lý do từ chối <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" rows="3" [formControl]="$any(approveForm.get('lyDoTuChoi'))"
+                            placeholder="Nhập lý do từ chối đề xuất..."></textarea>
+                    </div>
+                </div>
+
+            </div><!-- /modal-body -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeDetail()" [disabled]="saving">
+                    <i class="bi bi-x-lg me-1"></i>Đóng
+                </button>
+                <button type="button" class="btn btn-primary flex-fill" *ngIf="canApprove()" (click)="submitApprove()"
+                    [disabled]="approveForm.get('dongY')?.value === null || saving">
+                    <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                    <i class="bi bi-check-lg me-1" *ngIf="!saving"></i>
+                    Xác nhận quyết định
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

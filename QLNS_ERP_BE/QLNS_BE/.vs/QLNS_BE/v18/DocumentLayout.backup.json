@@ -1,0 +1,347 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\auth\\changepassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\auth\\changepassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\thamso\\thamsohethongdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\thamso\\thamsohethongdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\role\\rolecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\role\\rolecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\role\\rolelistitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\role\\rolelistitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\appsettings.development.json.example||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\appsettings.development.json.example||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\sql\\data_backup_2026.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\sql\\data_backup_2026.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\sql\\add_ten_doi_tuong_column.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\sql\\add_ten_doi_tuong_column.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\qlns_be.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\qlns_be.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\security\\passwordhasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\security\\passwordhasher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\role\\roleupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\role\\roleupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\thamso\\thamsohethongcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\thamso\\thamsohethongcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\security\\jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\security\\jwtsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\security\\jwttokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\security\\jwttokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\role\\rolepermissiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\role\\rolepermissiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\account\\accountdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\account\\accountdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|c:\\users\\hoand\\downloads\\qlns_erp-main\\qlns_erp-main\\qlns_erp_be\\qlns_be\\qlns_be\\models\\dtos\\admin\\account\\accountcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{64236A83-C632-4F34-9824-62198E123842}|QLNS_BE\\QLNS_BE.csproj|solutionrelative:qlns_be\\models\\dtos\\admin\\account\\accountcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DashboardService.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\DashboardService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Services\\DashboardService.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Services\\DashboardService.cs",
+              "RelativeToolTip": "QLNS_BE\\Services\\DashboardService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T03:21:48.246Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ChangePasswordDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Auth\\ChangePasswordDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Auth\\ChangePasswordDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Auth\\ChangePasswordDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Auth\\ChangePasswordDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T03:21:27.666Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ThamSoHeThongDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\ThamSo\\ThamSoHeThongDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\ThamSo\\ThamSoHeThongDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\ThamSo\\ThamSoHeThongDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\ThamSo\\ThamSoHeThongDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T03:21:22.476Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "data_backup_2026.sql",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\SQL\\data_backup_2026.sql",
+              "RelativeDocumentMoniker": "QLNS_BE\\SQL\\data_backup_2026.sql",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\SQL\\data_backup_2026.sql",
+              "RelativeToolTip": "QLNS_BE\\SQL\\data_backup_2026.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-05-07T03:12:38.679Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.Development.json.example",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\appsettings.Development.json.example",
+              "RelativeDocumentMoniker": "QLNS_BE\\appsettings.Development.json.example",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\appsettings.Development.json.example",
+              "RelativeToolTip": "QLNS_BE\\appsettings.Development.json.example",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-05-07T03:12:30.451Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "RoleCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleCreateDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleCreateDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleCreateDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T01:12:51.194Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RoleListItemDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleListItemDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleListItemDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleListItemDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleListItemDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T01:12:58.5Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "add_ten_doi_tuong_column.sql",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\SQL\\add_ten_doi_tuong_column.sql",
+              "RelativeDocumentMoniker": "QLNS_BE\\SQL\\add_ten_doi_tuong_column.sql",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\SQL\\add_ten_doi_tuong_column.sql",
+              "RelativeToolTip": "QLNS_BE\\SQL\\add_ten_doi_tuong_column.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-05-07T03:12:35.347Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "QLNS_BE.http",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\QLNS_BE.http",
+              "RelativeDocumentMoniker": "QLNS_BE\\QLNS_BE.http",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\QLNS_BE.http",
+              "RelativeToolTip": "QLNS_BE\\QLNS_BE.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2026-05-07T03:12:24.575Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "PasswordHasher.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Security\\PasswordHasher.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Security\\PasswordHasher.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Security\\PasswordHasher.cs",
+              "RelativeToolTip": "QLNS_BE\\Security\\PasswordHasher.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAQwBEAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T02:14:40.854Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "JwtTokenService.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Security\\JwtTokenService.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Security\\JwtTokenService.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Security\\JwtTokenService.cs",
+              "RelativeToolTip": "QLNS_BE\\Security\\JwtTokenService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T02:14:39.773Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "JwtSettings.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Security\\JwtSettings.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Security\\JwtSettings.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Security\\JwtSettings.cs",
+              "RelativeToolTip": "QLNS_BE\\Security\\JwtSettings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T02:14:38.626Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ThamSoHeThongCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\ThamSo\\ThamSoHeThongCreateDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\ThamSo\\ThamSoHeThongCreateDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\ThamSo\\ThamSoHeThongCreateDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\ThamSo\\ThamSoHeThongCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T01:13:07.131Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Program.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Program.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Program.cs",
+              "RelativeToolTip": "QLNS_BE\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGgAAABmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-06T02:34:49.055Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\appsettings.json",
+              "RelativeDocumentMoniker": "QLNS_BE\\appsettings.json",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\appsettings.json",
+              "RelativeToolTip": "QLNS_BE\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-05T08:23:11.619Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "QLNS_BE\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Properties\\launchSettings.json",
+              "RelativeToolTip": "QLNS_BE\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-07T02:41:07.599Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "RoleUpdateDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleUpdateDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleUpdateDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleUpdateDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RoleUpdateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T01:13:03.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "RolePermissionDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RolePermissionDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RolePermissionDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Role\\RolePermissionDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Role\\RolePermissionDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T01:12:59.731Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "AccountDetailDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Account\\AccountDetailDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Account\\AccountDetailDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Account\\AccountDetailDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Account\\AccountDetailDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T01:09:02.287Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "AccountCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Account\\AccountCreateDto.cs",
+              "RelativeDocumentMoniker": "QLNS_BE\\Models\\Dtos\\Admin\\Account\\AccountCreateDto.cs",
+              "ToolTip": "C:\\Users\\hoand\\Downloads\\QLNS_ERP-main\\QLNS_ERP-main\\QLNS_ERP_BE\\QLNS_BE\\QLNS_BE\\Models\\Dtos\\Admin\\Account\\AccountCreateDto.cs",
+              "RelativeToolTip": "QLNS_BE\\Models\\Dtos\\Admin\\Account\\AccountCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-07T01:09:00.381Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

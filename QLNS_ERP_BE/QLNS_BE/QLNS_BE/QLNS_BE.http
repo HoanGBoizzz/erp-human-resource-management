@@ -1,0 +1,6 @@
+@QLNS_BE_HostAddress = http://localhost:5042
+
+GET {{QLNS_BE_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

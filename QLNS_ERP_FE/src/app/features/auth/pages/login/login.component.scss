@@ -1,0 +1,290 @@
+// ===================================
+// VARIABLES & COLORS
+// ===================================
+$primary-blue: #5c6bc0; // Adjusted to match the purple/blue in the image
+$primary-blue-dark: #3f51b5;
+$text-primary: #333333;
+$text-secondary: #666666;
+$border-color: #e0e0e0;
+$bg-white: #ffffff;
+$bg-input: #f9f9f9;
+$shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+// ===================================
+// ANIMATIONS
+// ===================================
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out;
+}
+
+// ===================================
+// LAYOUT
+// ===================================
+.login-wrapper {
+  background-color: $bg-white;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+// ===================================
+// LEFT PANEL (ILLUSTRATION)
+// ===================================
+.illustration-area {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  
+  .hero-image {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+    z-index: 2;
+  }
+
+  .hero-placeholder {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f7fa;
+    border-radius: 20px;
+    
+    .placeholder-content {
+      text-align: center;
+      color: #90a4ae;
+    }
+
+    .placeholder-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .placeholder-icons {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      font-size: 2rem;
+      
+      i {
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+.brand-footer {
+  margin-top: auto;
+  padding-left: 1rem;
+  
+  .brand-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #78909c;
+    font-size: 1rem;
+    font-weight: 500;
+    
+    .brand-icon {
+      font-size: 1.5rem;
+      color: $primary-blue;
+    }
+  }
+}
+
+// ===================================
+// RIGHT PANEL (LOGIN CARD)
+// ===================================
+.login-card {
+  background: $bg-white;
+  border-radius: 8px;
+  box-shadow: $shadow-card;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  border: 1px solid #f0f0f0;
+}
+
+.card-header {
+  margin-bottom: 2rem;
+  
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 0.25rem;
+  }
+  
+  .card-subtitle {
+    font-size: 0.9rem;
+    color: #999;
+    margin: 0;
+  }
+}
+
+// ===================================
+// FORM STYLES
+// ===================================
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $primary-blue-dark;
+  margin-bottom: 0.5rem;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: visible; // Allow absolute-positioned toggle to always show
+  
+  .input-icon {
+    position: absolute;
+    left: 12px;
+    color: $primary-blue;
+    font-size: 1.1rem;
+    z-index: 10;
+    pointer-events: none;
+  }
+  
+  .form-control {
+    width: 100%;
+    height: 45px;
+    padding: 0.5rem 42px 0.5rem 40px; // Space for icons on both sides
+    font-size: 0.95rem;
+    color: $text-primary;
+    background-color: $bg-white;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    transition: all 0.2s;
+    z-index: 1; // Keep below toggle button
+    
+    &::placeholder {
+      color: #ccc;
+      font-weight: 400;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-blue;
+      box-shadow: 0 0 0 2px rgba($primary-blue, 0.1);
+      z-index: 1; // Still below toggle
+    }
+    
+    &.is-invalid {
+      border-color: #dc3545;
+    }
+  }
+  
+  .input-toggle-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 1.1rem;
+    z-index: 5; // Always above form-control
+    user-select: none;
+    -webkit-user-select: none;
+
+    &:hover {
+      color: $primary-blue;
+    }
+
+    &:active {
+      color: $primary-blue;
+    }
+  }
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+}
+
+.alert-custom {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-login {
+  width: 100%;
+  height: 45px;
+  background-color: $primary-blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+  
+  &:hover:not(:disabled) {
+    background-color: $primary-blue-dark;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 991.98px) {
+  .login-card {
+    box-shadow: none;
+    border: none;
+    padding: 1rem;
+  }
+  
+  .login-wrapper {
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+}

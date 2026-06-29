@@ -1,0 +1,71 @@
+// src/app/shared/components/toast/toast.component.scss
+
+.toast-container {
+  max-width: 350px;
+
+  .toast {
+    min-width: 280px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    animation: slideIn 0.3s ease-out;
+
+    &.text-bg-success {
+      .toast-header,
+      .toast-body {
+        color: #fff;
+      }
+    }
+
+    &.text-bg-danger {
+      .toast-header,
+      .toast-body {
+        color: #fff;
+      }
+    }
+
+    &.text-bg-warning {
+      .toast-header,
+      .toast-body {
+        color: #212529;
+      }
+
+      .btn-close {
+        filter: none;
+      }
+    }
+
+    &.text-bg-info {
+      .toast-header,
+      .toast-body {
+        color: #fff;
+      }
+    }
+  }
+
+  .toast-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px 8px 0 0;
+
+    .bi {
+      font-size: 1rem;
+    }
+  }
+
+  .toast-body {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

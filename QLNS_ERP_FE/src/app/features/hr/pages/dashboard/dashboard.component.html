@@ -1,0 +1,199 @@
+<div class="dash-page container-fluid py-3">
+
+    <!-- HEADER -->
+    <div class="header-card">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+            <div>
+                <div class="badge bg-primary-subtle text-primary mb-2">
+                    <i class="bi bi-calendar3 me-2"></i>
+                    Tháng {{ month }}/{{ year }}
+                </div>
+
+                <h3 class="page-title mb-1">Dashboard HR</h3>
+                <div class="text-muted page-subtitle">
+                    Trung tâm điều hành nhân sự: Phép, Công, Lương
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <a class="action-btn" routerLink="/hr/cham-cong">
+                    <i class="bi bi-calendar2-week me-2"></i>Bảng công
+                </a>
+                <a class="action-btn" routerLink="/hr/bang-luong">
+                    <i class="bi bi-receipt me-2"></i>Bảng lương
+                </a>
+                <a class="action-btn" routerLink="/hr/don-phep">
+                    <i class="bi bi-umbrella me-2"></i>Đơn phép
+                </a>
+                <button class="action-btn" (click)="load()" [disabled]="loading">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Làm mới
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-danger py-2" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+    <!-- ===== Skeleton when loading ===== -->
+    <div *ngIf="loading" class="mb-3">
+        <div class="row g-3">
+            <div class="col-md-3" *ngFor="let _ of [1,2,3,4]">
+                <div class="card border-0 shadow-sm skeleton-card">
+                    <div class="card-body placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                        <div class="mt-2">
+                            <span class="placeholder col-4"></span>
+                        </div>
+                        <div class="mt-3">
+                            <span class="placeholder col-8"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+            <div class="col-lg-4" *ngFor="let _ of [1,2,3]">
+                <div class="card border-0 shadow-sm skeleton-card">
+                    <div class="card-body placeholder-glow">
+                        <span class="placeholder col-5"></span>
+                        <div class="skeleton-chart mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI GRID -->
+    <div class="row g-4 mb-4" *ngIf="!loading">
+        <div class="col-md-3">
+            <div class="kpi-card kpi-blue">
+                <div class="kpi-header">
+                    <div class="kpi-icon-box kpi-icon-blue">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="kpi-label">Tổng nhân viên</div>
+                </div>
+                <div class="kpi-value">{{ display.tongNhanVien }}</div>
+                <div class="kpi-details">
+                    <span>Đang làm: {{ data.dangLam }}</span>
+                    <span class="dot-sep">•</span>
+                    <span>Nghỉ: {{ data.daNghi }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="kpi-card kpi-purple">
+                <div class="kpi-header">
+                    <div class="kpi-icon-box kpi-icon-purple">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="kpi-label">Bảng công</div>
+                </div>
+                <div class="kpi-value">{{ display.dangNhapLieu }}</div>
+                <div class="kpi-details">
+                    <span>Đang nhập liệu</span>
+                    <span class="dot-sep">•</span>
+                    <span>Chốt: {{ data.daChotCong }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="kpi-card kpi-orange">
+                <div class="kpi-header">
+                    <div class="kpi-icon-box kpi-icon-orange">
+                        <i class="bi bi-umbrella"></i>
+                    </div>
+                    <div class="kpi-label">Đơn phép chờ</div>
+                </div>
+                <div class="kpi-value">{{ display.choDuyet }}</div>
+                <div class="kpi-details">
+                    <span>Duyệt: {{ data.daDuyet }}</span>
+                    <span class="dot-sep">•</span>
+                    <span>Từ chối: {{ data.tuChoi }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="kpi-card kpi-green">
+                <div class="kpi-header">
+                    <div class="kpi-icon-box kpi-icon-green">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div class="kpi-label">Lương cần xử lý</div>
+                </div>
+                <div class="kpi-value">{{ data.canTinh }}</div>
+                <div class="kpi-details">
+                    <span>Cần tính lại</span>
+                    <span class="dot-sep">•</span>
+                    <span>Chờ duyệt: {{ data.choDuyetLuong }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSIGHTS -->
+    <div class="row g-3 mb-3" *ngIf="!loading && insights.length">
+        <div class="col-lg-3 col-md-6" *ngFor="let it of insights">
+            <div class="card border-0 shadow-sm insight h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-between gap-2">
+                        <div>
+                            <div class="fw-bold mb-1">{{ it.title }}</div>
+                            <div class="text-muted small">{{ it.desc }}</div>
+                        </div>
+
+                        <div class="insight-ic" [ngClass]="'tone-' + it.tone">
+                            <i [class]="it.icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="insight-hoverline"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="row g-4" *ngIf="!loading">
+        <div class="col-lg-4">
+            <div class="content-card h-100">
+                <div class="chart-header">
+                    <div class="fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-bar-chart"></i> Nhân sự
+                    </div>
+                    <div class="text-muted small">Đang làm vs đã nghỉ</div>
+                </div>
+                <div class="chart-box"><canvas #barNhanSu></canvas></div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="content-card h-100">
+                <div class="chart-header">
+                    <div class="fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-bar-chart-fill"></i> Đơn nghỉ phép
+                    </div>
+                    <div class="text-muted small">Chờ duyệt / đã duyệt / từ chối</div>
+                </div>
+                <div class="chart-box"><canvas #barPhep></canvas></div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="content-card h-100">
+                <div class="chart-header">
+                    <div class="fw-bold d-flex align-items-center gap-2">
+                        <i class="bi bi-pie-chart"></i> Tổng hợp module
+                    </div>
+                    <div class="text-muted small">Công · Lương · Đề xuất</div>
+                </div>
+                <div class="chart-box"><canvas #pieModules></canvas></div>
+            </div>
+        </div>
+    </div>
+
+</div>

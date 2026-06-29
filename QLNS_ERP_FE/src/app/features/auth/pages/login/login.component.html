@@ -1,0 +1,93 @@
+<div class="login-wrapper">
+  <div class="container">
+    <div class="row align-items-center justify-content-center min-vh-100">
+      <!-- LEFT PANEL - ILLUSTRATION -->
+      <div class="col-lg-7 d-none d-lg-flex flex-column justify-content-center h-100 py-5">
+        <div class="illustration-area animate-fade-in">
+          <div class="hero-placeholder" *ngIf="!imageLoaded" aria-hidden="true">
+            <div class="placeholder-content">
+              <h1 class="placeholder-title">QLNS ERP</h1>
+              <div class="placeholder-icons">
+                <i class="bi bi-people-fill"></i>
+                <i class="bi bi-laptop"></i>
+                <i class="bi bi-graph-up"></i>
+              </div>
+            </div>
+          </div>
+          <img class="hero-image" src="assets/images/login-hero.jpg" alt="Hệ thống quản lý nhân sự QLNS ERP"
+            (load)="onImageLoad($event)" (error)="onImageError($event)" />
+        </div>
+
+        <div class="brand-footer animate-slide-up">
+          <div class="brand-info">
+            <i class="bi bi-grid-3x3-gap-fill brand-icon"></i>
+            <span class="brand-text">QLNS ERP System | Hotline: 1900 21 77</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL - LOGIN CARD -->
+      <div class="col-12 col-md-8 col-lg-5">
+        <div class="login-card animate-slide-up">
+          <div class="card-header">
+            <h2 class="card-title">Đăng Nhập</h2>
+            <p class="card-subtitle">Hệ thống QLNS ERP</p>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="submit()" class="login-form" novalidate>
+            <!-- Username Field -->
+            <div class="form-group">
+              <label for="username" class="form-label">Tài Khoản</label>
+              <div class="input-group"
+                [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched">
+                <span class="input-icon">
+                  <i class="bi bi-person"></i>
+                </span>
+                <input type="text" id="username" class="form-control" formControlName="username"
+                  placeholder="Nhập tài khoản" autocomplete="username"
+                  [attr.aria-invalid]="form.get('username')?.invalid && form.get('username')?.touched" />
+              </div>
+              <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="invalid-feedback">
+                Vui lòng nhập tên đăng nhập
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="password" class="form-label">Mật Khẩu</label>
+              <div class="input-group"
+                [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched">
+                <span class="input-icon">
+                  <i class="bi bi-lock"></i>
+                </span>
+                <input [type]="showPassword ? 'text' : 'password'" id="password" class="form-control"
+                  formControlName="password" placeholder="**********" autocomplete="current-password"
+                  [attr.aria-invalid]="form.get('password')?.invalid && form.get('password')?.touched" />
+                <button type="button" class="input-toggle-btn" (mousedown)="showPasswordStart()"
+                  (mouseup)="showPasswordEnd()" (mouseleave)="showPasswordEnd()" (touchstart)="showPasswordStart()"
+                  (touchend)="showPasswordEnd()" tabindex="-1" title="Giữ để hiện mật khẩu">
+                  <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+              </div>
+              <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="invalid-feedback">
+                Vui lòng nhập mật khẩu
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMsg" class="alert alert-danger alert-custom" role="alert">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              <span>{{ errorMsg }}</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-login" [disabled]="loading">
+              <span *ngIf="!loading">ĐĂNG NHẬP</span>
+              <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

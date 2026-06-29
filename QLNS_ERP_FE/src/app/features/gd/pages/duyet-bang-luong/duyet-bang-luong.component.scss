@@ -1,0 +1,493 @@
+// ========== DESIGN SYSTEM - GD Duyệt Bảng Lương ==========
+@import '../../../../../scss/variables';
+
+// ========== Page Container ==========
+.page-container {
+  background: #f3f6f9;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+// ========== Header Card ==========
+.header-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+}
+
+// ========== Content Card ==========
+.content-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+
+  &:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba(37, 99, 235, 0.1);
+  }
+}
+
+// ========== Loading Overlay ==========
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: $radius-lg;
+
+  .spinner-container {
+    text-align: center;
+
+    .spinner-border {
+      width: 40px;
+      height: 40px;
+      border-width: 3px;
+      color: $primary;
+    }
+
+    .loading-text {
+      margin-top: 12px;
+      color: $text-muted;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+  }
+}
+
+// ========== Action Buttons ==========
+.action-btn {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+  z-index: 0;
+  cursor: pointer;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: #2563eb;
+    z-index: -1;
+    transition: width 0.3s ease;
+  }
+
+  &:hover:not(:disabled) {
+    color: white;
+    border-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+
+    &::before {
+      width: 100%;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.btn-sm {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  // Success variant
+  &.btn-success {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+
+    &::before {
+      background: #059669;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: #059669;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+  }
+}
+
+// ========== Table Styling ==========
+.table {
+  font-size: 0.875rem;
+
+  thead {
+    background: lighten($bg-page, 2%);
+    
+    th {
+      font-weight: 600;
+      color: $text-dark;
+      border-bottom: 2px solid $border-color;
+      padding: 12px 16px;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: all 0.2s ease;
+      cursor: pointer;
+
+      &:hover {
+        background: lighten($primary, 45%);
+      }
+
+      td {
+        padding: 14px 16px;
+        vertical-align: middle;
+        border-bottom: 1px solid lighten($border-color, 3%);
+      }
+    }
+  }
+}
+
+// ========== Status Badges ==========
+.badge {
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+
+  &.bg-warning {
+    background-color: #f59e0b !important;
+  }
+
+  &.bg-success {
+    background-color: #10b981 !important;
+  }
+
+  &.bg-danger {
+    background-color: #ef4444 !important;
+  }
+
+  &.bg-info {
+    background-color: #3b82f6 !important;
+  }
+
+  &.bg-light {
+    background-color: #e2e8f0 !important;
+    color: #1e293b !important;
+    font-weight: 600;
+  }
+}
+
+// ========== Form Controls ==========
+.form-control,
+.form-select {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.input-group-text {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-right: 0;
+  color: #64748b;
+}
+
+// ========== Pagination ==========
+.pagination {
+  .page-item {
+    .page-link {
+      color: $text-dark;
+      border: 1px solid $border-color;
+      border-radius: $radius-sm;
+      margin: 0 3px;
+      padding: 6px 12px;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: $primary;
+        color: white;
+        border-color: $primary;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.active .page-link {
+      background: $primary;
+      border-color: $primary;
+      font-weight: 600;
+    }
+
+    &.disabled .page-link {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ========== Modal Styling ==========
+.modal {
+  &.show {
+    display: block;
+  }
+
+  .modal-dialog {
+    .modal-content {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+
+      .modal-header {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 20px 24px;
+        background: linear-gradient(to bottom, white, #f8fafc);
+
+        .modal-title {
+          color: #1e293b;
+          font-weight: 700;
+        }
+
+        .btn-close {
+          opacity: 0.5;
+          transition: opacity 0.2s;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+
+      .modal-body {
+        padding: 24px;
+      }
+
+      .modal-footer {
+        border-top: 1px solid #e2e8f0;
+        padding: 16px 24px;
+        background: #f8fafc;
+
+        .btn {
+          border-radius: 12px;
+          padding: 10px 20px;
+          font-weight: 600;
+          transition: all 0.2s ease;
+
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          }
+        }
+      }
+    }
+  }
+}
+
+.modal-backdrop {
+  &.show {
+    opacity: 0.5;
+  }
+}
+
+// ========== Alert Styling ==========
+.alert {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 0.875rem;
+  border-left: 4px solid;
+
+  &.alert-danger {
+    background: #fee2e2;
+    border-left-color: #dc2626;
+    color: #991b1b;
+  }
+
+  &.alert-success {
+    background: #d1fae5;
+    border-left-color: #10b981;
+    color: #065f46;
+  }
+
+  &.alert-info {
+    background: #dbeafe;
+    border-left-color: #3b82f6;
+    color: #1e40af;
+  }
+}
+
+// ========== Detail Info Cards (Modal Chi Tiết) ==========
+.detail-info-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+  height: 100%;
+
+  &:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+
+  .detail-info-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 1.2rem;
+  }
+
+  .detail-info-label {
+    font-size: 0.72rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .detail-info-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+
+    .unit {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #64748b;
+    }
+  }
+}
+
+// ========== Salary Breakdown (Modal Chi Tiết) ==========
+.salary-breakdown {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+
+  .salary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #f1f5f9;
+    }
+
+    .salary-label { color: #475569; }
+    .salary-amount { color: #1e293b; font-weight: 500; }
+  }
+
+  .salary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+    color: white;
+
+    .salary-total-label { font-weight: 600; font-size: 0.95rem; }
+    .salary-total-amount { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
+  }
+}
+
+// ========== Confirm Icon Wrap (Modal Duyệt) ==========
+.confirm-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &.confirm-approve { background: #d1fae5; color: #10b981; }
+  &.confirm-reject  { background: #fee2e2; color: #ef4444; }
+}
+
+// ========== Confirm Summary Box (Modal Duyệt) ==========
+.confirm-summary-box {
+  border-radius: 12px;
+  padding: 16px 20px;
+  border: 1px solid transparent;
+
+  &.confirm-summary-approve { background: #d1fae5; border-color: #6ee7b7; color: #064e3b; }
+  &.confirm-summary-reject  { background: #fee2e2; border-color: #fca5a5; color: #7f1d1d; }
+}
+
+// ========== Bulk Total Box (Modal Hàng Loạt) ==========
+.bulk-total-box {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #86efac;
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+// ========== Bulk Detail Stat (Mini cards trong Bulk Modal) ==========
+.bulk-detail-stat {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+
+  .bds-label {
+    font-size: 0.72rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+  }
+
+  .bds-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  &.bulk-detail-total {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+}

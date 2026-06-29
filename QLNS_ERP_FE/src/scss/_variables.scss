@@ -1,0 +1,105 @@
+// src/scss/_variables.scss
+// ===== Design System Variables =====
+
+// Color Palette (Pastel Gradient friendly)
+// Color Palette (Professional Corporate)
+$primary: #1e3a8a;       // Deep Corporate Blue
+$primary-light: #3b82f6; // Standard Blue
+$primary-dark: #172554;  // Very Dark Blue
+
+$info: #0891b2;         // Cyan
+$info-light: #22d3ee;
+$info-dark: #155e75;
+
+$purple: #581c87;       // Deep Purple
+$purple-light: #7e22ce;
+$purple-dark: #3b0764;
+
+$success: #15803d;      // Forest Green (Natural)
+$success-light: #22c55e;
+$success-dark: #14532d;
+
+$warning: #b45309;      // Amber/Brown
+$warning-light: #f59e0b;
+$warning-dark: #78350f;
+
+$danger: #b91c1c;       // Deep Red
+$danger-light: #ef4444;
+$danger-dark: #7f1d1d;
+
+// Neutral Palette (Cool Grays)
+$slate-50: #f8fafc;
+$slate-100: #f1f5f9;
+$slate-200: #e2e8f0;
+$slate-300: #cbd5e1;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-700: #334155;
+$slate-800: #1e293b;
+$slate-900: #0f172a;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+
+// Border Radius (Square/Mature Look)
+$radius-sm: 2px;
+$radius-md: 4px;
+$radius-lg: 6px;
+$radius-xl: 8px;
+$radius-2xl: 12px;
+$radius-pill: 4px; // No more pills, just slightly rounded
+
+// Shadows (Subtle & Sharp)
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+$shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.1), 0 4px 8px rgba(15, 23, 42, 0.06);
+$shadow-xl: 0 20px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.08);
+$shadow-hover: 0 16px 40px rgba(15, 23, 42, 0.14), 0 6px 12px rgba(15, 23, 42, 0.08);
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-base: 0.2s ease;
+$transition-slow: 0.3s ease;
+$transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Typography
+$font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.875rem;
+$font-size-4xl: 2.25rem;
+
+// Gradients
+$gradient-primary: linear-gradient(135deg, $primary, $primary-light);
+$gradient-info: linear-gradient(135deg, $info, $info-light);
+$gradient-purple: linear-gradient(135deg, $purple, $purple-light);
+$gradient-success: linear-gradient(135deg, $success, $success-light);
+$gradient-warning: linear-gradient(135deg, $warning, $warning-light);
+$gradient-danger: linear-gradient(135deg, $danger, $danger-light);
+
+// Pastel Gradients (softer)
+$gradient-primary-pastel: linear-gradient(135deg, rgba($primary, 0.85), rgba($primary-light, 0.9));
+$gradient-info-pastel: linear-gradient(135deg, rgba($info, 0.85), rgba($info-light, 0.9));
+$gradient-purple-pastel: linear-gradient(135deg, rgba($purple, 0.85), rgba($purple-light, 0.9));
+$gradient-success-pastel: linear-gradient(135deg, rgba($success, 0.85), rgba($success-light, 0.9));
+$gradient-warning-pastel: linear-gradient(135deg, rgba($warning, 0.9), rgba($warning-light, 0.95));
+
+// Semantic colors (from Design System)
+$bg-page: $slate-100;      // #f1f5f9
+$card-bg: #ffffff;
+$text-dark: $slate-800;    // #1e293b
+$text-muted: $slate-500;   // #64748b
+$border-color: $slate-200; // #e2e8f0
+$error: $danger;
+$radius-full: 9999px;

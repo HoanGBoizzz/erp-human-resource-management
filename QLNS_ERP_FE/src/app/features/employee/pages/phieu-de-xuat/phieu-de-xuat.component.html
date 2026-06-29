@@ -1,0 +1,196 @@
+<div class="page-container">
+
+    <!-- HEADER CARD -->
+    <div class="header-card">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-tools me-2 text-primary"></i>Phiếu đề xuất mua dụng cụ
+                </h1>
+                <p class="page-subtitle mb-0">Lập phiếu đề xuất mua sắm trang thiết bị, dụng cụ làm việc</p>
+            </div>
+            <button class="action-btn btn" (click)="openModal()">
+                <i class="bi bi-plus-lg me-2"></i>Tạo phiếu mới
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI OVERVIEW -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-icon"><i class="bi bi-file-earmark-text"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Tổng phiếu</span>
+                    <span class="kpi-value">{{ list.length }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-warning">
+                <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Chờ duyệt</span>
+                    <span class="kpi-value">{{ cntChoDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-success">
+                <div class="kpi-icon"><i class="bi bi-check-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Đã duyệt</span>
+                    <span class="kpi-value">{{ cntDaDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-danger">
+                <div class="kpi-icon"><i class="bi bi-x-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Từ chối</span>
+                    <span class="kpi-value">{{ cntTuChoi }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIST CARD -->
+    <div class="content-card">
+        <div class="card-header-inner mb-3">
+            <h2 class="section-title"><i class="bi bi-list-ul me-2"></i>Danh sách phiếu đề xuất</h2>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" *ngIf="list.length === 0">
+            <i class="bi bi-inbox"></i>
+            <p>Chưa có phiếu đề xuất nào. Nhấn <strong>Tạo phiếu mới</strong> để bắt đầu.</p>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-responsive" *ngIf="list.length > 0">
+            <table class="table nlv-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Dụng cụ</th>
+                        <th>Đơn vị</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-end">Tổng tiền</th>
+                        <th>Lý do</th>
+                        <th>Ngày tạo</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of list; let i = index">
+                        <td class="text-muted">{{ i + 1 }}</td>
+                        <td class="fw-600">{{ item.tenDungCu }}</td>
+                        <td>{{ item.donViTinh }}</td>
+                        <td class="text-center">{{ item.soLuong }}</td>
+                        <td class="text-end">{{ formatCurrency(item.giaTien) }}</td>
+                        <td class="text-end fw-600 text-primary">{{ formatCurrency(item.tongTien) }}</td>
+                        <td class="text-truncate-col">{{ item.lyDo }}</td>
+                        <td class="text-muted small">{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td class="text-center">
+                            <span class="status-badge" [ngClass]="loaiClass(item.trangThai)">{{
+                                loaiLabel(item.trangThai) }}</span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1" (click)="openEditModal(item)"
+                                *ngIf="item.trangThai === 'CHO_DUYET'" title="Sửa phiếu">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" (click)="delete(item.id)"
+                                [disabled]="item.trangThai === 'DA_DUYET'" title="Xóa phiếu">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL TẠO PHIẾU ĐỀ XUẤT -->
+<div class="modal-backdrop-custom" *ngIf="showModal" (click)="closeModal()"></div>
+<div class="modal-panel" *ngIf="showModal" role="dialog" aria-modal="true">
+    <div class="modal-panel-header">
+        <h3>
+            <i class="bi" [ngClass]="isEditing ? 'bi-pencil-square text-warning' : 'bi-tools text-primary'" class="me-2"></i>
+            {{ isEditing ? 'Sửa phiếu đề xuất' : 'Tạo phiếu đề xuất mua dụng cụ' }}
+        </h3>
+        <button class="btn-close-panel" (click)="closeModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-panel-body">
+        <form [formGroup]="form" (ngSubmit)="submit()">
+
+            <!-- Tên dụng cụ -->
+            <div class="form-group mb-3">
+                <label class="form-label required">Tên dụng cụ / thiết bị</label>
+                <input type="text" class="form-control" formControlName="tenDungCu"
+                    placeholder="VD: Máy tính xách tay, bàn phím cơ..."
+                    [class.is-invalid]="form.get('tenDungCu')?.invalid && form.get('tenDungCu')?.touched">
+                <div class="invalid-feedback">Vui lòng nhập tên dụng cụ (tối đa 200 ký tự)</div>
+            </div>
+
+            <!-- Đơn vị + Số lượng -->
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <label class="form-label required">Đơn vị tính</label>
+                    <select class="form-select" formControlName="donViTinh">
+                        <option value="cái">Cái</option>
+                        <option value="bộ">Bộ</option>
+                        <option value="chiếc">Chiếc</option>
+                        <option value="hộp">Hộp</option>
+                        <option value="gói">Gói</option>
+                        <option value="cuộn">Cuộn</option>
+                        <option value="kg">Kg</option>
+                        <option value="lít">Lít</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label required">Số lượng</label>
+                    <input type="number" class="form-control" formControlName="soLuong" min="1"
+                        [class.is-invalid]="form.get('soLuong')?.invalid && form.get('soLuong')?.touched">
+                    <div class="invalid-feedback">Số lượng tối thiểu là 1</div>
+                </div>
+            </div>
+
+            <!-- Đơn giá -->
+            <div class="form-group mb-3">
+                <label class="form-label required">Đơn giá (đồng)</label>
+                <input type="number" class="form-control" formControlName="giaTien" min="1000"
+                    placeholder="Nhập đơn giá dự tính..."
+                    [class.is-invalid]="form.get('giaTien')?.invalid && form.get('giaTien')?.touched">
+                <div class="invalid-feedback">Đơn giá phải ≥ 1,000 đ</div>
+            </div>
+
+            <!-- Preview tổng tiền -->
+            <div class="tong-tien-preview mb-3" *ngIf="tongTienPreview > 0">
+                <span class="label">Tổng tiền dự tính:</span>
+                <span class="value">{{ formatCurrency(tongTienPreview) }}</span>
+            </div>
+
+            <!-- Lý do -->
+            <div class="form-group mb-4">
+                <label class="form-label required">Lý do cần mua</label>
+                <textarea class="form-control" formControlName="lyDo" rows="3"
+                    placeholder="Mô tả lý do cần mua dụng cụ này..."
+                    [class.is-invalid]="form.get('lyDo')?.invalid && form.get('lyDo')?.touched"></textarea>
+                <div class="invalid-feedback">Vui lòng nhập lý do cần mua (tối đa 500 ký tự)</div>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-end">
+                <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Hủy</button>
+                <button type="submit" class="btn btn-primary" [disabled]="submitting">
+                    <i class="bi" [ngClass]="isEditing ? 'bi-check-lg' : 'bi-send'" class="me-2"></i>
+                    {{ isEditing ? 'Cập nhật phiếu' : 'Nộp phiếu' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

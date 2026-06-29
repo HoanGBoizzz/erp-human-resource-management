@@ -1,0 +1,355 @@
+﻿<div class="page-container">
+
+  <!-- HEADER CARD -->
+  <div class="header-card">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <h3 class="fw-bold mb-1"><i class="bi bi-calendar2-check me-2"></i>Quản lý đơn nghỉ phép</h3>
+        <p class="text-muted mb-0 small">Tạo đơn xin nghỉ phép và theo dõi trạng thái phê duyệt.</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" (click)="load()" [disabled]="loadingList">
+          <i class="bi bi-arrow-clockwise" [class.spin]="loadingList"></i>
+          <span class="ms-1 d-none d-sm-inline">Làm mới</span>
+        </button>
+        <button class="btn btn-primary" (click)="openCreateModal()">
+          <i class="bi bi-plus-circle me-1"></i>Tạo đơn mới
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="alert alert-danger d-flex align-items-center" *ngIf="errorMsg">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span>{{ errorMsg }}</span>
+    <button type="button" class="btn-close ms-auto" (click)="errorMsg = ''"></button>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="row g-3 mb-4">
+    <div class="col-4">
+      <div class="kpi-card kpi-primary">
+        <div class="kpi-icon"><i class="bi bi-calendar3"></i></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Tổng phép năm</div>
+          <div class="kpi-value" [class.animating]="animatingStats">{{ displayTongPhepNam }}</div>
+          <div class="kpi-sub">ngày / năm</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="kpi-card kpi-warning">
+        <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Đã sử dụng</div>
+          <div class="kpi-value" [class.animating]="animatingStats">{{ displayDaSuDung }}</div>
+          <div class="kpi-sub">{{ usedPercent() | number:'1.0-0' }}% đã dùng</div>
+          <div class="kpi-progress-track">
+            <div class="kpi-progress-fill" [style.width.%]="usedPercent()"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="kpi-card kpi-success">
+        <div class="kpi-icon"><i class="bi bi-calendar-check"></i></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Còn lại</div>
+          <div class="kpi-value" [class.animating]="animatingStats">{{ displayConLai }}</div>
+          <div class="kpi-sub">ngày khả dụng</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER + LIST CARD -->
+  <div class="content-card">
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="filter-search-wrap">
+        <i class="bi bi-search filter-search-icon"></i>
+        <input class="filter-search-input" [formControl]="searchCtrl" placeholder="Tìm kiếm đơn...">
+      </div>
+      <div class="filter-status-tabs">
+        <button class="status-tab" [class.active]="statusCtrl.value === 'ALL'" (click)="statusCtrl.setValue('ALL')">
+          Tất cả <span class="tab-count">{{ all.length }}</span>
+        </button>
+        <button class="status-tab tab-pending" [class.active]="statusCtrl.value === 'CHO_DUYET'"
+          (click)="statusCtrl.setValue('CHO_DUYET')">
+          <i class="bi bi-clock"></i> Chờ duyệt
+        </button>
+        <button class="status-tab tab-approved" [class.active]="statusCtrl.value === 'DA_DUYET'"
+          (click)="statusCtrl.setValue('DA_DUYET')">
+          <i class="bi bi-check-circle"></i> Đã duyệt
+        </button>
+        <button class="status-tab tab-rejected" [class.active]="statusCtrl.value === 'TU_CHOI'"
+          (click)="statusCtrl.setValue('TU_CHOI')">
+          <i class="bi bi-x-circle"></i> Từ chối
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div *ngIf="loadingList" class="skeleton-list">
+      <div class="skeleton-row" *ngFor="let i of [1,2,3,4]">
+        <div class="skeleton-box" style="width:48px; height:48px; border-radius:8px;"></div>
+        <div class="flex-grow-1">
+          <div class="skeleton-box mb-2" style="width:140px; height:14px;"></div>
+          <div class="skeleton-box" style="width:220px; height:12px;"></div>
+        </div>
+        <div class="skeleton-box" style="width:80px; height:26px; border-radius:4px;"></div>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <div class="empty-state" *ngIf="!loadingList && list.length === 0">
+      <i class="bi bi-calendar2-x"></i>
+      <p>Không có đơn nghỉ phép nào.</p>
+      <button class="btn btn-primary btn-sm" (click)="openCreateModal()">
+        <i class="bi bi-plus-circle me-1"></i>Tạo đơn đầu tiên
+      </button>
+    </div>
+
+    <!-- Leave list -->
+    <div class="leave-list" *ngIf="!loadingList && list.length > 0">
+      <div class="leave-row" *ngFor="let d of list" [class.row-pending]="d.trangThai === 'CHO_DUYET'"
+        [class.row-approved]="d.trangThai === 'DA_DUYET'" [class.row-rejected]="d.trangThai === 'TU_CHOI'"
+        (click)="openDetail(d.id)">
+
+        <!-- Left: date block -->
+        <div class="date-block">
+          <span class="date-day">{{ d.tuNgay | date:'dd' }}</span>
+          <span class="date-mon">{{ d.tuNgay | date:'MM/yy' }}</span>
+        </div>
+
+        <!-- Middle: info -->
+        <div class="leave-info flex-grow-1">
+          <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+            <span class="leave-type">{{ d.tenLoaiPhep }}</span>
+            <span class="leave-id text-muted">#{{ d.id }}</span>
+          </div>
+          <div class="leave-dates">
+            <i class="bi bi-calendar-range me-1"></i>
+            {{ d.tuNgay | dateVn }} {{ d.denNgay | dateVn }}
+            <span class="ms-2 fw-semibold"> {{ d.soNgay }} ngày</span>
+          </div>
+        </div>
+
+        <!-- Right: status + action -->
+        <div class="d-flex align-items-center gap-2">
+          <span class="status-pill" [ngClass]="'pill-' + getStatusColor(d.trangThai)">
+            <i class="bi" [ngClass]="getStatusIcon(d.trangThai)"></i>
+            {{ statusText(d.trangThai) }}
+          </span>
+          <i class="bi bi-chevron-right text-muted"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 
+     CREATE / EDIT MODAL
+ -->
+<div class="modal-backdrop fade show" *ngIf="showCreateModal" (click)="closeCreateModal()"></div>
+<div class="modal fade show d-block" tabindex="-1" *ngIf="showCreateModal">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" (click)="$event.stopPropagation()">
+    <div class="modal-content app-modal">
+
+      <div class="modal-header app-modal-header">
+        <div>
+          <h5 class="modal-title">
+            <i class="bi me-2" [ngClass]="editMode ? 'bi-pencil-square' : 'bi-file-earmark-plus'"></i>
+            {{ editMode ? 'Sửa đơn nghỉ phép' : 'Tạo đơn xin nghỉ phép' }}
+          </h5>
+          <p class="modal-subtitle mb-0">{{ editMode ? 'Cập nhật thông tin đơn của bạn' : 'Điền đầy đủ thông tin bên
+            dưới' }}</p>
+        </div>
+        <button type="button" class="btn-close" (click)="closeCreateModal()"></button>
+      </div>
+
+      <div class="modal-body pt-3" style="padding: 1.25rem 1.5rem;">
+        <form id="leaveForm" [formGroup]="form" (ngSubmit)="submit()">
+
+          <div class="mb-3">
+            <label class="form-label form-label-sm fw-semibold">
+              <i class="bi bi-tag me-1 text-primary"></i>Loại nghỉ phép <span class="text-danger">*</span>
+            </label>
+            <select class="form-select form-select-sm" formControlName="loaiPhepId"
+              [class.is-invalid]="form.get('loaiPhepId')?.touched && form.get('loaiPhepId')?.invalid"
+              [attr.disabled]="loadingLoaiPhep ? true : null">
+              <option value="">{{ loadingLoaiPhep ? 'Đang tải...' : 'Chọn loại nghỉ phép' }}</option>
+              <option *ngFor="let lp of loaiPhepList" [value]="lp.id">{{ lp.tenLoaiPhep }}</option>
+            </select>
+            <div class="invalid-feedback">Vui lòng chọn loại nghỉ phép</div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label form-label-sm fw-semibold">
+                <i class="bi bi-calendar-event me-1 text-primary"></i>Từ ngày <span class="text-danger">*</span>
+              </label>
+              <input type="date" class="form-control form-control-sm" formControlName="tuNgay"
+                (change)="validateDateRange()"
+                [class.is-invalid]="form.get('tuNgay')?.touched && form.get('tuNgay')?.invalid">
+              <div class="invalid-feedback">Vui lòng chọn ngày bắt đầu</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label form-label-sm fw-semibold">
+                <i class="bi bi-calendar-event me-1 text-primary"></i>Đến ngày <span class="text-danger">*</span>
+              </label>
+              <input type="date" class="form-control form-control-sm" formControlName="denNgay"
+                (change)="validateDateRange()"
+                [class.is-invalid]="form.get('denNgay')?.touched && form.get('denNgay')?.invalid">
+              <div class="invalid-feedback">Vui lòng chọn ngày kết thúc</div>
+            </div>
+          </div>
+
+          <div class="alert alert-warning py-2 small" *ngIf="dateRangeError">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>{{ dateRangeError }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label form-label-sm fw-semibold">
+              <i class="bi bi-chat-left-text me-1 text-primary"></i>Lý do xin nghỉ <span class="text-danger">*</span>
+            </label>
+            <textarea rows="4" class="form-control form-control-sm" formControlName="lyDo"
+              placeholder="Nhập lý do xin nghỉ của bạn..."
+              [class.is-invalid]="form.get('lyDo')?.touched && form.get('lyDo')?.invalid"></textarea>
+            <div class="invalid-feedback">Vui lòng nhập lý do (tối đa 500 ký tự)</div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="closeCreateModal()">
+          <i class="bi bi-x-circle me-1"></i>Hủy
+        </button>
+        <button type="submit" form="leaveForm" class="btn btn-primary btn-sm px-4"
+          [disabled]="loadingCreate || form.invalid">
+          <span class="spinner-border spinner-border-sm me-1" *ngIf="loadingCreate"></span>
+          <i class="bi me-1" *ngIf="!loadingCreate" [ngClass]="editMode ? 'bi-check-circle-fill' : 'bi-send-fill'"></i>
+          {{ loadingCreate ? (editMode ? 'Đang cập nhật...' : 'Đang gửi...') : (editMode ? 'Cập nhật' : 'Gửi đơn') }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 
+     DETAIL DRAWER
+ -->
+<div class="drawer-overlay" *ngIf="showDetail" (click)="closeDetail()"></div>
+<div class="detail-drawer" [class.drawer-open]="showDetail" *ngIf="showDetail">
+
+  <div class="drawer-header">
+    <div>
+      <h5 class="fw-bold mb-1">
+        <i class="bi bi-file-earmark-text me-2 text-primary"></i>Chi tiết đơn nghỉ phép
+      </h5>
+      <p class="text-muted small mb-0" *ngIf="selectedDetail">Đơn #{{ selectedDetail.id }}</p>
+    </div>
+    <button type="button" class="btn-close" (click)="closeDetail()"></button>
+  </div>
+
+  <!-- Loading -->
+  <div class="d-flex flex-column align-items-center justify-content-center py-5" *ngIf="detailLoading">
+    <div class="spinner-border text-primary mb-2"></div>
+    <span class="text-muted small">Đang tải...</span>
+  </div>
+
+  <!-- Detail body -->
+  <div class="drawer-body" *ngIf="!detailLoading && selectedDetail">
+
+    <!-- Status banner -->
+    <div class="status-banner" [ngClass]="'banner-' + getStatusColor(selectedDetail.trangThai)">
+      <i class="bi fs-4" [ngClass]="getStatusIcon(selectedDetail.trangThai)"></i>
+      <div>
+        <div class="fw-bold">{{ statusText(selectedDetail.trangThai) }}</div>
+        <div class="small opacity-75">
+          {{ selectedDetail.trangThai === 'CHO_DUYET' ? 'Đơn đang chờ phê duyệt' :
+          selectedDetail.trangThai === 'DA_DUYET' ? 'Đơn đã được chấp thuận' : 'Đơn đã bị từ chối' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning for non-editable -->
+    <div class="alert alert-info py-2 small mt-3"
+      *ngIf="selectedDetail.trangThai !== 'CHO_DUYET' || selectedDetail.ngayDuyet || selectedDetail.nguoiDuyetId">
+      <i class="bi bi-info-circle-fill me-1"></i>
+      <span *ngIf="selectedDetail.trangThai !== 'CHO_DUYET'">Chỉ được sửa/xóa khi đơn đang chờ duyệt.</span>
+      <span
+        *ngIf="selectedDetail.trangThai === 'CHO_DUYET' && (selectedDetail.ngayDuyet || selectedDetail.nguoiDuyetId)">Đơn
+        đã được xử lý trước đó.</span>
+    </div>
+
+    <!-- Info Section -->
+    <div class="drawer-section">
+      <div class="drawer-section-title"><i class="bi bi-info-circle me-1"></i>Thông tin đơn</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Loại nghỉ phép</div>
+          <div class="info-value fw-semibold">{{ selectedDetail.tenLoaiPhep }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Số ngày nghỉ</div>
+          <div class="info-value"><span class="days-badge">{{ selectedDetail.soNgay }} ngày</span></div>
+        </div>
+        <div class="info-item info-item-full">
+          <div class="info-label">Thời gian nghỉ</div>
+          <div class="info-value fw-semibold">
+            <i class="bi bi-calendar-range me-1 text-primary"></i>
+            {{ selectedDetail.tuNgay | dateVn }} {{ selectedDetail.denNgay | dateVn }}
+          </div>
+        </div>
+        <div class="info-item info-item-full">
+          <div class="info-label">Lý do xin nghỉ</div>
+          <div class="info-value prewrap">{{ selectedDetail.lyDo || '' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-3">
+
+    <!-- Approval Section -->
+    <div class="drawer-section">
+      <div class="drawer-section-title"><i class="bi bi-person-check me-1"></i>Thông tin phê duyệt</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Người duyệt</div>
+          <div class="info-value">{{ selectedDetail.tenNguoiDuyet || 'Chưa xác định' }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Ngày duyệt</div>
+          <div class="info-value">
+            {{ selectedDetail.ngayDuyet ? (selectedDetail.ngayDuyet | dateVn) : 'Chưa duyệt' }}
+          </div>
+        </div>
+        <div class="info-item info-item-full" *ngIf="selectedDetail.trangThai === 'TU_CHOI'">
+          <div class="info-label text-danger">Lý do từ chối</div>
+          <div class="info-value text-danger prewrap">{{ selectedDetail.lyDoTuChoi || '' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawer footer actions -->
+  <div class="drawer-footer" *ngIf="selectedDetail">
+    <div class="d-flex gap-2"
+      *ngIf="selectedDetail.trangThai === 'CHO_DUYET' && !selectedDetail.ngayDuyet && !selectedDetail.nguoiDuyetId">
+      <button class="btn btn-warning btn-sm flex-fill" (click)="editLeaveRequest()">
+        <i class="bi bi-pencil-square me-1"></i>Sửa
+      </button>
+      <button class="btn btn-danger btn-sm flex-fill" (click)="deleteLeaveRequest()">
+        <i class="bi bi-trash3 me-1"></i>Xóa
+      </button>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm w-100"
+      [class.mt-2]="selectedDetail.trangThai === 'CHO_DUYET' && !selectedDetail.ngayDuyet" (click)="closeDetail()">
+      <i class="bi bi-x-circle me-1"></i>Đóng
+    </button>
+  </div>
+</div>

@@ -1,0 +1,368 @@
+﻿<div class="page-container">
+    <!-- Header Card -->
+    <div class="header-card">
+        <div class="header-top">
+            <div class="header-title-group">
+                <h1 class="page-title">
+                    <i class="bi bi-shield-check"></i>
+                    Quản Lý Nhận Diện Khuôn Mặt
+                </h1>
+                <p class="page-subtitle">Đăng ký và quản lý dữ liệu sinh trắc học cho hệ thống chấm công tự động</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="kpi-card kpi-success">
+                <div class="kpi-icon">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Đã đăng ký</div>
+                    <div class="kpi-value">{{ registeredEmployees.length }}</div>
+                    <div class="kpi-unit">nhân viên</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="kpi-card kpi-warning">
+                <div class="kpi-icon">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Chưa đăng ký</div>
+                    <div class="kpi-value">{{ allEmployees.length - registeredEmployees.length }}</div>
+                    <div class="kpi-unit">nhân viên</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row g-4">
+        <!-- Left Panel: Registration Wizard -->
+        <div class="col-lg-8">
+            <div class="content-card">
+                <!-- Step Progress Indicator -->
+                <div class="steps-progress mb-4">
+                    <div class="step-item" [class.active]="!selectedEmployee" [class.completed]="selectedEmployee">
+                        <div class="step-circle">1</div>
+                        <span class="step-text">Chọn nhân viên</span>
+                    </div>
+                    <div class="step-connector" [class.completed]="selectedEmployee"></div>
+                    <div class="step-item" [class.active]="selectedEmployee && !previewUrl" [class.completed]="previewUrl">
+                        <div class="step-circle">2</div>
+                        <span class="step-text">Chụp/Tải ảnh</span>
+                    </div>
+                    <div class="step-connector" [class.completed]="previewUrl"></div>
+                    <div class="step-item" [class.active]="previewUrl">
+                        <div class="step-circle">3</div>
+                        <span class="step-text">Xác nhận</span>
+                    </div>
+                </div>
+
+                <!-- Step 1: Employee Selection -->
+                <div class="step-content" *ngIf="!selectedEmployee">
+                    <div class="mb-3">
+                        <h5 class="section-title">
+                            <i class="bi bi-search"></i>
+                            Tìm và Chọn Nhân Viên
+                        </h5>
+                        <p class="text-muted small mb-3">Vui lòng chọn nhân viên cần đăng ký khuôn mặt</p>
+                    </div>
+
+                    <div class="search-wrapper mb-3">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" placeholder="Tìm kiếm theo tên hoặc mã nhân viên..." [(ngModel)]="searchKeyword" class="form-control search-input">
+                        <button class="btn-clear-search" *ngIf="searchKeyword" (click)="searchKeyword = ''">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="employee-list-wrapper">
+                        <div class="employee-item" *ngFor="let emp of filteredEmployees" (click)="onEmployeeSelect(emp)">
+                            <div class="employee-avatar">
+                                <i class="bi bi-person-circle"></i>
+                            </div>
+                            <div class="employee-info">
+                                <div class="employee-name">{{ emp.hoTen }}</div>
+                                <div class="employee-meta">
+                                    <span class="badge bg-primary-subtle text-primary">{{ emp.maNhanVien }}</span>
+                                    <span class="text-muted small">{{ emp.tenPhongBan }}</span>
+                                </div>
+                            </div>
+                            <i class="bi bi-chevron-right text-muted"></i>
+                        </div>
+
+                        <div class="empty-state" *ngIf="filteredEmployees.length === 0">
+                            <i class="bi bi-inbox"></i>
+                            <p class="text-muted">Không tìm thấy nhân viên nào</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Capture/Upload Photo -->
+                <div class="step-content" *ngIf="selectedEmployee && !previewUrl">
+                    <div class="selected-employee-info mb-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-person-check-fill text-success fs-3"></i>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold">{{ selectedEmployee.hoTen }}</div>
+                                <div class="text-muted small">{{ selectedEmployee.maNhanVien }}</div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" (click)="clearSelection()">
+                                <i class="bi bi-arrow-repeat"></i> Đổi
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info" *ngIf="selectedEmployeeFaces.length > 0">
+                        <i class="bi bi-info-circle"></i>
+                        Đã có <strong>{{ selectedEmployeeFaces.length }}/3</strong> ảnh được đăng ký
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="section-title">
+                            <i class="bi bi-camera"></i>
+                            Chọn Phương Thức Chụp Ảnh
+                        </h5>
+                        <p class="text-muted small mb-3">Vui lòng chọn một trong hai phương thức bên dưới</p>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="capture-option" (click)="openCameraModal()">
+                                <div class="option-icon bg-primary-subtle">
+                                    <i class="bi bi-camera text-primary"></i>
+                                </div>
+                                <div class="option-content">
+                                    <h6 class="mb-1">Chụp từ Camera</h6>
+                                    <p class="text-muted small mb-0">Sử dụng webcam để chụp ảnh trực tiếp</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="capture-option" (click)="triggerFileInput()">
+                                <div class="option-icon bg-success-subtle">
+                                    <i class="bi bi-cloud-upload text-success"></i>
+                                </div>
+                                <div class="option-content">
+                                    <h6 class="mb-1">Tải Ảnh Lên</h6>
+                                    <p class="text-muted small mb-0">Chọn ảnh từ thiết bị của bạn</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+
+                    <!-- Guidelines Card -->
+                    <div class="guidelines-card">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            <strong class="text-dark">Hướng Dẫn Chụp Ảnh Đạt Chuẩn</strong>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <div class="guideline-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span>Khuôn mặt quay thẳng vào camera</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="guideline-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span>Ánh sáng đầy đủ, không bị tối</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="guideline-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span>Không đeo khẩu trang, kính đen</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="guideline-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span>Khuôn mặt không bị che khuất</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Confirm Registration -->
+                <div class="step-content" *ngIf="selectedEmployee && previewUrl">
+                    <div class="mb-3">
+                        <h5 class="section-title">
+                            <i class="bi bi-check-circle"></i>
+                            Xác Nhận Đăng Ký
+                        </h5>
+                        <p class="text-muted small mb-3">Kiểm tra ảnh và xác nhận đăng ký</p>
+                    </div>
+
+                    <div class="preview-wrapper mb-3">
+                        <img [src]="previewUrl" alt="Preview" class="preview-image">
+
+                        <div class="preview-details">
+                            <div class="detail-row">
+                                <i class="bi bi-person-fill text-primary"></i>
+                                <div>
+                                    <div class="fw-semibold">{{ selectedEmployee.hoTen }}</div>
+                                    <div class="text-muted small">{{ selectedEmployee.maNhanVien }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <i class="bi bi-images text-primary"></i>
+                                <span>Ảnh {{ selectedEmployeeFaces.length + 1 }}/3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary flex-fill" (click)="resetCapture()" [disabled]="isUploading">
+                            <i class="bi bi-arrow-repeat"></i> Chụp Lại
+                        </button>
+                        <button class="btn btn-primary flex-fill action-btn" (click)="registerFace()" [disabled]="isUploading">
+                            <i class="bi bi-hourglass-split" *ngIf="isUploading"></i>
+                            <i class="bi bi-check-lg" *ngIf="!isUploading"></i>
+                            {{ isUploading ? 'Đang Xử Lý...' : 'Xác Nhận Đăng Ký' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Registered Employees List -->
+        <div class="col-lg-4">
+            <div class="content-card">
+                <div class="card-header-custom mb-3">
+                    <h5 class="mb-2">
+                        <i class="bi bi-people-fill"></i>
+                        Nhân Viên Đã Đăng Ký
+                    </h5>
+                    <div class="search-wrapper">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" placeholder="Tìm kiếm..." [(ngModel)]="searchKeyword" class="form-control form-control-sm search-input">
+                    </div>
+                </div>
+
+                <div class="registered-list-container">
+                    <div class="loading-overlay" *ngIf="isLoading">
+                        <div class="spinner-container">
+                            <div class="spinner-border text-primary"></div>
+                            <div class="loading-text">Đang tải...</div>
+                        </div>
+                    </div>
+
+                    <div class="registered-items">
+                        <div class="registered-item" *ngFor="let emp of filteredRegistered">
+                            <div class="item-avatar">
+                                <img [src]="emp.faceImageUrl || '/assets/images/default-avatar.png'" alt="{{ emp.tenNhanVien }}">
+                            </div>
+                            <div class="item-info flex-grow-1">
+                                <div class="item-name">{{ emp.tenNhanVien }}</div>
+                                <div class="item-meta">
+                                    <span class="badge bg-primary-subtle text-primary me-1">{{ emp.maNhanVien }}</span>
+                                    <span class="badge bg-info-subtle text-info">
+                                        <i class="bi bi-images"></i> {{ emp.soLuongAnh }}
+                                    </span>
+                                    <span class="text-warning small ms-1" *ngIf="emp.chatLuongTrungBinh">
+                                        <i class="bi bi-star-fill"></i> {{ emp.chatLuongTrungBinh | number:'1.0-0' }}%
+                                    </span>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger" (click)="deleteFace(emp)" title="Xóa">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+
+                        <div class="empty-state" *ngIf="filteredRegistered.length === 0 && !isLoading">
+                            <i class="bi bi-inbox"></i>
+                            <p class="text-muted">Chưa có nhân viên nào đăng ký</p>
+                        </div>
+                    </div>
+
+                    <!-- Existing Faces of Selected Employee -->
+                    <div class="existing-faces" *ngIf="selectedEmployee && selectedEmployeeFaces.length > 0">
+                        <div class="section-divider"></div>
+                        <h6 class="mb-2">
+                            <i class="bi bi-images"></i>
+                            Ảnh Đã Đăng Ký của {{ selectedEmployee.hoTen }}
+                        </h6>
+                        <div class="faces-grid">
+                            <div class="face-thumb" *ngFor="let existingFace of selectedEmployeeFaces">
+                                <img [src]="existingFace.faceImageUrl || '/assets/images/default-avatar.png'" alt="Face">
+                                <div class="thumb-overlay">
+                                    <button class="btn btn-sm btn-danger" (click)="deleteFace(existingFace, existingFace.id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                                <div class="thumb-quality" *ngIf="existingFace.qualityScore">
+                                    <i class="bi bi-star-fill"></i> {{ existingFace.qualityScore * 100 | number:'1.0-0' }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Modal -->
+    <div class="modal-backdrop-custom" *ngIf="isWebcamActive" (click)="closeCameraModal()">
+        <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+            <div class="modal-header-custom">
+                <h5 class="modal-title">
+                    <i class="bi bi-camera"></i> Chụp Ảnh Khuôn Mặt
+                </h5>
+                <button type="button" class="btn-close" (click)="closeCameraModal()"></button>
+            </div>
+
+            <div class="modal-body-custom">
+                <div class="camera-preview">
+                    <video #videoElement autoplay playsinline></video>
+                    <canvas #canvasElement style="display: none;"></canvas>
+
+                    <!-- Face Guide -->
+                    <div class="face-guide">
+                        <div class="guide-frame">
+                            <div class="corner top-left"></div>
+                            <div class="corner top-right"></div>
+                            <div class="corner bottom-left"></div>
+                            <div class="corner bottom-right"></div>
+                        </div>
+                        <div class="guide-hint">Đặt khuôn mặt vào trong khung</div>
+                    </div>
+                </div>
+
+                <div class="camera-hints">
+                    <div class="hint-item">
+                        <i class="bi bi-person text-primary"></i>
+                        <span>Khuôn mặt quay thẳng</span>
+                    </div>
+                    <div class="hint-item">
+                        <i class="bi bi-lightbulb text-primary"></i>
+                        <span>Ánh sáng đầy đủ</span>
+                    </div>
+                    <div class="hint-item">
+                        <i class="bi bi-emoji-smile text-primary"></i>
+                        <span>Không đeo khẩu trang</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+                <button class="btn btn-secondary" (click)="closeCameraModal()">
+                    <i class="bi bi-x-lg"></i> Hủy
+                </button>
+                <button class="btn btn-primary action-btn" (click)="capturePhoto()">
+                    <i class="bi bi-camera"></i> Chụp Ảnh
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

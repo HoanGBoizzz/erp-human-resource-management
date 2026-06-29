@@ -1,0 +1,398 @@
+<div class="page-container">
+    <div class="header-card">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div>
+                <h4 class="fw-bold mb-1"><i class="bi bi-building me-2 text-primary"></i>Quản lý phòng ban</h4>
+                <p class="text-muted mb-0">Danh sách phòng ban và nhân viên</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="action-btn" type="button" (click)="openCreateModal()">
+                    <i class="bi bi-plus-lg me-1"></i>Thêm phòng ban
+                </button>
+                <button class="action-btn" (click)="loadList()" [disabled]="loadingList">
+                    <i class="bi" [ngClass]="loadingList ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+                    <span class="ms-1">{{ loadingList ? 'Đang tải...' : 'Tải lại' }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMsg }}
+        <button type="button" class="btn-close" (click)="errorMsg = ''"></button>
+    </div>
+
+    <!-- Bar chart: số lượng nhân viên theo phòng ban -->
+    <div class="content-card" *ngIf="list.length > 0">
+        <h6 class="fw-semibold mb-3"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Nhân sự theo phòng ban</h6>
+        <div style="position: relative; height: 220px;">
+            <canvas #deptBarChart></canvas>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" *ngIf="loadingList">
+            <div class="spinner-container">
+                <div class="spinner-border" role="status"></div>
+                <div class="loading-text">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Mã phòng ban</th>
+                        <th>Tên phòng ban</th>
+                        <th class="text-center">Tổng nhân viên</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pb of list" [class.table-active]="pb.id === selectedId">
+                        <td class="fw-semibold">{{ pb.maPhongBan }}</td>
+                        <td>{{ pb.tenPhongBan }}</td>
+                        <td class="text-center">
+                            <span class="badge bg-primary-subtle text-primary">{{ pb.tongNhanVien }}</span>
+                        </td>
+                        <td>
+                            <span [class]="getStatusBadge(pb.trangThai)">{{ getStatusLabel(pb.trangThai) }}</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex gap-1 justify-content-end">
+                                <button class="btn btn-sm btn-outline-primary" (click)="openDetailModal(pb)"
+                                    title="Xem chi tiết">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" (click)="openEditModal(pb)"
+                                    title="Chỉnh sửa">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" (click)="confirmDelete(pb)"
+                                    [disabled]="pb.tongNhanVien > 0" title="Xóa">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="list.length === 0 && !loadingList">
+                        <td colspan="5" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>Không có dữ liệu
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- CREATE MODAL -->
+    <div class="modal fade" [class.show]="showCreateModal" [style.display]="showCreateModal ? 'block' : 'none'"
+        tabindex="-1" (click)="closeCreateModal()">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Thêm phòng ban mới</h5>
+                    <button type="button" class="btn-close" (click)="closeCreateModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="createForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Mã phòng ban <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="maPhongBan"
+                                placeholder="VD: PB001">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Tên phòng ban <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="tenPhongBan"
+                                placeholder="Nhập tên phòng ban">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Phòng ban cha</label>
+                            <select class="form-select" formControlName="phongBanChaId">
+                                <option [ngValue]="null">-- Không có --</option>
+                                <option *ngFor="let pb of list" [ngValue]="pb.id">{{ pb.tenPhongBan }}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Ghi chú</label>
+                            <textarea class="form-control" rows="2" formControlName="ghiChu"
+                                placeholder="Ghi chú (tuỳ chọn)"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" (click)="closeCreateModal()"
+                        [disabled]="saving">Hủy</button>
+                    <button type="button" class="btn btn-primary" (click)="saveCreate()" [disabled]="saving">
+                        <span class="spinner-border spinner-border-sm me-1" *ngIf="saving"></span>Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" [class.show]="showCreateModal" *ngIf="showCreateModal"></div>
+
+    <!-- EDIT MODAL -->
+    <div class="modal fade" [class.show]="showEditModal" [style.display]="showEditModal ? 'block' : 'none'"
+        tabindex="-1" (click)="closeEditModal()">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Chỉnh sửa phòng ban</h5>
+                    <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="editForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Tên phòng ban <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="tenPhongBan">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Phòng ban cha</label>
+                            <select class="form-select" formControlName="phongBanChaId">
+                                <option [ngValue]="null">-- Không có --</option>
+                                <option *ngFor="let pb of getOtherPhongBan(selectedId ?? undefined)" [ngValue]="pb.id">
+                                    {{ pb.tenPhongBan }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Trạng thái</label>
+                            <select class="form-select" formControlName="trangThai">
+                                <option [ngValue]="true">Hoạt động</option>
+                                <option [ngValue]="false">Ngừng hoạt động</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Ghi chú</label>
+                            <textarea class="form-control" rows="2" formControlName="ghiChu"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" (click)="closeEditModal()"
+                        [disabled]="saving">Hủy</button>
+                    <button type="button" class="btn btn-primary" (click)="saveEdit()" [disabled]="saving">
+                        <span class="spinner-border spinner-border-sm me-1" *ngIf="saving"></span>Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" [class.show]="showEditModal" *ngIf="showEditModal"></div>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal-backdrop fade" [class.show]="showDetailModal" *ngIf="showDetailModal"
+        (click)="closeDetailModal()"></div>
+    <div class="modal fade" [class.show]="showDetailModal" [style.display]="showDetailModal ? 'block' : 'none'"
+        tabindex="-1" *ngIf="showDetailModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+            (click)="$event.stopPropagation()">
+            <div class="modal-content">
+
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" *ngIf="loadingDetail" style="border-radius: 12px; z-index: 20;">
+                    <div class="spinner-container">
+                        <div class="spinner-border" role="status"></div>
+                        <div class="loading-text">Đang tải chi tiết...</div>
+                    </div>
+                </div>
+
+                <!-- Header -->
+                <div class="modal-header"
+                    style="background: linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%); border-radius: 12px 12px 0 0; padding: 20px 24px;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div
+                            style="width:44px;height:44px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-building fs-5 text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold mb-0 text-white">{{ detail?.tenPhongBan || 'Đang tải...' }}
+                            </h5>
+                            <div class="text-white-50 small mt-1">
+                                Mã: <strong class="text-white">{{ detail?.maPhongBan || '—' }}</strong>
+                                <span *ngIf="detail?.tenPhongBanCha" class="ms-2">
+                                    · Thuộc: <strong class="text-white">{{ detail?.tenPhongBanCha }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" (click)="closeDetailModal()"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body p-0" *ngIf="detail">
+
+                    <!-- Overview: stats + chart -->
+                    <div class="p-4 border-bottom" style="background:#f8fafc;">
+                        <div class="detail-overview">
+                            <div class="stats-col">
+                                <div class="section-title">Thống kê nhân sự</div>
+                                <div class="stat-card">
+                                    <div class="stat-value text-primary">{{ detail.danhSachNhanVien.length }}</div>
+                                    <div class="stat-label">Tổng nhân viên</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value text-success">{{ getSoNvDangLam() }}</div>
+                                    <div class="stat-label">Đang làm việc</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value text-secondary">{{ getSoNvNghiViec() }}</div>
+                                    <div class="stat-label">Đã nghỉ việc</div>
+                                </div>
+                            </div>
+                            <div class="chart-col" *ngIf="detail.danhSachNhanVien.length > 0">
+                                <div class="section-title">Phân bổ</div>
+                                <div class="chart-wrap">
+                                    <canvas #nvChart></canvas>
+                                </div>
+                                <!-- Legend -->
+                                <div class="d-flex flex-column gap-1 mt-2">
+                                    <div class="d-flex align-items-center gap-2" style="font-size:12px;">
+                                        <span
+                                            style="width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;flex-shrink:0;"></span>
+                                        <span class="text-muted">Đang làm</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2" style="font-size:12px;">
+                                        <span
+                                            style="width:10px;height:10px;border-radius:50%;background:#94a3b8;display:inline-block;flex-shrink:0;"></span>
+                                        <span class="text-muted">Nghỉ việc</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employee table -->
+                    <div class="p-4">
+                        <div class="section-title">
+                            <i class="bi bi-people me-1"></i>Danh sách nhân viên
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Mã NV</th>
+                                        <th>Họ tên</th>
+                                        <th>Chức vụ</th>
+                                        <th>Trạng thái</th>
+                                        <th class="text-end">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let nv of detail.danhSachNhanVien"
+                                        [class]="getNvStatusClass(nv.trangThaiLamViec)">
+                                        <td class="fw-semibold font-monospace small">{{ nv.maNhanVien }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div
+                                                    style="width:30px;height:30px;border-radius:50%;background:#e0e7ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                                    <i class="bi bi-person" style="color:#6366f1;font-size:13px;"></i>
+                                                </div>
+                                                <span>{{ nv.hoTen }}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{ nv.tenChucVu || '—' }}</td>
+                                        <td>
+                                            <span [class]="getNvStatusBadge(nv.trangThaiLamViec)">
+                                                {{ getNvStatusLabel(nv.trangThaiLamViec) }}
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="d-flex gap-1 justify-content-end">
+                                                <button class="btn btn-sm btn-outline-warning"
+                                                    (click)="openTransferModal(nv)"
+                                                    [disabled]="nv.trangThaiLamViec !== 1"
+                                                    title="Điều chuyển phòng ban">
+                                                    <i class="bi bi-arrow-left-right"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                    *ngIf="nv.trangThaiLamViec !== 1"
+                                                    (click)="xoaNhanVienKhoiPhongBan(nv)"
+                                                    [disabled]="deletingNvId === nv.nvCongViecId"
+                                                    title="Xóa khỏi phòng ban">
+                                                    <span class="spinner-border spinner-border-sm"
+                                                        *ngIf="deletingNvId === nv.nvCongViecId"></span>
+                                                    <i class="bi bi-trash" *ngIf="deletingNvId !== nv.nvCongViecId"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="detail.danhSachNhanVien.length === 0">
+                                        <td colspan="5" class="text-center text-muted py-5">
+                                            <i class="bi bi-people fs-2 d-block mb-2 opacity-25"></i>
+                                            Phòng ban chưa có nhân viên
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer" style="padding: 12px 24px;">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="closeDetailModal()">
+                        <i class="bi bi-x-lg me-1"></i>Đóng
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANSFER MODAL -->
+    <div class="modal fade" [class.show]="showTransferModal" [style.display]="showTransferModal ? 'block' : 'none'"
+        tabindex="-1" (click)="closeTransferModal()">
+        <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Điều chuyển nhân viên</h5>
+                    <button type="button" class="btn-close" (click)="closeTransferModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info mb-3" *ngIf="selectedNhanVien">
+                        <i class="bi bi-person me-2"></i>
+                        <strong>{{ selectedNhanVien.hoTen }}</strong> ({{ selectedNhanVien.maNhanVien }})
+                    </div>
+                    <form [formGroup]="transferForm">
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Chuyển đến phòng ban <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" formControlName="phongBanMoiId">
+                                <option [ngValue]="null" disabled>-- Chọn phòng ban --</option>
+                                <option *ngFor="let pb of getOtherPhongBan(selectedId ?? undefined)" [ngValue]="pb.id">
+                                    {{ pb.tenPhongBan }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">
+                                <i class="bi bi-paperclip me-1"></i>Quyết định điều chuyển
+                                <span class="fw-normal text-muted">(PDF/Word, tùy chọn)</span>
+                            </label>
+                            <input type="file" class="form-control form-control-sm" accept=".pdf,.doc,.docx"
+                                (change)="onQuyetDinhFileSelected($event)">
+                            <div class="form-text text-success" *ngIf="quyetDinhFile">
+                                <i class="bi bi-file-earmark-check me-1"></i>{{ quyetDinhFile.name }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" (click)="closeTransferModal()"
+                        [disabled]="transferring">Hủy</button>
+                    <button type="button" class="btn btn-warning" (click)="saveTransfer()" [disabled]="transferring">
+                        <span class="spinner-border spinner-border-sm me-1" *ngIf="transferring"></span>Điều chuyển
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" [class.show]="showTransferModal" *ngIf="showTransferModal"></div>
+</div>

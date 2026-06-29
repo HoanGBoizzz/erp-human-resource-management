@@ -1,0 +1,29 @@
+<div class="app-layout" [class.sidebar-collapsed]="layoutService.isCollapsed">
+
+    <!-- ROUTE LOADING OVERLAY -->
+    <app-route-loading></app-route-loading>
+
+    <!-- TOAST GLOBAL -->
+    <app-toast></app-toast>
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+        <app-sidebar *ngIf="auth.role as role" [role]="role"></app-sidebar>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="app-main">
+
+        <!-- TOPBAR -->
+        <header class="app-topbar">
+            <app-topbar></app-topbar>
+        </header>
+
+        <!-- CONTENT -->
+        <section class="app-content">
+            <router-outlet></router-outlet>
+        </section>
+
+    </div>
+
+</div>

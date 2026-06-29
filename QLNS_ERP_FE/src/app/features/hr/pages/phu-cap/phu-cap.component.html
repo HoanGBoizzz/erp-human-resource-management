@@ -1,0 +1,540 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-title">
+            <i class="bi bi-wallet2"></i>
+            <span>Quản lý phụ cấp</span>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-bar">
+        <button class="tab-btn" [class.active]="activeTab === 'loai'" (click)="activeTab = 'loai'">
+            <i class="bi bi-tags me-1"></i>Loại phụ cấp
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'nhan-vien'" (click)="activeTab = 'nhan-vien'">
+            <i class="bi bi-people me-1"></i>Phụ cấp nhân viên
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'thuong-phat'" (click)="activeTab = 'thuong-phat'">
+            <i class="bi bi-award me-1"></i>Thưởng &amp; Phạt
+        </button>
+    </div>
+
+    <!-- ═══ TAB 1: Loại phụ cấp ═══════════════════════════════════════════════ -->
+    <ng-container *ngIf="activeTab === 'loai'">
+        <div class="tab-toolbar">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Tìm loại phụ cấp..." [(ngModel)]="loaiKeyword"
+                    (ngModelChange)="applyLoaiFilter()" />
+            </div>
+            <button class="btn-primary" (click)="openAddLoai()">
+                <i class="bi bi-plus-lg me-1"></i>Thêm loại
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên phụ cấp</th>
+                        <th>Mô tả</th>
+                        <th>Đơn vị</th>
+                        <th>Loại</th>
+                        <th>Thứ tự</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of loaiFiltered; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td><strong>{{ item.tenPhuCap }}</strong></td>
+                        <td>{{ item.moTa ?? '—' }}</td>
+                        <td>{{ item.donVi }}</td>
+                        <td>
+                            <span class="badge" [class.badge-purple]="item.laCoDinh"
+                                [class.badge-blue]="!item.laCoDinh">
+                                {{ item.laCoDinh ? 'Cố định' : 'Linh hoạt' }}
+                            </span>
+                        </td>
+                        <td>{{ item.thuTu }}</td>
+                        <td>
+                            <span class="badge" [class.badge-success]="item.dangHoatDong"
+                                [class.badge-secondary]="!item.dangHoatDong">
+                                {{ item.dangHoatDong ? 'Hoạt động' : 'Tắt' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-icon btn-edit" title="Sửa" (click)="openEditLoai(item)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn-icon" [class.btn-success]="!item.dangHoatDong"
+                                    [class.btn-warning]="item.dangHoatDong"
+                                    [title]="item.dangHoatDong ? 'Tắt' : 'Kích hoạt'" (click)="toggleLoai(item)">
+                                    <i class="bi" [class.bi-toggle-on]="item.dangHoatDong"
+                                        [class.bi-toggle-off]="!item.dangHoatDong"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="loaiFiltered.length === 0">
+                        <td colspan="8" class="empty-row">Không có dữ liệu</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-container>
+
+    <!-- ═══ TAB 2: Phụ cấp nhân viên ══════════════════════════════════════════ -->
+    <ng-container *ngIf="activeTab === 'nhan-vien'">
+        <div class="tab-toolbar">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Tìm theo tên, mã NV, loại phụ cấp..." [(ngModel)]="nvKeyword"
+                    (ngModelChange)="applyNvFilter()" />
+            </div>
+            <button class="btn-primary" (click)="openAddNvPhuCap()">
+                <i class="bi bi-plus-lg me-1"></i>Thêm phụ cấp
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nhân viên</th>
+                        <th>Loại phụ cấp</th>
+                        <th class="text-right">Số tiền</th>
+                        <th>Từ ngày</th>
+                        <th>Đến ngày</th>
+                        <th>Ghi chú</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of nvPhuCapFiltered; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                            <div class="nv-info">
+                                <strong>{{ item.hoTen }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ item.tenPhuCap }}</td>
+                        <td class="text-right salary-col">{{ formatCurrency(item.soTien) }}</td>
+                        <td>{{ item.ngayBatDau | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ item.ngayKetThuc ? (item.ngayKetThuc | date:'dd/MM/yyyy') : '—' }}</td>
+                        <td>{{ item.ghiChu ?? '—' }}</td>
+                        <td>
+                            <span class="badge" [class.badge-success]="item.dangApDung"
+                                [class.badge-secondary]="!item.dangApDung">
+                                {{ item.dangApDung ? 'Đang áp dụng' : 'Hết hiệu lực' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-icon btn-edit" title="Sửa" (click)="openEditNvPhuCap(item)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn-icon btn-danger" title="Xóa" (click)="deleteNvPhuCap(item.id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="nvPhuCapFiltered.length === 0">
+                        <td colspan="9" class="empty-row">Không có dữ liệu</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-container>
+
+    <!-- ═══ TAB 3: Thưởng & Phạt ════════════════════════════════════════════ -->
+    <ng-container *ngIf="activeTab === 'thuong-phat'">
+
+        <!-- Toolbar -->
+        <div class="tp-toolbar">
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Tìm theo tên nhân viên..." [(ngModel)]="blKeyword"
+                    (ngModelChange)="applyBlFilter()" />
+            </div>
+            <div class="tp-filters">
+                <select class="filter-select" [(ngModel)]="blThangFilter" (ngModelChange)="applyBlFilter()">
+                    <option value="">Tất cả tháng</option>
+                    <option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="m">Tháng {{ m }}</option>
+                </select>
+                <input type="number" class="filter-select filter-year" [(ngModel)]="blNamFilter"
+                    (ngModelChange)="applyBlFilter()" placeholder="Tất cả năm" />
+                <button class="btn-icon btn-refresh" (click)="loadBangLuong()" title="Tải lại">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Summary stats -->
+        <div class="tp-stats">
+            <div class="tp-stat tp-stat--total">
+                <div class="tp-stat__icon"><i class="bi bi-people-fill"></i></div>
+                <div class="tp-stat__body">
+                    <span class="tp-stat__val">{{ bangLuongFiltered.length }}</span>
+                    <span class="tp-stat__lbl">Bảng lương</span>
+                </div>
+            </div>
+            <div class="tp-stat tp-stat--thuong">
+                <div class="tp-stat__icon"><i class="bi bi-gift-fill"></i></div>
+                <div class="tp-stat__body">
+                    <span class="tp-stat__val">{{ formatCurrency(blFilteredThuongTotal) }}</span>
+                    <span class="tp-stat__lbl">Tổng thưởng tháng</span>
+                </div>
+            </div>
+            <div class="tp-stat tp-stat--phat">
+                <div class="tp-stat__icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+                <div class="tp-stat__body">
+                    <span class="tp-stat__val">{{ formatCurrency(blFilteredKhauTruTotal) }}</span>
+                    <span class="tp-stat__lbl">Tổng khấu trừ tháng</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="split-view">
+            <!-- Left: card list -->
+            <div class="split-left">
+                <div class="bl-left-header">
+                    <span class="bl-left-title"><i class="bi bi-people me-2"></i>Danh sách nhân viên</span>
+                    <span class="bl-left-count">{{ bangLuongFiltered.length }} bảng lương</span>
+                </div>
+                <div class="bl-left-body">
+                    <div *ngIf="bangLuongFiltered.length === 0" class="empty-panel">
+                        <i class="bi bi-funnel fs-3"></i>
+                        <p>Không có dữ liệu</p>
+                        <span class="tp-hint-sub">Thử mở rộng bộ lọc hoặc tải lại</span>
+                    </div>
+                    <div class="bl-card-list" *ngIf="bangLuongFiltered.length > 0">
+                        <div *ngFor="let item of bangLuongFiltered" class="bl-card"
+                            [class.bl-card--active]="selectedBangLuong?.id === item.id" (click)="selectBangLuong(item)">
+                            <div class="bl-card__ava">{{ item.hoTen[0] }}</div>
+                            <div class="bl-card__body">
+                                <span class="bl-card__name">{{ item.hoTen }}</span>
+                                <div class="bl-card__meta">
+                                    <span class="bl-card__period"><i class="bi bi-calendar3"></i> T{{ item.thang }}/{{
+                                        item.nam }}</span>
+                                    <span class="badge badge-xs" [class.badge-warning]="item.trangThai === 'TAM_TINH'"
+                                        [class.badge-info]="item.trangThai === 'CHO_DUYET_GIAM_DOC'"
+                                        [class.badge-success]="item.trangThai === 'DA_DUYET'"
+                                        [class.badge-danger]="item.trangThai === 'TU_CHOI'"
+                                        [class.badge-secondary]="item.trangThai === 'DA_KHOA'">
+                                        {{ getStatusLabel(item.trangThai) }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="bl-card__nums">
+                                <span class="bl-num bl-num--thuong" *ngIf="item.thuong > 0">
+                                    <i class="bi bi-gift"></i> +{{ formatCurrency(item.thuong) }}
+                                </span>
+                                <span class="bl-num bl-num--phat" *ngIf="item.khauTru > 0">
+                                    <i class="bi bi-dash-circle"></i> −{{ formatCurrency(item.khauTru) }}
+                                </span>
+                                <span class="bl-num bl-num--empty" *ngIf="item.thuong === 0 && item.khauTru === 0">Chưa
+                                    có</span>
+                            </div>
+                            <i class="bi bi-chevron-right bl-card__arrow"></i>
+                        </div>
+                    </div>
+                </div><!-- /.bl-left-body -->
+            </div>
+
+            <!-- Right: detail panel -->
+            <div class="split-right">
+                <!-- Placeholder -->
+                <div *ngIf="!selectedBangLuong" class="tp-select-hint">
+                    <div class="tp-hint-icon"><i class="bi bi-arrow-left-circle-fill"></i></div>
+                    <p class="tp-hint-title">Chọn bảng lương</p>
+                    <p class="tp-hint-sub">Nhấn vào nhân viên bên trái để quản lý thưởng &amp; phạt</p>
+                </div>
+
+                <ng-container *ngIf="selectedBangLuong">
+                    <!-- Employee header -->
+                    <div class="pane-header">
+                        <div class="pane-ava">{{ selectedBangLuong.hoTen[0] }}</div>
+                        <div class="pane-info">
+                            <div class="pane-name">{{ selectedBangLuong.hoTen }}</div>
+                            <div class="pane-sub">
+                                <i class="bi bi-calendar3"></i>
+                                Tháng {{ selectedBangLuong.thang }}/{{ selectedBangLuong.nam }}
+                                <span *ngIf="selectedBangLuong.tenPhongBan">
+                                    &nbsp;·&nbsp;<i class="bi bi-building"></i> {{ selectedBangLuong.tenPhongBan }}
+                                </span>
+                            </div>
+                        </div>
+                        <button class="btn-add-item" (click)="openAddItem()"
+                            [disabled]="selectedBangLuong.trangThai === 'DA_KHOA'">
+                            <i class="bi bi-plus-lg"></i> Thêm
+                        </button>
+                    </div>
+
+                    <!-- Loading -->
+                    <div *ngIf="loadingItems" class="loading-inline">
+                        <div class="spinner-sm"></div> Đang tải...
+                    </div>
+
+                    <div *ngIf="!loadingItems" class="pane-body">
+                        <!-- Empty state -->
+                        <div *ngIf="blItems.length === 0" class="empty-panel small">
+                            <i class="bi bi-inbox fs-4"></i>
+                            <p>Chưa có khoản nào</p>
+                            <button class="btn-ghost" (click)="openAddItem()"
+                                [disabled]="selectedBangLuong.trangThai === 'DA_KHOA'">
+                                <i class="bi bi-plus me-1"></i>Thêm ngay
+                            </button>
+                        </div>
+
+                        <ng-container *ngIf="blItems.length > 0">
+                            <!-- Thưởng group -->
+                            <div class="item-group" *ngIf="blThuongItems.length > 0">
+                                <div class="item-group__head item-group__head--thuong">
+                                    <i class="bi bi-gift-fill me-1"></i>Thưởng
+                                    <span class="group-count">{{ blThuongItems.length }}</span>
+                                </div>
+                                <div *ngFor="let it of blThuongItems" class="item-row item-thuong">
+                                    <div class="item-icon"><i class="bi bi-gift"></i></div>
+                                    <div class="item-body">
+                                        <span class="item-lido">{{ it.lyDo }}</span>
+                                        <span class="item-amount positive">+{{ formatCurrency(it.soTien) }}</span>
+                                    </div>
+                                    <button class="btn-icon btn-danger btn-xs" title="Xóa" (click)="deleteBlItem(it.id)"
+                                        [disabled]="selectedBangLuong.trangThai === 'DA_KHOA'">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Khấu trừ group -->
+                            <div class="item-group" *ngIf="blKhauTruItems.length > 0">
+                                <div class="item-group__head item-group__head--phat">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>Khấu trừ / Phạt
+                                    <span class="group-count">{{ blKhauTruItems.length }}</span>
+                                </div>
+                                <div *ngFor="let it of blKhauTruItems" class="item-row item-phat">
+                                    <div class="item-icon"><i class="bi bi-dash-circle"></i></div>
+                                    <div class="item-body">
+                                        <span class="item-lido">{{ it.lyDo }}</span>
+                                        <span class="item-amount negative">−{{ formatCurrency(it.soTien) }}</span>
+                                    </div>
+                                    <button class="btn-icon btn-danger btn-xs" title="Xóa" (click)="deleteBlItem(it.id)"
+                                        [disabled]="selectedBangLuong.trangThai === 'DA_KHOA'">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Net balance -->
+                            <div class="balance-card">
+                                <div class="balance-line">
+                                    <span>Tổng thưởng</span>
+                                    <span class="positive bl-fw">+{{ formatCurrency(blTongThuong) }}</span>
+                                </div>
+                                <div class="balance-line">
+                                    <span>Tổng khấu trừ</span>
+                                    <span class="negative bl-fw">−{{ formatCurrency(blTongKhauTru) }}</span>
+                                </div>
+                                <div class="balance-divider"></div>
+                                <div class="balance-line balance-line--net">
+                                    <span>Chênh lệch</span>
+                                    <span class="bl-fw" [class.positive]="blNetPositive"
+                                        [class.negative]="!blNetPositive">
+                                        {{ blNetPositive ? '+' : '−' }}{{ formatCurrency(blNetAbs) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<!-- ════ Modal: Loại phụ cấp ══════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showLoaiModal" (click)="showLoaiModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>
+                <i class="bi bi-tag me-2"></i>
+                {{ selectedLoai ? 'Cập nhật loại phụ cấp' : 'Thêm loại phụ cấp' }}
+            </h3>
+            <button class="btn-close" (click)="showLoaiModal = false"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="loaiForm">
+                <div class="form-group">
+                    <label>Tên phụ cấp <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="tenPhuCap"
+                        placeholder="Ví dụ: Phụ cấp điện thoại" />
+                </div>
+                <div class="form-group">
+                    <label>Mô tả</label>
+                    <textarea class="form-control" formControlName="moTa" rows="2"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Đơn vị</label>
+                        <select class="form-control" formControlName="donVi">
+                            <option value="VND">VND</option>
+                            <option value="%">% (Phần trăm)</option>
+                        </select>
+                    </div>
+                    <div class="form-group half">
+                        <label>Thứ tự hiển thị</label>
+                        <input type="number" class="form-control" formControlName="thuTu" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" formControlName="laCoDinh" />
+                        Phụ cấp cố định (áp dụng hàng tháng tự động)
+                    </label>
+                </div>
+            </form>
+            <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" (click)="showLoaiModal = false">Hủy</button>
+            <button class="btn-primary" (click)="saveLoai()" [disabled]="saving || loaiForm.invalid">
+                <i class="bi bi-check-lg me-1"></i>{{ saving ? 'Đang lưu...' : 'Lưu' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ════ Modal: Phụ cấp nhân viên ════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showNvModal" (click)="showNvModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>
+                <i class="bi bi-wallet2 me-2"></i>
+                {{ selectedNvPhuCap ? 'Cập nhật phụ cấp NV' : 'Thêm phụ cấp cho nhân viên' }}
+            </h3>
+            <button class="btn-close" (click)="showNvModal = false"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="nvForm">
+                <div class="form-row">
+                    <div class="form-group full">
+                        <label>Nhân viên <span class="required">*</span></label>
+                        <div class="nv-select-wrapper">
+                            <input type="text" class="form-control" [value]="nvSearchTerm" (input)="onNvSearch($event)"
+                                (focus)="showNvDropdown = true" (blur)="showNvDropdown = false"
+                                placeholder="Tìm theo mã NV hoặc tên..." autocomplete="off" />
+                            <div class="nv-dropdown" *ngIf="showNvDropdown && nvDropdownFiltered.length > 0">
+                                <div *ngFor="let nv of nvDropdownFiltered" class="nv-option"
+                                    (mousedown)="selectNhanVienInModal(nv)">
+                                    <span class="nv-ma">{{ nv.maNhanVien }}</span>
+                                    <span class="nv-ten">{{ nv.hoTen }}</span>
+                                    <span class="nv-pb" *ngIf="nv.tenPhongBan">{{ nv.tenPhongBan }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-hint" *ngIf="!nvForm.get('nvHoSoId')?.value">
+                            <i class="bi bi-info-circle"></i> Chọn nhân viên từ danh sách gợi yầ
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Loại phụ cấp <span class="required">*</span></label>
+                        <select class="form-control" formControlName="phuCapLoaiId">
+                            <option [value]="null" disabled>Chọn loại...</option>
+                            <option *ngFor="let l of loaiList" [value]="l.id">{{ l.tenPhuCap }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group half">
+                        <label>Số tiền (VND) <span class="required">*</span></label>
+                        <input type="text" class="form-control currency-input" [value]="soTienDisplayNv"
+                            (input)="onSoTienInputNv($event)" placeholder="Ví dụ: 1.000.000" autocomplete="off" />
+                        <div class="field-hint" *ngIf="nvForm.get('soTien')?.value > 0">
+                            = {{ formatCurrency(nvForm.get('soTien')?.value) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Từ ngày <span class="required">*</span></label>
+                        <input type="date" class="form-control" formControlName="ngayBatDau" />
+                    </div>
+                    <div class="form-group half">
+                        <label>Đến ngày</label>
+                        <input type="date" class="form-control" formControlName="ngayKetThuc" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <input type="text" class="form-control" formControlName="ghiChu" />
+                </div>
+            </form>
+            <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" (click)="showNvModal = false">Hủy</button>
+            <button class="btn-primary" (click)="saveNvPhuCap()" [disabled]="saving || nvForm.invalid">
+                <i class="bi bi-check-lg me-1"></i>{{ saving ? 'Đang lưu...' : 'Lưu' }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ════ Modal: Thêm thưởng / phạt ══════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showItemModal" (click)="showItemModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3><i class="bi bi-award me-2"></i>Thêm thưởng / khấu trừ</h3>
+            <button class="btn-close" (click)="showItemModal = false"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="employee-badge" *ngIf="selectedBangLuong">
+                <i class="bi bi-person-circle"></i>
+                <span>{{ selectedBangLuong.hoTen }} — T{{ selectedBangLuong.thang }}/{{ selectedBangLuong.nam }}</span>
+            </div>
+            <form [formGroup]="itemForm">
+                <div class="form-group">
+                    <label>Loại <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option" [class.selected]="itemForm.get('loai')?.value === 'THUONG'">
+                            <input type="radio" formControlName="loai" value="THUONG" />
+                            <i class="bi bi-gift text-success"></i> Thưởng
+                        </label>
+                        <label class="radio-option" [class.selected]="itemForm.get('loai')?.value === 'KHAU_TRU'">
+                            <input type="radio" formControlName="loai" value="KHAU_TRU" />
+                            <i class="bi bi-dash-circle text-danger"></i> Khấu trừ / Phạt
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Lý do <span class="required">*</span></label>
+                    <input type="text" class="form-control" formControlName="lyDo"
+                        placeholder="Ví dụ: Thưởng hoàn thành dự án..." />
+                </div>
+                <div class="form-group">
+                    <label>Số tiền (VND) <span class="required">*</span></label>
+                    <input type="text" class="form-control currency-input" [value]="soTienDisplayItem"
+                        (input)="onSoTienInputItem($event)" placeholder="Ví dụ: 1.000.000" autocomplete="off" />
+                    <div class="field-hint" *ngIf="itemForm.get('soTien')?.value > 0">
+                        = {{ formatCurrency(itemForm.get('soTien')?.value) }}
+                    </div>
+                </div>
+            </form>
+            <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" (click)="showItemModal = false">Hủy</button>
+            <button class="btn-primary" (click)="saveItem()" [disabled]="saving || itemForm.invalid">
+                <i class="bi bi-check-lg me-1"></i>{{ saving ? 'Đang lưu...' : 'Lưu' }}
+            </button>
+        </div>
+    </div>
+</div>

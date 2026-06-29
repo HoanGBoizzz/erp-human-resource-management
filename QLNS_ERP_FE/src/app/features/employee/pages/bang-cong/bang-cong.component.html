@@ -1,0 +1,333 @@
+<div class="timesheet-page">
+    <div class="container-fluid" style="max-width: 1400px;">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1 class="page-title">
+                        <i class="bi bi-calendar-check"></i>
+                        Bảng công của tôi
+                    </h1>
+                    <p class="page-subtitle">Theo dõi ngày công, giờ làm việc và trạng thái chấm công</p>
+                </div>
+
+                <div class="filter-bar">
+                    <select class="filter-control" [formControl]="yearCtrl" (change)="onYearChange()"
+                        style="width: 120px;">
+                        <option *ngFor="let y of years" [value]="y">Năm {{ y }}</option>
+                    </select>
+
+                    <select class="filter-control" [formControl]="monthCtrl" (change)="loadMonth()"
+                        style="width: 140px;">
+                        <option *ngFor="let m of months" [value]="m">Tháng {{ m }}</option>
+                    </select>
+
+                    <button class="btn-refresh" (click)="refreshFilters()" [disabled]="loading"
+                        [class.loading]="loading">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <span class="btn-text">Làm mới</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ATTENDANCE QUICK ACTIONS -->
+        <div class="attendance-card">
+            <div class="attendance-info">
+                <div class="title">Chấm công hôm nay</div>
+
+                <div *ngIf="attendanceLoading" class="small text-muted">Đang tải trạng thái...</div>
+
+                <div *ngIf="!attendanceLoading && todayStatus" class="status-row">
+                    <span class="status-pill" [ngClass]="'status-' + todayStatus.trangThai.toLowerCase()">
+                        {{ statusText(todayStatus.trangThai) }}
+                    </span>
+                    <span class="time"><i class="bi bi-box-arrow-in-right"></i> {{ formatTime(todayStatus.gioVao)
+                        }}</span>
+                    <span class="time"><i class="bi bi-box-arrow-right"></i> {{ formatTime(todayStatus.gioRa) }}</span>
+                    <ng-container *ngIf="todayStatus.gioVaoOt">
+                        <span class="time time-ot"><i class="bi bi-clock-history"></i> OT vào: {{
+                            formatTime(todayStatus.gioVaoOt) }}</span>
+                        <span class="time time-ot" *ngIf="todayStatus.gioRaOt"><i class="bi bi-clock-history"></i> OT
+                            ra: {{ formatTime(todayStatus.gioRaOt) }}</span>
+                        <span class="time time-ot-running" *ngIf="!todayStatus.gioRaOt">Đang tăng ca...</span>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="!attendanceLoading && !todayStatus" class="small text-muted">
+                    Chưa có bản ghi chấm công hôm nay.
+                </div>
+
+                <div *ngIf="attendanceError" class="text-danger small">{{ attendanceError }}</div>
+            </div>
+
+            <div class="attendance-actions">
+                <button class="btn-attendance btn-in" (click)="openCamera('check-in')"
+                    [class.loading]="attendanceProcessing && pendingAction === 'check-in'"
+                    [disabled]="attendanceProcessing">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>Chấm công vào</span>
+                </button>
+
+                <button class="btn-attendance btn-out" (click)="openCamera('check-out')"
+                    [class.loading]="attendanceProcessing && pendingAction === 'check-out'"
+                    [disabled]="attendanceProcessing">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Chấm công ra</span>
+                </button>
+
+                <button class="btn-attendance btn-ot" (click)="openCamera('check-in-ot')"
+                    [class.loading]="attendanceProcessing && pendingAction === 'check-in-ot'"
+                    [disabled]="attendanceProcessing">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Vào tăng ca</span>
+                </button>
+
+                <button class="btn-attendance btn-out-ot" (click)="openCamera('check-out-ot')"
+                    [class.loading]="attendanceProcessing && pendingAction === 'check-out-ot'"
+                    [disabled]="attendanceProcessing">
+                    <i class="bi bi-clock-fill"></i>
+                    <span>Ra tăng ca</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- CAMERA MODAL -->
+        <div class="camera-modal" *ngIf="isCameraOpen" (click)="closeCamera()">
+            <div class="camera-modal__content" (click)="$event.stopPropagation()">
+                <div class="camera-modal__header">
+                    <div class="title">
+                        <i class="bi" [ngClass]="{
+                            'bi-box-arrow-in-right': currentMode === 'check-in',
+                            'bi-box-arrow-right': currentMode === 'check-out',
+                            'bi-clock-history': currentMode === 'check-in-ot',
+                            'bi-clock-fill': currentMode === 'check-out-ot'
+                        }"></i>
+                        {{ currentMode === 'check-in' ? 'Chấm công vào' : currentMode === 'check-out' ? 'Chấm công ra' :
+                        currentMode === 'check-in-ot' ? 'Vào tăng ca' : 'Ra tăng ca' }}
+                    </div>
+                    <button class="close-btn" (click)="closeCamera()">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <div class="camera-modal__body">
+                    <div class="webcam-wrap">
+                        <video #videoElement autoplay playsinline (loadedmetadata)="onVideoLoaded()"></video>
+                        <canvas #canvasElement hidden></canvas>
+                        <div class="camera-overlay">
+                            <div class="guide-box"></div>
+                            <div class="hint">Giữ khuôn mặt trong khung</div>
+                        </div>
+                    </div>
+
+                    <div class="camera-error" *ngIf="cameraError">{{ cameraError }}</div>
+                </div>
+
+                <div class="camera-modal__footer">
+                    <!-- Loading Progress Bar -->
+                    <div class="loading-progress" *ngIf="attendanceProcessing">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" [style.width.%]="loadingProgress"></div>
+                        </div>
+                        <div class="progress-text">
+                            Đang xác thực khuôn mặt... {{ loadingProgress | number:'1.0-0' }}%
+                        </div>
+                    </div>
+
+                    <button class="btn-secondary" (click)="closeCamera()" [disabled]="attendanceProcessing">
+                        Hủy
+                    </button>
+                    <button class="btn-primary" (click)="captureAndProcess()"
+                        [disabled]="attendanceProcessing || !videoReady">
+                        <i class="bi bi-camera-fill"></i>
+                        Chụp &amp; xác thực
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="row g-3 g-lg-4 mb-4">
+            <!-- Đi làm -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="kpi-card kpi-success">
+                    <div class="kpi-icon">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-label">Ngày công</div>
+                        <div class="kpi-value">{{ loading ? '-' : diLam }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nghỉ phép -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="kpi-card kpi-warning">
+                    <div class="kpi-icon">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-label">Nghỉ phép</div>
+                        <div class="kpi-value">{{ loading ? '-' : nghiPhep }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nghỉ không phép -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="kpi-card kpi-danger">
+                    <div class="kpi-icon">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-label">Vắng mặt</div>
+                        <div class="kpi-value">{{ loading ? '-' : nghi }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OT -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="kpi-card kpi-info">
+                    <div class="kpi-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-label">Giờ OT</div>
+                        <div class="kpi-value">{{ loading ? '-' : totalOt }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT CARD -->
+            <div class="content-card">
+                <!-- Toolbar -->
+                <div class="card-toolbar">
+                    <div class="toolbar-title">
+                        <i class="bi bi-table"></i>
+                        Chi tiết chấm công tháng {{ monthCtrl.value }}/{{ yearCtrl.value }}
+                    </div>
+
+                    <div class="view-toggle">
+                        <button [class.active]="viewMode === 'calendar'" (click)="toggleView('calendar')">
+                            <i class="bi bi-calendar3"></i>
+                            <span>Lịch</span>
+                        </button>
+                        <button [class.active]="viewMode === 'table'" (click)="toggleView('table')">
+                            <i class="bi bi-list-ul"></i>
+                            <span>Bảng</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div class="loading-overlay" *ngIf="loading">
+                    <div class="loading-spinner">
+                        <span class="spinner-border text-primary"></span>
+                    </div>
+                    <p class="loading-text">Đang tải dữ liệu...</p>
+                </div>
+
+                <!-- Error State -->
+                <div class="empty-state" *ngIf="errorMsg && !loading">
+                    <div class="empty-icon">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="empty-title">Đã xảy ra lỗi</h3>
+                    <p class="empty-message">{{ errorMsg }}</p>
+                    <button class="btn-empty-action" (click)="loadMonth()">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Thử lại
+                    </button>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" *ngIf="!loading && !errorMsg && rows.length === 0">
+                    <div class="empty-icon">
+                        <i class="bi bi-inbox"></i>
+                    </div>
+                    <h3 class="empty-title">Chưa có dữ liệu</h3>
+                    <p class="empty-message">Không tìm thấy dữ liệu chấm công cho tháng này.</p>
+                </div>
+                <!-- Content -->
+                <ng-container *ngIf="!loading && !errorMsg && rows.length > 0">
+
+                    <!-- CALENDAR VIEW -->
+                    <div class="calendar-view" *ngIf="viewMode === 'calendar'">
+                        <div class="calendar-grid">
+                            <div class="day-card" *ngFor="let r of rows">
+                                <div class="day-header">
+                                    <div class="date">{{ r.ngay | dateVn }}</div>
+                                    <div class="status-dot" [ngClass]="'status-' + r.trangThai.toLowerCase()"></div>
+                                </div>
+
+                                <div class="time-row" *ngIf="r.gioVao">
+                                    <i class="bi bi-box-arrow-in-right"></i>
+                                    <span>{{ formatTime(r.gioVao) }}</span>
+                                </div>
+                                <div class="time-row" *ngIf="r.gioRa">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>{{ formatTime(r.gioRa) }}</span>
+                                </div>
+                                <div class="time-row time-row-ot" *ngIf="r.gioVaoOt">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span>OT: {{ formatTime(r.gioVaoOt) }} – {{ r.gioRaOt ? formatTime(r.gioRaOt) :
+                                        '...' }}</span>
+                                </div>
+
+                                <div class="ot-tag" *ngIf="r.soGioOt > 0">
+                                    <i class="bi bi-lightning-fill"></i> {{ r.soGioOt }}h OT
+                                </div>
+
+                                <div class="note-text" *ngIf="r.ghiChu" title="{{ r.ghiChu }}">
+                                    {{ r.ghiChu }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLE VIEW -->
+                    <div class="table-responsive" *ngIf="viewMode === 'table'">
+                        <table class="clean-table">
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Giờ vào</th>
+                                    <th>Giờ ra</th>
+                                    <th>OT (Giờ)</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let r of rows">
+                                    <td><strong>{{ r.ngay | dateVn }}</strong></td>
+                                    <td>{{ formatTime(r.gioVao) }}</td>
+                                    <td>{{ formatTime(r.gioRa) }}</td>
+                                    <td>
+                                        <span *ngIf="r.soGioOt > 0" class="ot-value">{{ r.soGioOt }}</span>
+                                        <span *ngIf="!r.soGioOt">-</span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge" [ngClass]="'status-' + r.trangThai.toLowerCase()">
+                                            <i class="bi bi-circle-fill" style="font-size: 8px;"></i>
+                                            {{ statusText(r.trangThai) }}
+                                        </span>
+                                    </td>
+                                    <td class="text-muted">{{ r.ghiChu || '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="table-footer">
+                        <i class="bi bi-info-circle"></i>
+                        Hiển thị {{ rows.length }} ngày công.
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>

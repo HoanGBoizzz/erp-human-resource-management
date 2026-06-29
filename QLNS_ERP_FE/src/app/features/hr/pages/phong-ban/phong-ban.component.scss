@@ -1,0 +1,260 @@
+@import '../../../../../scss/variables';
+
+.page-container {
+    padding: $spacing-xl;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+}
+
+.header-card {
+    background: white;
+    border-radius: $radius-2xl;
+    padding: $spacing-xl;
+    box-shadow: $shadow-md;
+    border: 1px solid $slate-200;
+}
+
+.content-card {
+    background: white;
+    border-radius: $radius-2xl;
+    padding: $spacing-lg;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid transparent;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+
+    &:hover {
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+        border-color: rgba($primary, 0.1);
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+
+        &:hover {
+            background-color: #f8fafc !important;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+    }
+
+    .form-select {
+        transition: all 0.2s ease;
+        cursor: pointer;
+
+        &:hover:not(:disabled) {
+            border-color: $primary;
+            box-shadow: 0 0 0 3px rgba($primary, 0.1);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+    }
+}
+
+.action-btn {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid $slate-300;
+    background: white;
+    border-radius: $radius-md;
+    padding: 10px 16px;
+    font-weight: 600;
+    color: $slate-800;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 0;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: $primary;
+        z-index: -1;
+        transition: width 0.3s ease;
+    }
+
+    &:hover:not(:disabled) {
+        color: white;
+        border-color: $primary;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba($primary, 0.2);
+
+        &::before {
+            width: 100%;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.table thead th {
+    text-transform: uppercase;
+    font-size: $font-size-sm;
+    color: $slate-500;
+    border-bottom: 1px solid $slate-200;
+}
+
+.table tbody td {
+    border-color: $slate-100;
+}
+
+.badge {
+    border-radius: $radius-pill;
+    padding: 6px 10px;
+    font-weight: 600;
+}
+
+// Loading overlay
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: $radius-2xl;
+
+    .spinner-container {
+        text-align: center;
+
+        .spinner-border {
+            width: 40px;
+            height: 40px;
+            border-width: 3px;
+            color: $primary;
+        }
+
+        .loading-text {
+            margin-top: 12px;
+            color: $slate-600;
+            font-size: $font-size-sm;
+            font-weight: 500;
+        }
+    }
+}
+
+// Stat cards in detail modal
+.stat-card {
+    background: $slate-50;
+    border: 1px solid $slate-200;
+    border-radius: $radius-md;
+    padding: $spacing-md $spacing-lg;
+    text-align: center;
+    flex: 1;
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .stat-label {
+        font-size: $font-size-sm;
+        color: $slate-500;
+        margin-top: 4px;
+    }
+}
+
+// Chart container in detail modal
+.detail-overview {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+
+    .stats-col {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .chart-col {
+        flex: 0 0 160px;
+
+        .chart-wrap {
+            position: relative;
+            width: 160px;
+            height: 160px;
+        }
+    }
+}
+
+.section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: $slate-400;
+    margin-bottom: 12px;
+}
+
+// Resigned employee row styling
+.nv-resigned {
+    opacity: 0.5;
+    background-color: $slate-50 !important;
+
+    td {
+        color: $slate-500 !important;
+    }
+}
+
+// Modal improvements
+.modal-content {
+    border: none;
+    border-radius: $radius-xl;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+    padding: $spacing-lg $spacing-lg 0;
+}
+
+.modal-body {
+    padding: $spacing-lg;
+}
+
+.modal-footer {
+    padding: 0 $spacing-lg $spacing-lg;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.form-control,
+.form-select {
+    border-radius: $radius-md;
+    border-color: $slate-300;
+    padding: 0.625rem 0.875rem;
+
+    &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.15);
+    }
+}
+
+// Button hover effects
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover,
+.btn-outline-danger:hover,
+.btn-outline-warning:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,521 @@
+<div class="page-container">
+
+    <!-- ═══════════════════ HEADER ═══════════════════ -->
+    <div class="header-card">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div>
+                <h4 class="page-title mb-1">
+                    <i class="bi bi-clipboard2-check me-2"></i>Quản lý đơn yêu cầu
+                </h4>
+                <p class="page-subtitle mb-0">Xem và duyệt phiếu đề xuất, tạm ứng, đơn đi muộn của nhân viên</p>
+            </div>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <div class="search-box">
+                    <i class="bi bi-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Tìm theo tên, mã nhân viên..."
+                        [(ngModel)]="searchText">
+                </div>
+                <button class="action-btn btn" (click)="reload()" [disabled]="loading">
+                    <i class="bi" [ngClass]="loading ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+                    <span class="ms-1 d-none d-sm-inline">{{ loading ? 'Đang tải...' : 'Tải lại' }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ KPI CARDS ═══════════════════ -->
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="kpi-card kpi-primary" [class.loading]="loading">
+                <div class="kpi-icon"><i class="bi bi-collection-fill"></i></div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Tổng đơn</div>
+                    <div class="kpi-value">{{ totalAll }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="kpi-card kpi-warning" [class.loading]="loading">
+                <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Chờ duyệt</div>
+                    <div class="kpi-value">{{ totalChoDuyet }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="kpi-card kpi-success" [class.loading]="loading">
+                <div class="kpi-icon"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Đã duyệt</div>
+                    <div class="kpi-value">{{ totalDaDuyet }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="kpi-card kpi-danger" [class.loading]="loading">
+                <div class="kpi-icon"><i class="bi bi-x-circle-fill"></i></div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Từ chối</div>
+                    <div class="kpi-value">{{ totalTuChoi }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+    <div class="content-card">
+
+        <!-- Tab navigation -->
+        <div class="tab-nav mb-0">
+            <button class="tab-btn" [class.active]="activeTab === 'de-xuat'" (click)="setTab('de-xuat')">
+                <i class="bi bi-tools"></i>
+                <span>Phiếu đề xuất</span>
+                <span class="tab-badge" *ngIf="countStatus(deXuatList, 'CHO_DUYET') > 0">
+                    {{ countStatus(deXuatList, 'CHO_DUYET') }}
+                </span>
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'tam-ung'" (click)="setTab('tam-ung')">
+                <i class="bi bi-cash-coin"></i>
+                <span>Phiếu tạm ứng</span>
+                <span class="tab-badge" *ngIf="countStatus(tamUngList, 'CHO_DUYET') > 0">
+                    {{ countStatus(tamUngList, 'CHO_DUYET') }}
+                </span>
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'don-di-muon'" (click)="setTab('don-di-muon')">
+                <i class="bi bi-clock-history"></i>
+                <span>Đi muộn / Về sớm</span>
+                <span class="tab-badge" *ngIf="countStatus(diMuonList, 'CHO_DUYET') > 0">
+                    {{ countStatus(diMuonList, 'CHO_DUYET') }}
+                </span>
+            </button>
+        </div>
+
+        <!-- Toolbar: filter chips + result count -->
+        <div class="toolbar">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <ng-container *ngIf="activeTab === 'de-xuat'">
+                    <button *ngFor="let opt of statusOptions" class="chip" [class.active]="filterDeXuat === opt.value"
+                        (click)="filterDeXuat = opt.value">{{ opt.label }}</button>
+                </ng-container>
+                <ng-container *ngIf="activeTab === 'tam-ung'">
+                    <button *ngFor="let opt of statusOptions" class="chip" [class.active]="filterTamUng === opt.value"
+                        (click)="filterTamUng = opt.value">{{ opt.label }}</button>
+                </ng-container>
+                <ng-container *ngIf="activeTab === 'don-di-muon'">
+                    <button *ngFor="let opt of statusOptions" class="chip" [class.active]="filterDiMuon === opt.value"
+                        (click)="filterDiMuon = opt.value">{{ opt.label }}</button>
+                </ng-container>
+            </div>
+            <div class="result-count text-muted small" *ngIf="!loading">
+                <ng-container [ngSwitch]="activeTab">
+                    <span *ngSwitchCase="'de-xuat'">{{ filteredDeXuat.length }} kết quả</span>
+                    <span *ngSwitchCase="'tam-ung'">{{ filteredTamUng.length }} kết quả</span>
+                    <span *ngSwitchDefault>{{ filteredDiMuon.length }} kết quả</span>
+                </ng-container>
+            </div>
+        </div>
+
+        <!-- Loading overlay -->
+        <div class="loading-overlay" *ngIf="loading">
+            <div class="spinner-container">
+                <div class="spinner-border" role="status"></div>
+                <div class="loading-text">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+
+        <!-- ── PHIẾU ĐỀ XUẤT ── -->
+        <ng-container *ngIf="activeTab === 'de-xuat' && !loading">
+            <div class="empty-state" *ngIf="filteredDeXuat.length === 0">
+                <i class="bi bi-inbox"></i>
+                <p>Không có phiếu đề xuất nào phù hợp.</p>
+            </div>
+            <div class="table-responsive" *ngIf="filteredDeXuat.length > 0">
+                <table class="table hr-table">
+                    <thead>
+                        <tr>
+                            <th style="width:36px">#</th>
+                            <th>Nhân viên</th>
+                            <th>Dụng cụ / Thiết bị</th>
+                            <th class="text-center">SL</th>
+                            <th class="text-end">Tổng tiền</th>
+                            <th>Ngày tạo</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center" style="width:100px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of filteredDeXuat; let i = index">
+                            <td class="row-idx">{{ i + 1 }}</td>
+                            <td>
+                                <div class="nv-name-cell">{{ item.hoTenNhanVien }}</div>
+                                <div class="nv-code-cell">{{ item.maNhanVien }}</div>
+                            </td>
+                            <td class="fw-semibold">{{ item.tenDungCu }}</td>
+                            <td class="text-center">{{ item.soLuong }} <span class="text-muted small">{{ item.donViTinh
+                                    }}</span></td>
+                            <td class="text-end fw-semibold text-primary">{{ formatCurrency(item.tongTien) }}</td>
+                            <td class="text-muted small">{{ item.createdAt | date:'dd/MM/yyyy' }}</td>
+                            <td class="text-center">
+                                <span class="status-badge" [ngClass]="trangThaiClass(item.trangThai)">
+                                    {{ trangThaiLabel(item.trangThai) }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn-detail" (click)="openModal(item)">
+                                    <i class="bi bi-eye"></i> Chi tiết
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+
+        <!-- ── PHIẾU TẠM ỨNG ── -->
+        <ng-container *ngIf="activeTab === 'tam-ung' && !loading">
+            <div class="empty-state" *ngIf="filteredTamUng.length === 0">
+                <i class="bi bi-inbox"></i>
+                <p>Không có phiếu tạm ứng nào phù hợp.</p>
+            </div>
+            <div class="table-responsive" *ngIf="filteredTamUng.length > 0">
+                <table class="table hr-table">
+                    <thead>
+                        <tr>
+                            <th style="width:36px">#</th>
+                            <th>Nhân viên</th>
+                            <th>Mục đích</th>
+                            <th class="text-end">Số tiền</th>
+                            <th>Ngày cần</th>
+                            <th>Ngày tạo</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center" style="width:100px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of filteredTamUng; let i = index">
+                            <td class="row-idx">{{ i + 1 }}</td>
+                            <td>
+                                <div class="nv-name-cell">{{ item.hoTenNhanVien }}</div>
+                                <div class="nv-code-cell">{{ item.maNhanVien }}</div>
+                            </td>
+                            <td class="fw-semibold">{{ item.mucDich }}</td>
+                            <td class="text-end fw-semibold" style="color:#b45309">{{ formatCurrency(item.soTien) }}
+                            </td>
+                            <td>{{ item.ngayCanTamUng | date:'dd/MM/yyyy' }}</td>
+                            <td class="text-muted small">{{ item.createdAt | date:'dd/MM/yyyy' }}</td>
+                            <td class="text-center">
+                                <span class="status-badge" [ngClass]="trangThaiClass(item.trangThai)">
+                                    {{ trangThaiLabel(item.trangThai) }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn-detail" (click)="openModal(item)">
+                                    <i class="bi bi-eye"></i> Chi tiết
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+
+        <!-- ── ĐƠN ĐI MUỘN / VỀ SỚM ── -->
+        <ng-container *ngIf="activeTab === 'don-di-muon' && !loading">
+            <div class="empty-state" *ngIf="filteredDiMuon.length === 0">
+                <i class="bi bi-inbox"></i>
+                <p>Không có đơn đi muộn nào phù hợp.</p>
+            </div>
+            <div class="table-responsive" *ngIf="filteredDiMuon.length > 0">
+                <table class="table hr-table">
+                    <thead>
+                        <tr>
+                            <th style="width:36px">#</th>
+                            <th>Nhân viên</th>
+                            <th>Loại</th>
+                            <th>Ngày áp dụng</th>
+                            <th>Thời gian</th>
+                            <th>Ngày tạo</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center" style="width:100px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of filteredDiMuon; let i = index">
+                            <td class="row-idx">{{ i + 1 }}</td>
+                            <td>
+                                <div class="nv-name-cell">{{ item.hoTenNhanVien }}</div>
+                                <div class="nv-code-cell">{{ item.maNhanVien }}</div>
+                            </td>
+                            <td>
+                                <span class="loai-badge"
+                                    [ngClass]="'loai-' + item.loai.toLowerCase().replace('_', '-')">
+                                    {{ item.tenLoai }}
+                                </span>
+                            </td>
+                            <td>{{ item.ngayApDung | date:'dd/MM/yyyy' }}</td>
+                            <td class="fw-semibold">{{ item.thoiGianBatDau }} – {{ item.thoiGianKetThuc }}</td>
+                            <td class="text-muted small">{{ item.createdAt | date:'dd/MM/yyyy' }}</td>
+                            <td class="text-center">
+                                <span class="status-badge" [ngClass]="trangThaiClass(item.trangThai)">
+                                    {{ trangThaiLabel(item.trangThai) }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn-detail" (click)="openModal(item)">
+                                    <i class="bi bi-eye"></i> Chi tiết
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+
+    </div><!-- /content-card -->
+
+</div><!-- /page-container -->
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!--  DETAIL MODAL                                                      -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop fade" [class.show]="showModal" *ngIf="showModal" (click)="closeModal()"></div>
+
+<div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1"
+    role="dialog" *ngIf="showModal">
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- ── MODAL HEADER ── -->
+            <div class="modal-header modal-header-colored"
+                [ngClass]="activeTab === 'de-xuat' ? 'mh-primary' : activeTab === 'tam-ung' ? 'mh-warning' : 'mh-danger'">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-header-icon">
+                        <i class="bi" [ngClass]="activeTab === 'de-xuat' ? 'bi-tools'
+                                    : activeTab === 'tam-ung' ? 'bi-cash-coin'
+                                    : 'bi-clock-history'"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0">
+                            <ng-container [ngSwitch]="activeTab">
+                                <span *ngSwitchCase="'de-xuat'">Phiếu đề xuất dụng cụ</span>
+                                <span *ngSwitchCase="'tam-ung'">Phiếu tạm ứng</span>
+                                <span *ngSwitchDefault>Đơn đi muộn / về sớm</span>
+                            </ng-container>
+                        </h5>
+                        <div class="modal-subtitle" *ngIf="selectedItem">
+                            Nộp {{ selectedItem.createdAt | date:'dd/MM/yyyy' }}
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" (click)="closeModal()"></button>
+            </div>
+
+            <!-- ── MODAL BODY ── -->
+            <div class="modal-body" *ngIf="selectedItem">
+
+                <!-- NV Identity Strip -->
+                <div class="nv-strip">
+                    <div class="nv-avatar"
+                        [ngClass]="activeTab === 'de-xuat' ? 'av-primary' : activeTab === 'tam-ung' ? 'av-warning' : 'av-danger'">
+                        {{ selectedItem.hoTenNhanVien.charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="nv-meta">
+                        <div class="nv-name">{{ selectedItem.hoTenNhanVien }}</div>
+                        <div class="nv-code">{{ selectedItem.maNhanVien }}</div>
+                    </div>
+                    <span class="status-badge status-lg" [ngClass]="trangThaiClass(selectedItem.trangThai)">
+                        {{ trangThaiLabel(selectedItem.trangThai) }}
+                    </span>
+                </div>
+
+                <!-- ── PHIẾU ĐỀ XUẤT DETAILS ── -->
+                <ng-container *ngIf="isDeXuat(selectedItem)">
+                    <div class="field-section mt-3">
+                        <div class="field-section-title">Thông tin phiếu đề xuất</div>
+                        <div class="row g-0">
+                            <div class="col-12 col-md-8">
+                                <div class="field-item field-item-right">
+                                    <div class="field-label">Tên dụng cụ / thiết bị</div>
+                                    <div class="field-value fw-semibold">{{ selectedItem.tenDungCu }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="field-item">
+                                    <div class="field-label">Đơn vị tính</div>
+                                    <div class="field-value">{{ selectedItem.donViTinh }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 field-top">
+                                <div class="field-item field-item-right">
+                                    <div class="field-label">Số lượng</div>
+                                    <div class="field-value fw-semibold">{{ selectedItem.soLuong }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 field-top">
+                                <div class="field-item field-item-right">
+                                    <div class="field-label">Đơn giá</div>
+                                    <div class="field-value">{{ formatCurrency(selectedItem.giaTien) }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 field-top field-hl">
+                                <div class="field-item">
+                                    <div class="field-label">Tổng tiền dự tính</div>
+                                    <div class="field-value fw-bold text-primary" style="font-size:1.05rem">{{
+                                        formatCurrency(selectedItem.tongTien) }}</div>
+                                </div>
+                            </div>
+                            <div class="col-12 field-top">
+                                <div class="field-item">
+                                    <div class="field-label">Lý do cần mua</div>
+                                    <div class="field-value">{{ selectedItem.lyDo }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- ── PHIẾU TẠM ỨNG DETAILS ── -->
+                <ng-container *ngIf="isTamUng(selectedItem)">
+                    <div class="field-section mt-3">
+                        <div class="field-section-title">Thông tin phiếu tạm ứng</div>
+                        <div class="row g-0">
+                            <div class="col-12 col-md-8">
+                                <div class="field-item field-item-right">
+                                    <div class="field-label">Mục đích tạm ứng</div>
+                                    <div class="field-value fw-semibold">{{ selectedItem.mucDich }}</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 field-hl">
+                                <div class="field-item">
+                                    <div class="field-label">Số tiền yêu cầu</div>
+                                    <div class="field-value fw-bold" style="font-size:1.05rem;color:#b45309">{{
+                                        formatCurrency(selectedItem.soTien) }}</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 field-top">
+                                <div class="field-item field-item-right">
+                                    <div class="field-label">Ngày cần tạm ứng</div>
+                                    <div class="field-value">{{ selectedItem.ngayCanTamUng | date:'dd/MM/yyyy' }}</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 field-top">
+                                <div class="field-item">
+                                    <div class="field-label">Lý do / Nội dung</div>
+                                    <div class="field-value">{{ selectedItem.lyDo }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- ── ĐI MUỘN DETAILS ── -->
+                <ng-container *ngIf="isDiMuon(selectedItem)">
+                    <div class="field-section mt-3">
+                        <div class="field-section-title">Thông tin đơn xin phép</div>
+                        <div class="row g-0">
+                            <div class="col-6 col-md-3">
+                                <div class="field-item field-item-right">
+                                    <div class="field-label">Loại đơn</div>
+                                    <div class="field-value">
+                                        <span class="loai-badge"
+                                            [ngClass]="'loai-' + selectedItem.loai.toLowerCase().replace('_', '-')">
+                                            {{ selectedItem.tenLoai }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="field-item field-item-right">
+                                    <div class="field-label">Ngày áp dụng</div>
+                                    <div class="field-value fw-semibold">{{ selectedItem.ngayApDung | date:'dd/MM/yyyy'
+                                        }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 field-top-sm">
+                                <div class="field-item field-item-right">
+                                    <div class="field-label">Giờ bắt đầu</div>
+                                    <div class="field-value fw-semibold">{{ selectedItem.thoiGianBatDau }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 field-top-sm">
+                                <div class="field-item">
+                                    <div class="field-label">Giờ kết thúc</div>
+                                    <div class="field-value fw-semibold">{{ selectedItem.thoiGianKetThuc }}</div>
+                                </div>
+                            </div>
+                            <div class="col-12 field-top">
+                                <div class="field-item">
+                                    <div class="field-label">Lý do</div>
+                                    <div class="field-value">{{ selectedItem.lyDo }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Người duyệt meta -->
+                <div class="meta-strip mt-3" *ngIf="selectedItem.hoTenNguoiDuyet">
+                    <i class="bi bi-person-check-fill"></i>
+                    <span>Đã xử lý bởi <strong>{{ selectedItem.hoTenNguoiDuyet }}</strong>
+                        <span *ngIf="selectedItem.ngayDuyet"> · {{ selectedItem.ngayDuyet | date:'dd/MM/yyyy'
+                            }}</span></span>
+                </div>
+
+                <!-- Lý do từ chối -->
+                <div class="reject-alert mt-3" *ngIf="selectedItem.trangThai === 'TU_CHOI' && selectedItem.lyDoTuChoi">
+                    <i class="bi bi-x-circle-fill"></i>
+                    <div><strong>Lý do từ chối:</strong> {{ selectedItem.lyDoTuChoi }}</div>
+                </div>
+
+                <!-- ── APPROVAL PANEL ── -->
+                <div class="approval-panel mt-4" *ngIf="canProcess()">
+                    <div class="approval-panel-header">
+                        <i class="bi bi-clipboard2-pulse me-2"></i>Quyết định xử lý
+                    </div>
+                    <div class="approval-panel-body">
+                        <form [formGroup]="approveForm">
+                            <div class="decision-buttons">
+                                <button type="button" class="decision-btn db-approve"
+                                    [class.selected]="approveForm.get('chapNhan')?.value === true"
+                                    (click)="approveForm.patchValue({ chapNhan: true })" [disabled]="saving">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <span>Phê duyệt</span>
+                                </button>
+                                <button type="button" class="decision-btn db-reject"
+                                    [class.selected]="approveForm.get('chapNhan')?.value === false"
+                                    (click)="approveForm.patchValue({ chapNhan: false })" [disabled]="saving">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                    <span>Từ chối</span>
+                                </button>
+                            </div>
+                            <div class="mt-3" *ngIf="approveForm.get('chapNhan')?.value === false">
+                                <label class="form-label fw-semibold">
+                                    Lý do từ chối <span class="text-danger">*</span>
+                                </label>
+                                <textarea class="form-control" rows="3" formControlName="lyDoTuChoi"
+                                    placeholder="Nhập lý do từ chối cụ thể..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div><!-- /modal-body -->
+
+            <!-- ── MODAL FOOTER ── -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="closeModal()" [disabled]="saving">
+                    <i class="bi bi-x-lg me-1"></i>Đóng
+                </button>
+                <button type="button" class="btn btn-primary" *ngIf="canProcess()" (click)="submitApprove()"
+                    [disabled]="approveForm.get('chapNhan')?.value === null || saving">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="saving"></span>
+                    <i class="bi bi-check-lg me-1" *ngIf="!saving"></i>
+                    Xác nhận
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

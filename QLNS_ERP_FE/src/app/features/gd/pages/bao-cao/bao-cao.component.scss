@@ -1,0 +1,379 @@
+// ═══════════════════════════════════════════════════════════
+// Báo cáo thống kê — Giám đốc
+// ═══════════════════════════════════════════════════════════
+
+.bao-cao-page {
+  padding: 24px;
+  background: #f0f4f8;
+  min-height: 100vh;
+}
+
+// ── Page header ─────────────────────────────────────────────
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 4px 0 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.year-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .filter-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    white-space: nowrap;
+  }
+
+  .form-select {
+    width: 100px;
+    font-size: 0.875rem;
+  }
+}
+
+// ── Report Section ──────────────────────────────────────────
+.report-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  page-break-inside: avoid;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+
+  i {
+    font-size: 1.3rem;
+    color: #3b82f6;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+}
+
+// ── Metric Cards ────────────────────────────────────────────
+.metric-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  flex: 1 1 140px;
+  min-width: 130px;
+  max-width: 200px;
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-align: center;
+  position: relative;
+  border-left: 4px solid transparent;
+
+  .metric-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+    margin-top: 6px;
+    font-weight: 500;
+    opacity: 0.85;
+  }
+
+  .metric-percent {
+    font-size: 0.7rem;
+    margin-top: 3px;
+    opacity: 0.65;
+    font-weight: 600;
+  }
+
+  &.primary   { background: #eff6ff; color: #1d4ed8; border-left-color: #3b82f6; }
+  &.success   { background: #f0fdf4; color: #15803d; border-left-color: #22c55e; }
+  &.warning   { background: #fffbeb; color: #b45309; border-left-color: #f59e0b; }
+  &.danger    { background: #fef2f2; color: #b91c1c; border-left-color: #ef4444; }
+  &.info      { background: #f0f9ff; color: #0369a1; border-left-color: #0ea5e9; }
+  &.secondary { background: #f8fafc; color: #475569; border-left-color: #94a3b8; }
+}
+
+// ── Chart Layout ────────────────────────────────────────────
+.chart-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 16px;
+  align-items: flex-start;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+}
+
+.chart-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 18px;
+  flex: 1 1 420px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: visible;
+
+  &--wide {
+    flex: 1.4 1 480px;
+  }
+
+  &--full {
+    flex: 1 1 100%;
+  }
+
+  // ngx-charts container responsive
+  ngx-charts-pie-chart,
+  ngx-charts-bar-vertical,
+  ngx-charts-line-chart {
+    max-width: 100%;
+    overflow: visible;
+  }
+}
+
+.chart-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 14px;
+  text-align: center;
+  width: 100%;
+}
+
+// Fix ngx-charts text colors in light theme
+::ng-deep {
+  .ngx-charts {
+    text {
+      fill: #475569 !important;
+    }
+
+    .gridline-path {
+      stroke: #e2e8f0;
+    }
+
+    .tick line {
+      stroke: #e2e8f0;
+    }
+
+    .label {
+      fill: #334155 !important;
+    }
+  }
+
+  // ── Legend: xóa nền trắng + border, tích hợp vào chart-card ──
+  .chart-legend,
+  div.chart-legend {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 4px 0 !important;
+    outline: none !important;
+  }
+
+  .chart-legend .legend-wrap,
+  div.chart-legend .legend-wrap {
+    width: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
+  .chart-legend .legend-labels,
+  div.chart-legend .legend-labels {
+    background: transparent !important;
+    background-color: transparent !important;
+    overflow: visible !important;
+    white-space: nowrap !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    float: none !important;
+  }
+
+  .chart-legend .legend-label {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    max-width: none !important;
+    margin: 2px 0 !important;
+  }
+
+  .chart-legend .legend-label-text {
+    width: auto !important;
+    max-width: none !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    display: inline !important;
+    color: #475569 !important;
+    font-size: 0.8rem !important;
+  }
+
+  .chart-legend .legend-label-color {
+    border-radius: 3px !important;
+  }
+
+  .chart-legend .legend-title-text {
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+    font-size: 0.85rem !important;
+  }
+
+  // SVG ngx-charts: bắt buộc hiển thị nội dung ngoài bounds
+  .ngx-charts {
+    overflow: visible !important;
+  }
+
+  .ngx-charts-outer,
+  ngx-charts-chart {
+    overflow: visible !important;
+  }
+
+  // Xóa clip-path trên label pie
+  .pie-label,
+  .pie-label-line,
+  .pie-label-group {
+    clip-path: none !important;
+    overflow: visible !important;
+  }
+}
+
+// ── Print footer ────────────────────────────────────────────
+.print-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 8px;
+}
+
+// ═══════════════════════════════════════════════════════════
+// @media print  —  xuất PDF / in ấn  (layout shell ẩn qua global styles.scss)
+// ═══════════════════════════════════════════════════════════
+@media print {
+  // ── 1. Báo cáo page ─────────────────────────────────────
+  .bao-cao-page {
+    background: #fff !important;
+    padding: 6px 0 !important;
+    min-height: unset;
+  }
+
+  // ── 2. Ẩn nút + bộ lọc ─────────────────────────────────
+  .header-actions,
+  .btn,
+  .year-filter {
+    display: none !important;
+  }
+
+  // ── 3. Report sections ──────────────────────────────────
+  .report-section {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+    margin-bottom: 16px !important;
+    padding: 16px !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  // ── 4. Chart row: giữ 2 cột ngang khi in ───────────────
+  .chart-row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    flex-direction: row !important;
+    gap: 14px !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .chart-card {
+    flex: 1 1 45% !important;
+    min-width: 0 !important;
+    background: #f8fafc !important;
+    padding: 12px !important;
+    overflow: hidden;
+  }
+
+  .chart-card--wide,
+  .chart-card--full {
+    flex: 1 1 45% !important;
+  }
+
+  // ── 5. SVG scale for print ──────────────────────────────
+  ::ng-deep .ngx-charts {
+    svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+  }
+
+  // ── 6. Metric cards compact ─────────────────────────────
+  .metric-row {
+    gap: 8px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .metric-card {
+    padding: 10px 12px !important;
+    min-width: 100px !important;
+    max-width: none !important;
+
+    .metric-value { font-size: 1.3rem !important; }
+    .metric-label { font-size: 0.7rem !important; }
+  }
+
+  // ── 7. Print footer ─────────────────────────────────────
+  .print-only {
+    display: block !important;
+  }
+}
+
+.print-only {
+  display: none;
+}

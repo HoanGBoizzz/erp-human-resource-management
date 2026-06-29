@@ -1,0 +1,99 @@
+# -----------------------------
+# OS / Editor
+# -----------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*.tmp
+.vscode/
+.idea/
+
+# -----------------------------
+# Logs
+# -----------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# -----------------------------
+# Node / Angular (FE)
+# -----------------------------
+node_modules/
+.npm/
+.angular/
+dist/
+coverage/
+.cache/
+.eslintcache
+
+# Build artifacts
+*.tsbuildinfo
+
+# -----------------------------
+# .NET (BE)
+# -----------------------------
+bin/
+obj/
+out/
+TestResults/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ASP.NET runtime/config local secrets
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# -----------------------------
+# Python (python_face_service)
+# -----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# -----------------------------
+# Environment / Secrets
+# -----------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Keys and certs
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+
+# -----------------------------
+# Archives / Large generated files
+# -----------------------------
+*.zip
+*.tar
+*.gz
+*.7z
+*.rar
+
+# -----------------------------
+# Temporary upload/export folders (if any)
+# -----------------------------
+tmp/
+temp/

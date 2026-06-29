@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: qlns-erp-be
+    runtime: docker
+    dockerfilePath: ./QLNS_BE/Dockerfile
+    dockerContext: ./QLNS_BE
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:10000
+      # ── Điền các giá trị bên dưới trong Render Dashboard ──
+      - key: ConnectionStrings__DefaultConnection
+        sync: false # nhập tay trong dashboard
+      - key: Jwt__SecretKey
+        sync: false
+      - key: FaceRecognition__PythonApiUrl
+        value: "" # để trống → dùng fallback SimpleFaceRecognition
+      - key: FaceRecognition__ConfidenceThreshold
+        value: "0.45"
+      - key: Gemini__ApiKey
+        sync: false

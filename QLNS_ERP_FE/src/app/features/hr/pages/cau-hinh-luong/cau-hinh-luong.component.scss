@@ -1,0 +1,198 @@
+@import 'src/scss/variables';
+
+:host {
+  display: block;
+}
+
+.page-container {
+  padding: 24px;
+  background: $bg-page;
+  min-height: 100vh;
+}
+
+.header-card {
+  background: $card-bg;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $text-dark;
+}
+
+.content-card {
+  background: $card-bg;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 20px 24px;
+}
+
+.nhom-header {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $text-muted;
+  border-bottom: 1px solid $border-color;
+  padding-bottom: 10px;
+}
+
+.value-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+table thead th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: $text-muted;
+  font-weight: 600;
+  border-bottom: 2px solid $border-color;
+  background: #f8fafc;
+}
+
+table tbody tr:hover {
+  background: #f8fafc;
+}
+
+// ── Formula Builder ──────────────────────────────────────────────────────────
+
+.formula-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 4px;
+  padding: 14px 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+
+  .formula-base {
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .formula-op {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #2563eb;
+    transition: color 0.2s;
+
+    &.op-off {
+      color: #cbd5e1;
+    }
+  }
+
+  .formula-token {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.25s;
+
+    &.token-on {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    &.token-off {
+      background: #f1f5f9;
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
+  }
+}
+
+.formula-toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.formula-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: #fff;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s;
+
+  &:last-child { border-bottom: none; }
+
+  &:not(.fixed):hover {
+    background: #f8fafc;
+  }
+
+  &.row-off {
+    background: #fafafa;
+    opacity: 0.8;
+  }
+
+  &.fixed {
+    background: #f8fafc;
+  }
+}
+
+.formula-toggle-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+
+  &.bg-primary-light { background: #dbeafe; }
+  &.bg-success-light { background: #dcfce7; }
+  &.bg-danger-light  { background: #fee2e2; }
+  &.bg-muted-light   { background: #f1f5f9; }
+}
+
+.formula-toggle-info {
+  min-width: 0;
+
+  .fw-semibold { font-size: 0.92rem; }
+  .text-muted.small { font-size: 0.78rem; margin-top: 1px; }
+}
+
+.formula-toggle-sign {
+  font-size: 1.3rem;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.formula-toggle-switch-area {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 52px;
+
+  .form-check-input {
+    box-shadow: none !important;
+    border-color: #cbd5e1;
+
+    &:checked {
+      background-color: #2563eb;
+      border-color: #2563eb;
+    }
+  }
+}

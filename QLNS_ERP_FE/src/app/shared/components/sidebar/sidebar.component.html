@@ -1,0 +1,305 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+    <div class="brand">
+        <div class="brand-content" *ngIf="!isCollapsed">
+            <div class="logo">V9 Tech</div>
+            <div class="sub">Công ty CP Công nghệ V9</div>
+        </div>
+        <div class="logo-mini" *ngIf="isCollapsed">V9</div>
+        <button class="toggle-btn" (click)="toggleSidebar()" [title]="isCollapsed ? 'Mở rộng' : 'Thu gọn'">
+            <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+        </button>
+    </div>
+
+    <!-- EMPLOYEE MENU -->
+    <ul class="menu" *ngIf="role === 'EMPLOYEE'">
+        <li [class.active]="isActive('/employee/dashboard')" (click)="navigate('/employee/dashboard')"
+            data-tooltip="Trang chủ">
+            <i class="bi bi-house"></i>
+            <span>Trang chủ</span>
+        </li>
+        <li [class.active]="isActive('/employee/cham-cong')" (click)="navigate('/employee/cham-cong')"
+            data-tooltip="Chấm công">
+            <i class="bi bi-clock-history"></i>
+            <span>Chấm công</span>
+            <span class="badge" *ngIf="counts?.bangCongDaChot">{{ counts?.bangCongDaChot }}</span>
+        </li>
+        <li [class.active]="isActive('/employee/face-registration')" (click)="navigate('/employee/face-registration')"
+            data-tooltip="Khuôn mặt của tôi">
+            <i class="bi bi-person-bounding-box"></i>
+            <span>Khuôn mặt của tôi</span>
+        </li>
+        <li [class.active]="isActive('/employee/nghi-phep')" (click)="navigate('/employee/nghi-phep')"
+            data-tooltip="Quản lý nghỉ phép">
+            <i class="bi bi-calendar2-event"></i>
+            <span>Quản lý nghỉ phép</span>
+            <span class="badge" *ngIf="getNotificationCount('DON_PHEP') > 0">{{ getNotificationCount('DON_PHEP')
+                }}</span>
+        </li>
+        <li [class.active]="isActive('/employee/luong')" (click)="navigate('/employee/luong')"
+            data-tooltip="Bảng lương">
+            <i class="bi bi-cash-stack"></i>
+            <span>Bảng lương</span>
+            <span class="badge" *ngIf="getNotificationCount('BANG_LUONG') > 0">{{ getNotificationCount('BANG_LUONG')
+                }}</span>
+        </li>
+        <li [class.active]="isActive('/employee/du-an')" (click)="navigate('/employee/du-an')"
+            data-tooltip="Dự án của tôi">
+            <i class="bi bi-briefcase"></i>
+            <span>Dự án của tôi</span>
+            <span class="badge" *ngIf="getNotificationCount('DU_AN') > 0">{{ getNotificationCount('DU_AN') }}</span>
+        </li>
+        <!-- Accordion: Nơi làm việc (expanded) -->
+        <li class="menu-parent" [class.expanded]="noiLamViecMenuExpanded" *ngIf="!isCollapsed">
+            <div class="menu-parent-content"
+                [class.active]="isActive('/employee/phieu-de-xuat') || isActive('/employee/phieu-tam-ung') || isActive('/employee/don-di-muon') || isActive('/employee/noi-lam-viec-thong-ke')">
+                <div class="menu-parent-left" (click)="toggleNoiLamViecMenu($event)">
+                    <i class="bi bi-building"></i>
+                    <span>Nơi làm việc</span>
+                </div>
+                <i class="bi bi-chevron-down expand-icon" (click)="toggleNoiLamViecMenu($event)"></i>
+            </div>
+            <ul class="submenu" [@slideDown]="noiLamViecMenuExpanded ? 'open' : 'closed'">
+                <li [class.active]="isActive('/employee/noi-lam-viec-thong-ke')"
+                    (click)="navigate('/employee/noi-lam-viec-thong-ke')">
+                    <i class="bi bi-bar-chart-line submenu-icon"></i>
+                    <span>Thống kê tổng hợp</span>
+                </li>
+                <li [class.active]="isActive('/employee/phieu-de-xuat')" (click)="navigate('/employee/phieu-de-xuat')">
+                    <i class="bi bi-tools submenu-icon"></i>
+                    <span>Đề xuất mua dụng cụ</span>
+                </li>
+                <li [class.active]="isActive('/employee/phieu-tam-ung')" (click)="navigate('/employee/phieu-tam-ung')">
+                    <i class="bi bi-cash-coin submenu-icon"></i>
+                    <span>Phiếu tạm ứng</span>
+                </li>
+                <li [class.active]="isActive('/employee/don-di-muon')" (click)="navigate('/employee/don-di-muon')">
+                    <i class="bi bi-clock-history submenu-icon"></i>
+                    <span>Đi muộn / Về sớm</span>
+                </li>
+            </ul>
+        </li>
+        <!-- Collapsed version: Nơi làm việc -->
+        <li *ngIf="isCollapsed"
+            [class.active]="isActive('/employee/phieu-de-xuat') || isActive('/employee/phieu-tam-ung') || isActive('/employee/don-di-muon') || isActive('/employee/noi-lam-viec-thong-ke')"
+            (click)="navigate('/employee/noi-lam-viec-thong-ke')" data-tooltip="Nơi làm việc">
+            <i class="bi bi-building"></i>
+        </li>
+    </ul>
+
+    <!-- HR_KETOAN MENU -->
+    <ul class="menu" *ngIf="role === 'HR_ACC'">
+        <li [class.active]="isActive('/hr/dashboard')" (click)="navigate('/hr/dashboard')" data-tooltip="Trang chủ">
+            <i class="bi bi-house"></i>
+            <span>Trang chủ</span>
+        </li>
+        <li [class.active]="isActive('/hr/du-an')" (click)="navigate('/hr/du-an')" data-tooltip="Dự án công ty">
+            <i class="bi bi-briefcase"></i>
+            <span>Dự án công ty</span>
+            <span class="badge" *ngIf="getNotificationCount('DU_AN') > 0">{{ getNotificationCount('DU_AN') }}</span>
+        </li>
+        <!-- Accordion Menu: Quản lý nhân viên -->
+        <li class="menu-parent" [class.expanded]="nhanVienMenuExpanded" *ngIf="!isCollapsed">
+            <div class="menu-parent-content" [class.active]="isActive('/hr/nhan-vien') || isActive('/hr/phong-ban')">
+                <div class="menu-parent-left" (click)="toggleNhanVienMenu($event)">
+                    <i class="bi bi-people"></i>
+                    <span>Quản lý nhân viên</span>
+                </div>
+                <span class="badge" *ngIf="counts?.dieuChuyenDaXuLy">{{ counts?.dieuChuyenDaXuLy }}</span>
+                <i class="bi bi-chevron-down expand-icon" (click)="toggleNhanVienMenu($event)"></i>
+            </div>
+            <ul class="submenu" [@slideDown]="nhanVienMenuExpanded ? 'open' : 'closed'">
+                <li [class.active]="isActive('/hr/nhan-vien')" (click)="navigate('/hr/nhan-vien')">
+                    <i class="bi bi-list-ul submenu-icon"></i>
+                    <span>Danh sách nhân viên</span>
+                </li>
+                <li [class.active]="isActive('/hr/phong-ban')" (click)="navigate('/hr/phong-ban')">
+                    <i class="bi bi-building submenu-icon"></i>
+                    <span>Quản lý phòng ban</span>
+                </li>
+            </ul>
+        </li>
+        <!-- Collapsed version: Quản lý nhân viên -->
+        <li *ngIf="isCollapsed" [class.active]="isActive('/hr/nhan-vien') || isActive('/hr/phong-ban')"
+            (click)="navigate('/hr/nhan-vien')" data-tooltip="Quản lý nhân viên">
+            <i class="bi bi-people"></i>
+        </li>
+        <!-- Accordion Menu: Quản lý chấm công -->
+        <li class="menu-parent" [class.expanded]="chamCongMenuExpanded" *ngIf="!isCollapsed">
+            <div class="menu-parent-content"
+                [class.active]="isActive('/hr/cham-cong') || isActive('/hr/face-registration')">
+                <div class="menu-parent-left" (click)="navigate('/hr/cham-cong'); chamCongMenuExpanded = true">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Quản lý chấm công</span>
+                </div>
+                <i class="bi bi-chevron-down expand-icon" (click)="toggleChamCongMenu($event)"></i>
+            </div>
+            <ul class="submenu" [@slideDown]="chamCongMenuExpanded ? 'open' : 'closed'">
+                <li [class.active]="isActive('/hr/face-registration')" (click)="navigate('/hr/face-registration')">
+                    <i class="bi bi-person-bounding-box submenu-icon"></i>
+                    <span>Đăng ký khuôn mặt</span>
+                </li>
+            </ul>
+        </li>
+        <!-- Collapsed version: Quản lý chấm công -->
+        <li *ngIf="isCollapsed" [class.active]="isActive('/hr/cham-cong') || isActive('/hr/face-registration')"
+            (click)="navigate('/hr/cham-cong')" data-tooltip="Quản lý chấm công">
+            <i class="bi bi-clock-history"></i>
+        </li>
+        <!-- Accordion Menu: Quản lý bảng lương -->
+        <li class="menu-parent" [class.expanded]="bangLuongMenuExpanded" *ngIf="!isCollapsed">
+            <div class="menu-parent-content"
+                [class.active]="isActive('/hr/bang-luong') || isActive('/hr/luong-co-ban') || isActive('/hr/phu-cap') || isActive('/hr/tinh-luong') || isActive('/hr/cau-hinh-luong')">
+                <div class="menu-parent-left" (click)="navigate('/hr/bang-luong'); bangLuongMenuExpanded = true">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>Quản lý bảng lương</span>
+                </div>
+                <span class="badge" *ngIf="getNotificationCount('BANG_LUONG') > 0">{{ getNotificationCount('BANG_LUONG')
+                    }}</span>
+                <i class="bi bi-chevron-down expand-icon" (click)="toggleBangLuongMenu($event)"></i>
+            </div>
+            <ul class="submenu" [@slideDown]="bangLuongMenuExpanded ? 'open' : 'closed'">
+                <li [class.active]="isActive('/hr/luong-co-ban')" (click)="navigate('/hr/luong-co-ban')">
+                    <i class="bi bi-person-check submenu-icon"></i>
+                    <span>Lương cơ bản</span>
+                </li>
+                <li [class.active]="isActive('/hr/tinh-luong')" (click)="navigate('/hr/tinh-luong')">
+                    <i class="bi bi-calculator submenu-icon"></i>
+                    <span>Tính lương nhân viên</span>
+                </li>
+                <li [class.active]="isActive('/hr/bang-luong')" (click)="navigate('/hr/bang-luong')">
+                    <i class="bi bi-table submenu-icon"></i>
+                    <span>Bảng lương tháng</span>
+                    <span class="badge" *ngIf="getNotificationCount('BANG_LUONG') > 0">{{
+                        getNotificationCount('BANG_LUONG') }}</span>
+                </li>
+                <li [class.active]="isActive('/hr/phu-cap')" (click)="navigate('/hr/phu-cap')">
+                    <i class="bi bi-gift submenu-icon"></i>
+                    <span>Phụ cấp &amp; Thưởng phạt</span>
+                </li>
+                <li [class.active]="isActive('/hr/cau-hinh-luong')" (click)="navigate('/hr/cau-hinh-luong')">
+                    <i class="bi bi-sliders submenu-icon"></i>
+                    <span>Cấu hình lương</span>
+                </li>
+            </ul>
+        </li>
+        <!-- Collapsed version: Quản lý bảng lương -->
+        <li *ngIf="isCollapsed"
+            [class.active]="isActive('/hr/bang-luong') || isActive('/hr/luong-co-ban') || isActive('/hr/phu-cap') || isActive('/hr/tinh-luong') || isActive('/hr/cau-hinh-luong')"
+            (click)="navigate('/hr/bang-luong')" data-tooltip="Quản lý bảng lương">
+            <i class="bi bi-cash-stack"></i>
+        </li>
+        <li [class.active]="isActive('/hr/don-phep')" (click)="navigate('/hr/don-phep')"
+            data-tooltip="Quản lý nghỉ phép">
+            <i class="bi bi-calendar2-event"></i>
+            <span>Quản lý nghỉ phép</span>
+            <span class="badge" *ngIf="getNotificationCount('DON_PHEP') > 0">{{ getNotificationCount('DON_PHEP')
+                }}</span>
+        </li>
+        <!-- Accordion Menu: Quản lý đơn yêu cầu -->
+        <li class="menu-parent" [class.expanded]="deXuatMenuExpanded" *ngIf="!isCollapsed">
+            <div class="menu-parent-content"
+                [class.active]="isActive('/hr/yeu-cau-noi-lam-viec') || isActive('/hr/de-xuat-giam-doc')">
+                <div class="menu-parent-left" (click)="toggleDeXuatMenu($event)">
+                    <i class="bi bi-clipboard2-check"></i>
+                    <span>Quản lý đơn yêu cầu</span>
+                </div>
+                <span class="badge" *ngIf="(counts?.yeuCauChoDuyet ?? 0) > 0">{{ counts?.yeuCauChoDuyet }}</span>
+                <i class="bi bi-chevron-down expand-icon" (click)="toggleDeXuatMenu($event)"></i>
+            </div>
+            <ul class="submenu" [@slideDown]="deXuatMenuExpanded ? 'open' : 'closed'">
+                <li [class.active]="isActive('/hr/yeu-cau-noi-lam-viec')"
+                    (click)="navigate('/hr/yeu-cau-noi-lam-viec')">
+                    <i class="bi bi-list-check submenu-icon"></i>
+                    <span>Đơn yêu cầu NLV</span>
+                    <span class="badge" *ngIf="(counts?.yeuCauChoDuyet ?? 0) > 0">{{ counts?.yeuCauChoDuyet }}</span>
+                </li>
+                <li [class.active]="isActive('/hr/de-xuat-giam-doc')" (click)="navigate('/hr/de-xuat-giam-doc')">
+                    <i class="bi bi-send-check submenu-icon"></i>
+                    <span>Đề xuất giám đốc</span>
+                </li>
+            </ul>
+        </li>
+        <!-- Collapsed version: Quản lý đơn yêu cầu -->
+        <li *ngIf="isCollapsed"
+            [class.active]="isActive('/hr/yeu-cau-noi-lam-viec') || isActive('/hr/de-xuat-giam-doc')"
+            (click)="navigate('/hr/yeu-cau-noi-lam-viec')" data-tooltip="Quản lý đơn yêu cầu">
+            <i class="bi bi-clipboard2-check"></i>
+            <span class="badge" *ngIf="(counts?.yeuCauChoDuyet ?? 0) > 0">{{ counts?.yeuCauChoDuyet }}</span>
+        </li>
+        <!-- Accordion Menu: Quản lý tài khoản -->
+        <li class="menu-parent" [class.expanded]="accountMenuExpanded" *ngIf="!isCollapsed">
+            <div class="menu-parent-content"
+                [class.active]="isActive('/hr/tai-khoan') || isActive('/hr/canh-bao-tai-khoan')">
+                <div class="menu-parent-left" (click)="toggleAccountMenu($event)">
+                    <i class="bi bi-shield-lock"></i>
+                    <span>Quản lý tài khoản</span>
+                </div>
+                <span class="badge" *ngIf="counts?.taiKhoanCanhBao">{{ counts?.taiKhoanCanhBao }}</span>
+                <i class="bi bi-chevron-down expand-icon" (click)="toggleAccountMenu($event)"></i>
+            </div>
+            <ul class="submenu" [@slideDown]="accountMenuExpanded ? 'open' : 'closed'">
+                <li [class.active]="isActive('/hr/tai-khoan') && !isActive('/hr/canh-bao-tai-khoan')"
+                    (click)="navigate('/hr/tai-khoan')">
+                    <i class="bi bi-list-ul submenu-icon"></i>
+                    <span>Danh sách tài khoản</span>
+                </li>
+                <li [class.active]="isActive('/hr/canh-bao-tai-khoan')" (click)="navigate('/hr/canh-bao-tai-khoan')">
+                    <i class="bi bi-shield-exclamation submenu-icon"></i>
+                    <span>Cảnh báo tài khoản</span>
+                    <span class="badge" *ngIf="counts?.taiKhoanCanhBao">{{ counts?.taiKhoanCanhBao }}</span>
+                </li>
+            </ul>
+        </li>
+        <!-- Collapsed version: Quản lý tài khoản -->
+        <li *ngIf="isCollapsed" [class.active]="isActive('/hr/tai-khoan')" (click)="navigate('/hr/tai-khoan')"
+            data-tooltip="Quản lý tài khoản">
+            <i class="bi bi-shield-lock"></i>
+        </li>
+        <li [class.active]="isActive('/admin/audit-log')" (click)="navigate('/admin/audit-log')"
+            data-tooltip="Lịch sử hoạt động">
+            <i class="bi bi-shield-lock"></i>
+            <span>Lịch sử hoạt động</span>
+        </li>
+    </ul>
+
+    <!-- GIAMDOC MENU -->
+    <ul class="menu" *ngIf="role === 'GIAM_DOC'">
+        <li [class.active]="isActive('/gd/dashboard')" (click)="navigate('/gd/dashboard')" data-tooltip="Trang chủ">
+            <i class="bi bi-house"></i>
+            <span>Trang chủ</span>
+        </li>
+        <li [class.active]="isActive('/gd/duyet-bang-luong')" (click)="navigate('/gd/duyet-bang-luong')"
+            data-tooltip="Duyệt bảng lương">
+            <i class="bi bi-receipt"></i>
+            <span>Duyệt bảng lương</span>
+            <span class="badge" *ngIf="getNotificationCount('BANG_LUONG') > 0">{{ getNotificationCount('BANG_LUONG')
+                }}</span>
+        </li>
+        <li [class.active]="isActive('/gd/duyet-de-xuat')" (click)="navigate('/gd/duyet-de-xuat')"
+            data-tooltip="Duyệt đề xuất">
+            <i class="bi bi-file-earmark-check"></i>
+            <span>Duyệt đề xuất</span>
+            <span class="badge" *ngIf="counts?.deXuatChoDuyet">{{ counts?.deXuatChoDuyet }}</span>
+        </li>
+        <li [class.active]="isActive('/gd/duyet-du-an')" (click)="navigate('/gd/duyet-du-an')"
+            data-tooltip="Duyệt dự án">
+            <i class="bi bi-clipboard-data"></i>
+            <span>Dự án</span>
+            <span class="badge" *ngIf="getNotificationCount('DU_AN') > 0">{{ getNotificationCount('DU_AN') }}</span>
+        </li>
+        <li [class.active]="isActive('/gd/bao-cao')" (click)="navigate('/gd/bao-cao')" data-tooltip="Báo cáo thống kê">
+            <i class="bi bi-pie-chart"></i>
+            <span>Báo cáo thống kê</span>
+        </li>
+        <li [class.active]="isActive('/admin/audit-log')" (click)="navigate('/admin/audit-log')"
+            data-tooltip="Lịch sử hoạt động">
+            <i class="bi bi-shield-lock"></i>
+            <span>Lịch sử hoạt động</span>
+        </li>
+    </ul>
+
+    <div class="logout" (click)="logout()">
+        <i class="bi bi-box-arrow-left"></i>
+        <span>Đăng xuất</span>
+    </div>
+</aside>

@@ -1,0 +1,213 @@
+<div class="page-container">
+    <!-- HEADER CARD -->
+    <div class="header-card">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-shield-lock me-2"></i>
+                    Nhật ký hệ thống
+                </h1>
+                <p class="page-subtitle">
+                    Theo dõi toàn bộ hoạt động và thay đổi dữ liệu trong hệ thống
+                </p>
+            </div>
+            <div class="header-actions">
+                <button class="action-btn btn-icon" (click)="loadData()" [disabled]="loadingList" title="Làm mới">
+                    <i class="bi" [class.bi-arrow-clockwise]="!loadingList" [class.bi-arrow-repeat]="loadingList"
+                        [class.spin]="loadingList"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTER CARD -->
+    <div class="content-card filter-card mb-4">
+        <div class="filter-header">
+            <h3 class="filter-title">
+                <i class="bi bi-funnel me-2"></i>Bộ lọc
+            </h3>
+        </div>
+
+        <div class="filter-body">
+            <div class="row g-3">
+                <!-- Từ khóa -->
+                <div class="col-md-4">
+                    <label class="form-label">Tìm kiếm</label>
+                    <input type="text" class="form-control" [(ngModel)]="filter.keyword"
+                        placeholder="Tên đăng nhập, đối tượng, ghi chú..." (keyup.enter)="applyFilter()" />
+                </div>
+
+                <!-- Hành động -->
+                <div class="col-md-3">
+                    <label class="form-label">Hành động</label>
+                    <select class="form-select" [(ngModel)]="filter.hanhDong">
+                        <option *ngFor="let action of actionTypes" [value]="action.value">
+                            {{ action.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Từ ngày -->
+                <div class="col-md-2">
+                    <label class="form-label">Từ ngày</label>
+                    <input type="date" class="form-control" [(ngModel)]="filter.tuNgay" />
+                </div>
+
+                <!-- Đến ngày -->
+                <div class="col-md-2">
+                    <label class="form-label">Đến ngày</label>
+                    <input type="date" class="form-control" [(ngModel)]="filter.denNgay" />
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="filter-actions">
+                <button class="action-btn btn-primary" (click)="applyFilter()" [disabled]="loadingList">
+                    <i class="bi bi-search me-2"></i>Tìm kiếm
+                </button>
+                <button class="action-btn" (click)="resetFilter()" [disabled]="loadingList">
+                    <i class="bi bi-x-circle me-2"></i>Xóa bộ lọc
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLE CARD -->
+    <div class="content-card table-card">
+        <!-- Loading overlay -->
+        <div class="loading-overlay" *ngIf="loadingList">
+            <div class="spinner-container">
+                <div class="spinner-border"></div>
+                <div class="loading-text">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+
+        <!-- Table header -->
+        <div class="table-header">
+            <div class="table-info">
+                <h3 class="table-title">Danh sách nhật ký</h3>
+                <span class="record-count">{{ displayRange }} bản ghi</span>
+            </div>
+        </div>
+
+        <!-- Table content - REDESIGNED -->
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th width="70">ID</th>
+                        <th width="130">Thời gian</th>
+                        <th width="220">Tài khoản</th>
+                        <th>Đối tượng</th>
+                        <th>Hành động</th>
+                        <th width="90" class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let log of logs" class="data-row">
+                        <!-- ID Badge -->
+                        <td>
+                            <span class="id-badge">#{{ log.id }}</span>
+                        </td>
+
+                        <!-- Thời gian -->
+                        <td>
+                            <div class="datetime-cell">
+                                <div class="date">{{ log.thoiGian | date: 'dd/MM/yyyy' }}</div>
+                                <div class="time">{{ log.thoiGian | date: 'HH:mm:ss' }}</div>
+                            </div>
+                        </td>
+
+                        <!-- Tài khoản & Ghi chú -->
+                        <td>
+                            <div class="account-cell">
+                                <div class="account-name">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    <span>{{ log.tenDangNhap }}</span>
+                                </div>
+                                <div class="account-note" *ngIf="log.ghiChu">
+                                    <i class="bi bi-chat-left-text me-1"></i>
+                                    {{ log.ghiChu }}
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Đối tượng (Tên + Bảng) -->
+                        <td>
+                            <div class="object-cell">
+                                <div class="object-name" *ngIf="log.tenDoiTuong">
+                                    {{ log.tenDoiTuong }}
+                                </div>
+                                <div class="object-name text-muted fst-italic"
+                                    *ngIf="!log.tenDoiTuong && log.doiTuongId">
+                                    ID: {{ log.doiTuongId }}
+                                </div>
+                                <div class="object-table">
+                                    <span class="table-badge-mini">{{ log.bang }}</span>
+                                    <span class="field-tag" *ngIf="log.truong">{{ log.truong }}</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Hành động - Badge với Icon -->
+                        <td>
+                            <span class="action-badge-new" [style.background]="getActionGradient(log.hanhDong)">
+                                <i class="bi" [ngClass]="getActionIcon(log.hanhDong)"></i>
+                                {{ log.hanhDong }}
+                            </span>
+                        </td>
+
+                        <!-- Thao tác -->
+                        <td class="text-center">
+                            <button class="btn-view" (click)="viewDetail(log)" [disabled]="loadingDetail"
+                                title="Xem chi tiết">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Empty state -->
+                    <tr *ngIf="logs.length === 0 && !loadingList">
+                        <td colspan="6" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="bi bi-inbox display-1 text-muted"></i>
+                                <p class="mt-3 text-muted">Không có dữ liệu</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="table-footer" *ngIf="totalCount > 0">
+            <div class="pagination-info">
+                Hiển thị {{ displayRange }}
+            </div>
+            <div class="pagination-controls">
+                <button class="btn-page" [disabled]="filter.pageIndex === 1" (click)="onPageChange(1)">
+                    <i class="bi bi-chevron-bar-left"></i>
+                </button>
+                <button class="btn-page" [disabled]="filter.pageIndex === 1"
+                    (click)="onPageChange(filter.pageIndex - 1)">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <span class="page-display">
+                    Trang {{ filter.pageIndex }} / {{ totalPages }}
+                </span>
+                <button class="btn-page" [disabled]="filter.pageIndex === totalPages"
+                    (click)="onPageChange(filter.pageIndex + 1)">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+                <button class="btn-page" [disabled]="filter.pageIndex === totalPages"
+                    (click)="onPageChange(totalPages)">
+                    <i class="bi bi-chevron-bar-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<app-audit-log-detail *ngIf="showDetailModal && selectedLog" [auditLog]="selectedLog"
+    (close)="closeDetailModal()"></app-audit-log-detail>

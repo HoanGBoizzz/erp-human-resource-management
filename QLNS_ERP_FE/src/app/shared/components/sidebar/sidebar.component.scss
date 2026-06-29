@@ -1,0 +1,537 @@
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden; // Constrain height so menu can scroll
+
+  // ========== COLLAPSED STATE ==========
+  &.collapsed {
+    width: 60px;
+    padding: 16px 8px;
+    overflow: visible; // Ensure tooltip can overflow
+
+    .brand {
+      justify-content: center;
+      margin-bottom: 16px;
+      padding: 0;
+
+      .toggle-btn {
+        position: static;
+        transform: none;
+        margin-left: 0;
+      }
+    }
+
+    .menu {
+      overflow: visible;
+
+      >li:not(.menu-parent) {
+        justify-content: center;
+        padding: 10px;
+        margin-bottom: 4px;
+        position: relative;
+        overflow: visible; // CRITICAL: Allow tooltip to overflow outside li
+
+        i {
+          margin: 0;
+          font-size: 18px;
+        }
+
+        // Hide span in collapsed
+        span {
+          display: none;
+        }
+
+        // Popup tooltip style
+        &[data-tooltip]::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          left: calc(100% + 8px);
+          top: 50%;
+          transform: translateY(-50%) scale(0.9);
+          background: #2563eb;
+          color: #fff;
+          padding: 8px 14px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: 600;
+          white-space: nowrap;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 1000;
+          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+          pointer-events: none;
+        }
+
+        &[data-tooltip]:hover::after {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(-50%) scale(1);
+        }
+      }
+    }
+
+    .logout {
+      justify-content: center;
+      padding: 10px;
+      position: relative;
+
+      i {
+        margin: 0;
+      }
+
+      span {
+        display: none;
+      }
+
+      // Logout tooltip
+      &::after {
+        content: 'Đăng xuất';
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 50%;
+        transform: translateY(-50%) scale(0.9);
+        background: #dc2626;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        pointer-events: none;
+      }
+
+      &:hover::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(-50%) scale(1);
+      }
+    }
+  }
+
+  .brand {
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    .brand-content {
+      .logo {
+        font-weight: 900;
+        font-size: 20px;
+        color: #2563eb;
+      }
+
+      .sub {
+        font-size: 13px;
+        color: #64748b;
+      }
+    }
+
+    .logo-mini {
+      font-weight: 900;
+      font-size: 24px;
+      color: #2563eb;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      border-radius: 10px;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+      &:hover {
+        background: #f1f5f9;
+        border-color: #2563eb;
+        color: #2563eb;
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      i {
+        font-size: 12px;
+        color: #64748b;
+      }
+    }
+  }
+
+  // Position toggle button at the edge when collapsed
+  &.collapsed .brand .toggle-btn {
+    right: -12px;
+  }
+
+  .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+
+    // Thin scrollbar
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+    &::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+    // ========== MENU ITEMS THÔNG THƯỜNG ==========
+    >li:not(.menu-parent) {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      color: #0f172a;
+      margin-bottom: 6px;
+      font-weight: 600;
+      position: relative;
+      z-index: 0;
+      overflow: hidden;
+      transition: transform .12s ease, background-color .18s ease, color .18s ease;
+
+      i {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      span {
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      // Notification badge - red dot
+      .badge {
+        background: #ef4444;
+        color: white;
+        border-radius: 50%;
+        min-width: 18px;
+        height: 18px;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        padding: 0 4px;
+        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.4);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      // Slide-in background effect
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #f1f5f9;
+        transform: translateX(-110%);
+        transition: transform .22s ease;
+        z-index: -1;
+      }
+
+      &:hover::before {
+        transform: translateX(0);
+      }
+
+      &:hover {
+        transform: translateX(3px);
+      }
+
+      &.active {
+        background: #2563eb;
+        color: #fff;
+
+        &::before {
+          transform: translateX(-110%);
+        }
+      }
+    }
+
+    // ========== ACCORDION MENU ==========
+    .menu-parent {
+      margin-bottom: 6px;
+
+      &.expanded {
+        .expand-icon {
+          transform: rotate(180deg);
+        }
+
+        .submenu {
+          margin-top: 8px;
+        }
+      }
+
+      // Parent item
+      .menu-parent-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        border-radius: 12px;
+        cursor: pointer;
+        color: #0f172a;
+        font-weight: 600;
+        position: relative;
+        z-index: 0;
+        overflow: hidden;
+        transition: transform .12s ease, background-color .18s ease, color .18s ease;
+
+        // Slide-in background effect
+        &::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: #f1f5f9;
+          transform: translateX(-110%);
+          transition: transform .22s ease;
+          z-index: -1;
+        }
+
+        &:hover::before {
+          transform: translateX(0);
+        }
+
+        &:hover {
+          transform: translateX(3px);
+        }
+
+        .menu-parent-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+
+          i {
+            font-size: 18px;
+          }
+
+          span {
+            flex: 1;
+          }
+        }
+
+        .expand-icon {
+          font-size: 14px;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: #64748b;
+          flex-shrink: 0;
+        }
+
+        // Active state
+        &.active {
+          background: #2563eb;
+          color: #fff;
+
+          .expand-icon {
+            color: #fff;
+          }
+
+          &::before {
+            transform: translateX(-110%);
+          }
+        }
+      }
+
+      // Submenu items
+      .submenu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 11px 14px 11px 46px;
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #475569;
+          margin-bottom: 4px;
+          border-radius: 12px;
+          cursor: pointer;
+          position: relative;
+          z-index: 0;
+          overflow: hidden;
+          transition: transform .12s ease, color .18s ease, background-color .18s ease;
+
+          .submenu-icon {
+            font-size: 16px;
+            opacity: 0.65;
+            transition: opacity .2s ease;
+          }
+
+          span:not(.badge) {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          // Slide-in background effect
+          &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #e2e8f0 0%, #f1f5f9 100%);
+            transform: translateX(-110%);
+            transition: transform .22s ease;
+            z-index: -1;
+          }
+
+          &:hover::before {
+            transform: translateX(0);
+          }
+
+          &:hover {
+            transform: translateX(3px);
+            color: #0f172a;
+
+            .submenu-icon {
+              opacity: 1;
+            }
+          }
+
+          // Active state
+          &.active {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #2563eb;
+            font-weight: 600;
+
+            .submenu-icon {
+              opacity: 1;
+              color: #2563eb;
+            }
+
+            &::before {
+              transform: translateX(-110%);
+            }
+          }
+
+          // Notification badge for submenu - red dot
+          .badge {
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 0 4px;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.4);
+            animation: pulse 2s infinite;
+          }
+        }
+      }
+
+      // Badge for parent menu header
+      .menu-parent-content {
+        .badge {
+          background: #ef4444;
+          color: white;
+          border-radius: 50%;
+          min-width: 18px;
+          height: 18px;
+          font-size: 11px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: 8px;
+          padding: 0 4px;
+          box-shadow: 0 2px 4px rgba(239, 68, 68, 0.4);
+          animation: pulse 2s infinite;
+        }
+      }
+    }
+  }
+
+  .logout {
+    margin-top: auto;
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: #dc2626;
+    font-weight: 600;
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    transition: transform .12s ease, background-color .18s ease, color .18s ease;
+
+    i {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    span {
+      white-space: nowrap;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: #fee2e2;
+      transform: translateX(-110%);
+      transition: transform .22s ease;
+      z-index: -1;
+    }
+
+    &:hover::before {
+      transform: translateX(0);
+    }
+
+    &:hover {
+      transform: translateX(3px);
+      color: #991b1b;
+    }
+  }
+}

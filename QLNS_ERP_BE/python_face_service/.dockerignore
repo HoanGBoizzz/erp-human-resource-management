@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+venv/
+env/
+ENV/
+.venv
+
+# Models (sẽ download trong container)
+.insightface/
+models/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+DOCKER_SETUP.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.yml

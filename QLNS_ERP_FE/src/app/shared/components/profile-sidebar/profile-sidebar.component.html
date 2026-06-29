@@ -1,0 +1,260 @@
+<div class="profile-sidebar-overlay" (click)="onClose()"></div>
+
+<aside class="profile-sidebar" [class.loading]="loading">
+
+    <!-- HEADER -->
+    <header class="sidebar-header">
+        <h2>Hồ sơ cá nhân</h2>
+        <button class="btn-close" (click)="onClose()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </header>
+
+    <!-- TABS -->
+    <div class="sidebar-tabs">
+        <button [class.active]="activeTab === 'info'" (click)="switchTab('info')">
+            <i class="bi bi-person"></i>
+            Thông tin
+        </button>
+        <button [class.active]="activeTab === 'bank'" (click)="switchTab('bank')">
+            <i class="bi bi-credit-card"></i>
+            Tài khoản NH
+        </button>
+        <button [class.active]="activeTab === 'password'" (click)="switchTab('password')">
+            <i class="bi bi-lock"></i>
+            Đổi mật khẩu
+        </button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="sidebar-content">
+
+        <!-- LOADING STATE -->
+        <div *ngIf="loading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Đang tải thông tin...</p>
+        </div>
+
+        <!-- TAB: THÔNG TIN CÁ NHÂN -->
+        <div *ngIf="activeTab === 'info' && !loading && profile" class="tab-content">
+
+            <!-- Avatar -->
+            <div class="avatar-section">
+                <div class="avatar-wrapper">
+                    <img *ngIf="displayAvatarUrl" [src]="displayAvatarUrl" alt="Avatar" class="avatar-img" />
+                    <div *ngIf="!displayAvatarUrl" class="avatar-placeholder">
+                        {{ profile.hoTen.charAt(0).toUpperCase() }}
+                    </div>
+                    <label class="avatar-upload-btn" [class.uploading]="uploadingAvatar">
+                        <i class="bi" [class.bi-camera]="!uploadingAvatar"
+                            [class.bi-arrow-clockwise]="uploadingAvatar"></i>
+                        <input type="file" accept="image/jpeg,image/jpg,image/png"
+                            (change)="onAvatarFileSelected($event)" [disabled]="uploadingAvatar" />
+                    </label>
+                </div>
+                <h3>{{ profile.hoTen }}</h3>
+                <p class="role-badge">{{ profile.tenVaiTro }}</p>
+            </div>
+
+            <!-- Thông tin chi tiết -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Mã nhân viên</label>
+                    <div class="value">{{ profile.maNhanVien }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Vai trò</label>
+                    <div class="value">{{ profile.tenVaiTro }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Tên đăng nhập</label>
+                    <div class="value">{{ profile.tenDangNhap }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Số điện thoại</label>
+                    <div class="value">{{ profile.soDienThoai || 'Chưa cập nhật' }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Email cá nhân</label>
+                    <div class="value">{{ profile.emailCaNhan || 'Chưa cập nhật' }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Ngày sinh</label>
+                    <div class="value">{{ formatDate(profile.ngaySinh) }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Giới tính</label>
+                    <div class="value">{{ getGenderLabel(profile.gioiTinh) }}</div>
+                </div>
+
+                <div class="info-item">
+                    <label>Địa chỉ</label>
+                    <div class="value">{{ profile.diaChi || 'Chưa cập nhật' }}</div>
+                </div>
+
+                <!-- Thông tin công việc -->
+                <div *ngIf="profile.congViecHienTai" class="info-item full-width" style="margin-top: 0.5rem;">
+                    <h4 class="section-title">Công việc hiện tại</h4>
+                </div>
+
+                <ng-container *ngIf="profile.congViecHienTai">
+                    <div class="info-item">
+                        <label>Phòng ban</label>
+                        <div class="value">{{ profile.congViecHienTai.tenPhongBan || 'Chưa phân công' }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Ngày vào làm</label>
+                        <div class="value">{{ formatDate(profile.congViecHienTai.ngayVaoLam) }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Chức vụ</label>
+                        <div class="value">{{ profile.congViecHienTai.tenChucVu || 'Chưa phân công' }}</div>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Loại hợp đồng</label>
+                        <div class="value">{{ profile.congViecHienTai.loaiHopDong || 'Chưa xác định' }}</div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+
+        <!-- TAB: TÀI KHOẢN NGÂN HÀNG -->
+        <div *ngIf="activeTab === 'bank' && !loading && profile" class="tab-content">
+
+            <!-- Thông tin tài khoản -->
+            <div class="info-grid">
+                <div class="info-item full-width">
+                    <label>Số tài khoản ngân hàng</label>
+                    <div class="value">{{ profile.soTaiKhoanNganHang || 'Chưa cập nhật' }}</div>
+                </div>
+            </div>
+
+            <!-- Hiển thị ảnh STK nếu có -->
+            <div *ngIf="displayStkImageUrl" class="stk-preview" style="margin-top: 1.5rem;">
+                <h4 class="section-title">Ảnh sao kê tài khoản</h4>
+                <div class="stk-image-wrapper">
+                    <img [src]="displayStkImageUrl" alt="Ảnh sao kê tài khoản" />
+                </div>
+
+                <!-- Nút upload ảnh STK -->
+                <div class="stk-upload-section">
+                    <input #stkImageInput type="file" accept="image/jpeg,image/jpg,image/png"
+                        (change)="onStkImageSelected($event)" style="display: none" />
+                    <button type="button" class="btn btn-outline-primary avatar-upload-btn"
+                        (click)="stkImageInput.click()" [disabled]="uploadingStkImage">
+                        <i class="bi" [class.bi-cloud-upload]="!uploadingStkImage"
+                            [class.bi-arrow-clockwise]="uploadingStkImage"></i>
+                        {{ uploadingStkImage ? 'Đang upload...' : 'Thay đổi ảnh tài khoản' }}
+                    </button>
+                    <small class="help-text" style="display: block; margin-top: 0.5rem; color: #666;">
+                        Chấp nhận JPG, PNG. Tối đa 2MB.
+                    </small>
+                </div>
+            </div>
+
+            <!-- Form cập nhật -->
+            <div style="margin-top: 1.5rem;">
+                <h4 class="section-title">Cập nhật thông tin</h4>
+                <form [formGroup]="bankForm" (ngSubmit)="updateBankAccount()" style="margin-top: 1rem;">
+
+                    <div class="form-group">
+                        <label>Số tài khoản ngân hàng</label>
+                        <input type="text" formControlName="soTaiKhoanNganHang"
+                            placeholder="Nhập số tài khoản ngân hàng" maxlength="50" />
+                        <small class="help-text">
+                            Nhập số tài khoản để nhận lương qua chuyển khoản
+                        </small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" [disabled]="updatingBank || bankForm.invalid">
+                            <i class="bi" [class.bi-check-lg]="!updatingBank"
+                                [class.bi-arrow-clockwise]="updatingBank"></i>
+                            {{ updatingBank ? 'Đang cập nhật...' : 'Cập nhật' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB: ĐỔI MẬT KHẨU -->
+        <div *ngIf="activeTab === 'password' && !loading" class="tab-content">
+            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+
+                <div class="form-group">
+                    <label>Mật khẩu hiện tại *</label>
+                    <div class="password-input-wrapper">
+                        <input [type]="showCurrentPassword ? 'text' : 'password'" formControlName="currentPassword"
+                            placeholder="Nhập mật khẩu hiện tại" />
+                        <button type="button" class="toggle-password"
+                            (click)="showCurrentPassword = !showCurrentPassword">
+                            <i class="bi" [class.bi-eye]="!showCurrentPassword"
+                                [class.bi-eye-slash]="showCurrentPassword"></i>
+                        </button>
+                    </div>
+                    <div class="error"
+                        *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
+                        <small *ngIf="passwordForm.get('currentPassword')?.errors?.['required']">Vui lòng nhập mật khẩu
+                            hiện tại</small>
+                        <small *ngIf="passwordForm.get('currentPassword')?.errors?.['minlength']">Mật khẩu tối thiểu 6
+                            ký tự</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mật khẩu mới *</label>
+                    <div class="password-input-wrapper">
+                        <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword"
+                            placeholder="Nhập mật khẩu mới" />
+                        <button type="button" class="toggle-password" (click)="showNewPassword = !showNewPassword">
+                            <i class="bi" [class.bi-eye]="!showNewPassword" [class.bi-eye-slash]="showNewPassword"></i>
+                        </button>
+                    </div>
+                    <div class="error"
+                        *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+                        <small *ngIf="passwordForm.get('newPassword')?.errors?.['required']">Vui lòng nhập mật khẩu
+                            mới</small>
+                        <small *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">Mật khẩu tối thiểu 6 ký
+                            tự</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu mới *</label>
+                    <div class="password-input-wrapper">
+                        <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
+                            placeholder="Nhập lại mật khẩu mới" />
+                        <button type="button" class="toggle-password"
+                            (click)="showConfirmPassword = !showConfirmPassword">
+                            <i class="bi" [class.bi-eye]="!showConfirmPassword"
+                                [class.bi-eye-slash]="showConfirmPassword"></i>
+                        </button>
+                    </div>
+                    <div class="error"
+                        *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmPassword')?.touched">
+                        <small>Mật khẩu xác nhận không khớp</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" [disabled]="updatingPassword || passwordForm.invalid">
+                        <i class="bi" [class.bi-lock]="!updatingPassword"
+                            [class.bi-arrow-clockwise]="updatingPassword"></i>
+                        {{ updatingPassword ? 'Đang xử lý...' : 'Đổi mật khẩu' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</aside>

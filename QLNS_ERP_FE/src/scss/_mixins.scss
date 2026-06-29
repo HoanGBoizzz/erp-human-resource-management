@@ -1,0 +1,262 @@
+// src/scss/_mixins.scss
+// ===== Design System Mixins =====
+
+@import 'variables';
+
+// Card mixin
+@mixin card-base($radius: $radius-lg) {
+  background: #ffffff;
+  border: 1px solid rgba($slate-200, 0.8);
+  border-radius: $radius;
+  box-shadow: $shadow-md;
+  transition: transform $transition-base, box-shadow $transition-base;
+}
+
+@mixin card-hover($lift: 3px) {
+  &:hover {
+    transform: translateY(-#{$lift});
+    box-shadow: $shadow-hover;
+  }
+}
+
+// Shimmer effect
+@mixin shimmer-effect {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 80%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    transform: translateX(120%);
+  }
+}
+
+// Glow effect
+@mixin glow-effect($color: $primary, $intensity: 0.15) {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba($color, $intensity) 0%,
+      transparent 70%
+    );
+    filter: blur(16px);
+    opacity: 0;
+    transition: opacity $transition-base;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+// Icon bounce
+@mixin icon-bounce {
+  transition: transform $transition-base, filter $transition-base;
+
+  &:hover {
+    animation: iconBounce 0.4s ease;
+  }
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-3px) scale(1.05); }
+  50% { transform: translateY(-1px) scale(1.02); }
+  75% { transform: translateY(-2px) scale(1.03); }
+}
+
+// Button shine effect
+@mixin btn-shine {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    transform: translateX(-120%) rotate(25deg);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.35),
+      transparent
+    );
+    transition: transform 0.6s ease;
+  }
+
+  &:hover::after {
+    transform: translateX(120%) rotate(25deg);
+  }
+}
+
+// Responsive breakpoints
+@mixin mobile {
+  @media (max-width: 575.98px) { @content; }
+}
+
+@mixin tablet {
+  @media (min-width: 576px) and (max-width: 991.98px) { @content; }
+}
+
+@mixin desktop {
+  @media (min-width: 992px) { @content; }
+}
+
+@mixin large-desktop {
+  @media (min-width: 1200px) { @content; }
+}
+
+// Skeleton loading
+@mixin skeleton-pulse {
+  background: linear-gradient(
+    90deg,
+    $slate-200 25%,
+    $slate-100 50%,
+    $slate-200 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// Gradient text
+@mixin gradient-text($gradient) {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Glass effect
+@mixin glass-effect($opacity: 0.8, $blur: 12px) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+}
+
+// Focus ring
+@mixin focus-ring($color: $primary) {
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($color, 0.25);
+  }
+}
+
+// Action button with slide-in effect
+@mixin action-btn {
+  position: relative;
+  overflow: hidden;
+  background: $card-bg;
+  color: $text-dark;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: $primary;
+    z-index: -1;
+    transition: width 0.3s ease;
+  }
+
+  &:hover:not(:disabled) {
+    color: white;
+    border-color: $primary;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($primary, 0.2);
+    
+    &::before {
+      width: 100%;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Icon button
+@mixin btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: $radius-lg;
+  
+  &:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Loading overlay
+@mixin loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: $radius-2xl;
+
+  .spinner-container {
+    text-align: center;
+    
+    .spinner-border {
+      width: 40px;
+      height: 40px;
+      border-width: 3px;
+      color: $primary;
+    }
+
+    .loading-text {
+      margin-top: 12px;
+      color: $text-muted;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+  }
+}

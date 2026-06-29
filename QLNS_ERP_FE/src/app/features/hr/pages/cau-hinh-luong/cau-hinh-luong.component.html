@@ -1,0 +1,292 @@
+<div class="page-container">
+
+    <!-- HEADER -->
+    <div class="header-card d-flex align-items-center justify-content-between">
+        <div>
+            <h4 class="page-title mb-1">
+                <i class="bi bi-sliders me-2 text-primary"></i>Cấu hình lương
+            </h4>
+            <p class="text-muted mb-0 small">
+                Thiết lập công thức tính lương và các tham số hệ thống.
+            </p>
+        </div>
+        <button class="btn btn-outline-primary" (click)="openCreate()">
+            <i class="bi bi-plus-lg me-1"></i> Thêm tham số
+        </button>
+    </div>
+
+    <!-- LOADING -->
+    <div class="text-center py-5" *ngIf="loading">
+        <div class="spinner-border text-primary"></div>
+        <div class="text-muted mt-2 small">Đang tải...</div>
+    </div>
+
+    <!-- GROUPS -->
+    <ng-container *ngIf="!loading">
+        <!-- ═══  FORMULA BUILDER  ═══════════════════════════════════════════ -->
+        <div class="content-card mb-4">
+            <div class="nhom-header mb-1">
+                <i class="bi bi-calculator-fill me-2 text-primary"></i>
+                <span class="fw-semibold text-dark">Công thức tính tổng lương</span>
+            </div>
+            <p class="text-muted small mb-3">
+                Bật / tắt từng thành phần để thay đổi cách tính lương từ kỳ tiếp theo.
+                <strong>Lương theo công</strong> luôn được tính, không thể tắt.
+            </p>
+
+            <!-- Preview formula bar -->
+            <div class="formula-preview mb-4">
+                <span class="formula-base">Tổng&nbsp;=&nbsp;Lương&nbsp;công</span>
+                <ng-container *ngFor="let c of formulaComponents">
+                    <span class="formula-op" [class.op-off]="!getFlag(c.ma)">
+                        {{ c.loai === 'tru' ? '−' : '+' }}
+                    </span>
+                    <span class="formula-token" [class.token-on]="getFlag(c.ma)" [class.token-off]="!getFlag(c.ma)">
+                        {{ c.nhan }}
+                    </span>
+                </ng-container>
+            </div>
+
+            <!-- Toggle rows -->
+            <div class="formula-toggle-list">
+                <!-- Lương theo công — fixed -->
+                <div class="formula-toggle-row fixed">
+                    <div class="formula-toggle-icon bg-primary-light">
+                        <i class="bi bi-person-workspace text-primary"></i>
+                    </div>
+                    <div class="formula-toggle-info flex-grow-1">
+                        <div class="fw-semibold">
+                            Lương theo công
+                            <span class="ms-2 badge bg-secondary">Cố định</span>
+                        </div>
+                        <div class="text-muted small">Lương CB ÷ Ngày chuẩn × Số ngày công — Luôn được tính</div>
+                    </div>
+                    <div class="formula-toggle-sign text-primary fw-bold">+</div>
+                    <div class="formula-toggle-switch-area">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" checked disabled
+                                style="opacity:.4;cursor:not-allowed;width:2.5em;height:1.4em" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic components -->
+                <div class="formula-toggle-row" *ngFor="let c of formulaComponents" [class.row-off]="!getFlag(c.ma)">
+                    <div class="formula-toggle-icon" [class.bg-success-light]="c.loai === 'cong' && getFlag(c.ma)"
+                        [class.bg-danger-light]="c.loai === 'tru' && getFlag(c.ma)"
+                        [class.bg-muted-light]="!getFlag(c.ma)">
+                        <i class="bi {{ c.icon }}" [class.text-success]="c.loai === 'cong' && getFlag(c.ma)"
+                            [class.text-danger]="c.loai === 'tru' && getFlag(c.ma)"
+                            [class.text-muted]="!getFlag(c.ma)"></i>
+                    </div>
+                    <div class="formula-toggle-info flex-grow-1">
+                        <div class="fw-semibold" [class.text-muted]="!getFlag(c.ma)">
+                            {{ c.nhan }}
+                            <span class="ms-2 badge" [class.bg-success]="getFlag(c.ma) && c.loai === 'cong'"
+                                [class.bg-danger]="getFlag(c.ma) && c.loai === 'tru'"
+                                [class.bg-secondary]="!getFlag(c.ma)">
+                                {{ getFlag(c.ma) ? 'Đang tính' : 'Bỏ qua' }}
+                            </span>
+                        </div>
+                        <div class="text-muted small">{{ c.moTa }}</div>
+                    </div>
+                    <div class="formula-toggle-sign fw-bold" [class.text-success]="c.loai === 'cong' && getFlag(c.ma)"
+                        [class.text-danger]="c.loai === 'tru' && getFlag(c.ma)" [class.text-muted]="!getFlag(c.ma)">
+                        {{ c.loai === 'tru' ? '−' : '+' }}
+                    </div>
+                    <div class="formula-toggle-switch-area d-flex align-items-center">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" [checked]="getFlag(c.ma)"
+                                [disabled]="togglingFlag === c.ma" (change)="toggleFlag(c.ma)"
+                                style="cursor:pointer;width:2.5em;height:1.4em" />
+                        </div>
+                        <div *ngIf="togglingFlag === c.ma" class="spinner-border spinner-border-sm text-primary ms-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warning when something is disabled -->
+            <div class="alert alert-warning mt-3 mb-0 small py-2" *ngIf="hasDisabledComponents">
+                <i class="bi bi-exclamation-triangle me-1"></i>
+                Một số thành phần đang <strong>tắt</strong>. Lương tính cho các kỳ tiếp theo sẽ
+                <strong>không bao gồm</strong> các khoản đó.
+            </div>
+        </div>
+
+        <!-- ═══  PARAM TABLE GROUPS  ════════════════════════════════════════ -->
+        <div class="content-card mb-4" *ngFor="let nhom of nhomList">
+            <div class="nhom-header mb-3">
+                <i class="bi bi-tag-fill me-2 text-primary"></i>
+                <span class="fw-semibold text-dark">{{ nhom }}</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width:220px">Tên tham số</th>
+                            <th style="width:160px">Mã</th>
+                            <th style="width:130px">Giá trị</th>
+                            <th>Mô tả</th>
+                            <th style="width:130px">Hiệu lực từ</th>
+                            <th style="width:100px" class="text-end">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of getByNhom(nhom)">
+                            <td class="fw-semibold text-dark">{{ getLabel(item.maThamSo) }}</td>
+                            <td>
+                                <code class="badge bg-light text-dark border">{{ item.maThamSo }}</code>
+                            </td>
+                            <td>
+                                <span class="value-chip">{{ item.giaTri }}</span>
+                            </td>
+                            <td class="text-muted small">{{ item.moTa || getMoTa(item.maThamSo) || '—' }}</td>
+                            <td class="text-muted small">
+                                {{ item.ngayBatDauHieuLuc | date:'dd/MM/yyyy' }}
+                            </td>
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-secondary me-1" title="Sửa"
+                                    (click)="openEdit(item)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" title="Xóa" (click)="confirmDelete(item)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- EMPTY -->
+        <div class="content-card text-center py-5" *ngIf="nhomList.length === 0">
+            <i class="bi bi-sliders fs-1 text-muted"></i>
+            <p class="text-muted mt-2">Chưa có tham số nào. Nhấn <strong>Thêm tham số</strong> để bắt đầu.</p>
+        </div>
+    </ng-container>
+
+</div>
+
+<!-- ── MODAL THÊM / SỬA ─────────────────────────────────────────── -->
+<div class="modal-backdrop fade" [class.show]="showModal" *ngIf="showModal" (click)="closeModal()"></div>
+<div class="modal fade" [class.show]="showModal" [style.display]="showModal ? 'block' : 'none'" tabindex="-1"
+    *ngIf="showModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-sliders me-2"></i>
+                    {{ editId ? 'Sửa tham số' : 'Thêm tham số mới' }}
+                </h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="save()">
+                <div class="modal-body">
+
+                    <!-- Mã tham số (chỉ cho nhập khi tạo mới) -->
+                    <div class="mb-3" *ngIf="!editId">
+                        <label class="form-label fw-semibold">Mã tham số <span class="text-danger">*</span></label>
+                        <input class="form-control text-uppercase" formControlName="maThamSo"
+                            placeholder="Ví dụ: LUONG_PHAT_DI_MUON"
+                            [class.is-invalid]="form.get('maThamSo')!.invalid && form.get('maThamSo')!.touched" />
+                        <div class="invalid-feedback">
+                            Bắt buộc. Chỉ dùng chữ hoa, số và dấu gạch dưới (_).
+                        </div>
+                        <div class="form-text">Chỉ chữ IN HOA, số và dấu gạch dưới. Không thể sửa sau khi tạo.</div>
+                    </div>
+
+                    <!-- Mã tham số readonly khi edit -->
+                    <div class="mb-3" *ngIf="editId">
+                        <label class="form-label fw-semibold">Mã tham số</label>
+                        <input class="form-control bg-light" formControlName="maThamSo" readonly />
+                        <div class="form-text text-muted">Mã không thể thay đổi.</div>
+                    </div>
+
+                    <!-- Giá trị -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Giá trị <span class="text-danger">*</span></label>
+                        <input class="form-control" formControlName="giaTri" placeholder="Ví dụ: 30000, 1.5, 08:00"
+                            [class.is-invalid]="form.get('giaTri')!.invalid && form.get('giaTri')!.touched" />
+                        <div class="invalid-feedback">Vui lòng nhập giá trị.</div>
+                        <div class="form-text text-muted">
+                            Số nguyên, số thập phân hoặc chuỗi thời gian (HH:mm).
+                        </div>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mô tả</label>
+                        <textarea class="form-control" formControlName="moTa" rows="2"
+                            placeholder="Diễn giải ý nghĩa của tham số này..."></textarea>
+                    </div>
+
+                    <!-- Ngày hiệu lực -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Ngày bắt đầu hiệu lực <span
+                                    class="text-danger">*</span></label>
+                            <input type="date" class="form-control" formControlName="ngayBatDauHieuLuc"
+                                [class.is-invalid]="form.get('ngayBatDauHieuLuc')!.invalid && form.get('ngayBatDauHieuLuc')!.touched" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Ngày kết thúc hiệu lực</label>
+                            <input type="date" class="form-control" formControlName="ngayKetThucHieuLuc" />
+                            <div class="form-text text-muted">Để trống = vô thời hạn.</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeModal()"
+                        [disabled]="saving">Hủy</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="saving">
+                        <span *ngIf="saving" class="spinner-border spinner-border-sm me-1"></span>
+                        <i class="bi bi-check-lg me-1" *ngIf="!saving"></i>
+                        {{ editId ? 'Lưu thay đổi' : 'Thêm tham số' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODAL XÁC NHẬN XÓA ──────────────────────────────────────── -->
+<div class="modal-backdrop fade" [class.show]="showDeleteConfirm" *ngIf="showDeleteConfirm" (click)="cancelDelete()">
+</div>
+<div class="modal fade" [class.show]="showDeleteConfirm" [style.display]="showDeleteConfirm ? 'block' : 'none'"
+    tabindex="-1" *ngIf="showDeleteConfirm">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title text-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Xác nhận xóa
+                </h5>
+                <button type="button" class="btn-close" (click)="cancelDelete()"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa tham số
+                    <strong>{{ getLabel(deleteTarget?.maThamSo ?? '') }}</strong>?
+                </p>
+                <p class="text-muted small mb-0">
+                    Mã: <code>{{ deleteTarget?.maThamSo }}</code> — Giá trị hiện tại: <strong>{{ deleteTarget?.giaTri
+                        }}</strong>
+                </p>
+                <div class="alert alert-warning mt-3 mb-0 small">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    Hệ thống sẽ dùng giá trị mặc định nếu không tìm thấy tham số này.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="cancelDelete()">Hủy</button>
+                <button class="btn btn-danger" (click)="doDelete()">
+                    <i class="bi bi-trash me-1"></i>Xóa
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,265 @@
+<div class="profile-page">
+
+  <!-- ERROR ALERT -->
+  <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- ===== SKELETON LOADING ===== -->
+  <div class="row g-4" *ngIf="loading">
+    <div class="col-lg-4">
+      <div class="skeleton-card h-100"></div>
+    </div>
+    <div class="col-lg-8">
+      <div class="skeleton-card mb-4" style="height: 200px"></div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="skeleton-card" style="height: 150px"></div>
+        </div>
+        <div class="col-md-6">
+          <div class="skeleton-card" style="height: 150px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="row g-4" *ngIf="!loading && !errorMsg">
+
+    <!-- LEFT COLUMN: Avatar & Personal Info -->
+    <div class="col-lg-4">
+      <div class="content-card profile-summary h-100">
+        <!-- Avatar Section -->
+        <div class="avatar-section">
+          <div class="avatar-wrapper" (click)="avatarInput.click()">
+            <img *ngIf="profile.anhCaNhanUrl" [src]="profile.anhCaNhanUrl" class="avatar-img" alt="Avatar">
+            <div *ngIf="!profile.anhCaNhanUrl" class="avatar-placeholder">{{ initials(profile.hoTen) }}</div>
+            <div class="avatar-overlay"><i class="bi bi-camera"></i></div>
+            <div class="avatar-spinner" *ngIf="uploadingAvatar">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <input type="file" #avatarInput hidden accept="image/*" (change)="onAvatarSelected($event)" />
+
+          <h3 class="profile-name">{{ profile.hoTen || 'Chưa cập nhật' }}</h3>
+          <div class="profile-role">{{ profile.tenVaiTro || 'Nhân viên' }}</div>
+
+          <div class="profile-badges">
+            <span class="status-badge" [class.active]="profile.congViecHienTai?.trangThaiLamViec === 1">
+              <span class="dot"></span>
+              {{ workStatusText(profile.congViecHienTai?.trangThaiLamViec) }}
+            </span>
+            <span class="id-badge">#{{ profile.maNhanVien }}</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Contact Info -->
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="icon-box blue"><i class="bi bi-envelope"></i></div>
+            <div class="contact-info">
+              <span class="label">Email</span>
+              <span class="value">{{ profile.emailCaNhan || '—' }}</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon-box purple"><i class="bi bi-telephone"></i></div>
+            <div class="contact-info">
+              <span class="label">Điện thoại</span>
+              <span class="value">{{ profile.soDienThoai || '—' }}</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon-box orange"><i class="bi bi-geo-alt"></i></div>
+            <div class="contact-info">
+              <span class="label">Địa chỉ</span>
+              <span class="value">{{ profile.diaChi || '—' }}</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon-box green"><i class="bi bi-calendar-event"></i></div>
+            <div class="contact-info">
+              <span class="label">Ngày sinh</span>
+              <span class="value">{{ profile.ngaySinh ? (profile.ngaySinh | dateVn) : '—' }}</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="icon-box gray"><i class="bi bi-gender-ambiguous"></i></div>
+            <div class="contact-info">
+              <span class="label">Giới tính</span>
+              <span class="value">{{ genderText(profile.gioiTinh) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Work & Account -->
+    <div class="col-lg-8">
+
+      <!-- WORK INFO CARD -->
+      <div class="content-card mb-4">
+        <div class="card-head">
+          <div class="head-icon blue"><i class="bi bi-briefcase"></i></div>
+          <h3 class="head-title">Thông tin công việc</h3>
+        </div>
+        <div class="card-body-grid">
+          <div class="grid-item">
+            <span class="label">Phòng ban</span>
+            <span class="value">{{ profile.congViecHienTai?.tenPhongBan || '—' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="label">Chức vụ</span>
+            <span class="value">{{ profile.congViecHienTai?.tenChucVu || '—' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="label">Loại hợp đồng</span>
+            <span class="value">{{ profile.congViecHienTai?.loaiHopDong || '—' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="label">Ngày vào làm</span>
+            <span class="value">{{ profile.congViecHienTai?.ngayVaoLam ? (profile.congViecHienTai?.ngayVaoLam | dateVn)
+              : '—' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="label">Ngày ký HĐ</span>
+            <span class="value">{{ profile.congViecHienTai?.ngayKyHopDong ? (profile.congViecHienTai?.ngayKyHopDong |
+              dateVn) : '—' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="label">Hết hạn HĐ</span>
+            <span class="value">{{ profile.congViecHienTai?.ngayHetHanHopDong ?
+              (profile.congViecHienTai?.ngayHetHanHopDong | dateVn) : '—' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCOUNT & BANK GRID -->
+      <div class="row g-4">
+        <!-- Account Info -->
+        <div class="col-md-6">
+          <div class="content-card h-100">
+            <div class="card-head">
+              <div class="head-icon purple"><i class="bi bi-shield-lock"></i></div>
+              <h3 class="head-title">Tài khoản</h3>
+            </div>
+            <div class="info-list">
+              <div class="info-row">
+                <span class="label">Tên đăng nhập</span>
+                <span class="value fw-bold">{{ profile.tenDangNhap }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Vai trò</span>
+                <span class="value">{{ profile.tenVaiTro }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank Account -->
+        <div class="col-md-6">
+          <div class="content-card h-100">
+            <div class="card-head">
+              <div class="head-icon green"><i class="bi bi-bank"></i></div>
+              <h3 class="head-title">Ngân hàng</h3>
+              <button class="icon-btn" *ngIf="!editingBank" (click)="startEditBank()" title="Chỉnh sửa">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </div>
+
+            <div class="card-body-content">
+              <!-- View Mode -->
+              <div *ngIf="!editingBank" class="bank-display">
+                <div class="bank-number">{{ profile.soTaiKhoanNganHang || 'Chưa cập nhật' }}</div>
+                <div class="bank-label">Số tài khoản nhận lương</div>
+              </div>
+
+              <!-- Edit Mode -->
+              <div *ngIf="editingBank" class="bank-edit">
+                <input type="text" class="form-control custom-input mb-3" [(ngModel)]="bankAccountInput"
+                  placeholder="Nhập số tài khoản..." [disabled]="savingBank">
+                <div class="d-flex gap-2 justify-content-end">
+                  <button class="btn-cancel" (click)="cancelEditBank()" [disabled]="savingBank">Hủy</button>
+                  <button class="btn-save" (click)="saveBank()" [disabled]="savingBank">
+                    <span class="spinner-sm" *ngIf="savingBank"></span>
+                    {{ savingBank ? 'Lưu...' : 'Lưu' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bank Image Upload Section -->
+      <div class="row g-4 mt-0">
+        <div class="col-12">
+          <div class="content-card">
+            <div class="card-head">
+              <div class="head-icon teal"><i class="bi bi-image"></i></div>
+              <h3 class="head-title">Ảnh sao kê tài khoản ngân hàng</h3>
+            </div>
+
+            <div class="card-body-content">
+              <div class="stk-image-section">
+                <!-- Image Preview -->
+                <div class="stk-preview" *ngIf="profile.anhStkUrl">
+                  <img [src]="profile.anhStkUrl" alt="Ảnh sao kê STK" class="stk-img" (click)="openStkImageModal()">
+                  <div class="stk-actions">
+                    <button class="btn-view" (click)="openStkImageModal()" title="Xem ảnh">
+                      <i class="bi bi-zoom-in"></i>
+                    </button>
+                    <button class="btn-delete" (click)="deleteStkImage()" [disabled]="uploadingStk" title="Xóa ảnh">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Upload Area -->
+                <div class="stk-upload" *ngIf="!profile.anhStkUrl">
+                  <div class="upload-area" (click)="stkInput.click()" [class.uploading]="uploadingStk">
+                    <div class="upload-content" *ngIf="!uploadingStk">
+                      <i class="bi bi-cloud-arrow-up"></i>
+                      <span class="upload-text">Nhấn để tải lên ảnh sao kê</span>
+                      <span class="upload-hint">PNG, JPG tối đa 5MB</span>
+                    </div>
+                    <div class="upload-spinner" *ngIf="uploadingStk">
+                      <div class="spinner"></div>
+                      <span>Đang tải lên...</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Change Image Button -->
+                <div class="stk-change" *ngIf="profile.anhStkUrl">
+                  <button class="btn-change" (click)="stkInput.click()" [disabled]="uploadingStk">
+                    <i class="bi bi-upload"></i>
+                    {{ uploadingStk ? 'Đang tải...' : 'Thay đổi ảnh' }}
+                  </button>
+                </div>
+
+                <input type="file" #stkInput hidden accept="image/*" (change)="onStkImageSelected($event)" />
+
+                <p class="stk-note">
+                  <i class="bi bi-info-circle"></i>
+                  Ảnh sao kê tài khoản ngân hàng giúp HR xác minh thông tin tài khoản nhận lương của bạn.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- STK Image Modal -->
+<div class="stk-modal-overlay" *ngIf="showStkImageModal" (click)="closeStkImageModal()">
+  <div class="stk-modal-content" (click)="$event.stopPropagation()">
+    <button class="stk-modal-close" (click)="closeStkImageModal()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+    <img [src]="profile.anhStkUrl" alt="Ảnh sao kê STK" class="stk-modal-img">
+  </div>
+</div>

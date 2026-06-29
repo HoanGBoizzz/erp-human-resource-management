@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# InsightFace models (sẽ tự download)
+models/
+*.onnx
+*.params
+.insightface/
+
+# Logs
+*.log
+
+# Docker artifacts (keep Dockerfile & docker-compose.yml)
+# No need to ignore Docker config files

@@ -1,0 +1,359 @@
+<div class="page-container">
+
+    <!-- ╔════════════════════════════════════════╗
+       ║           HEADER CARD                 ║
+       ╚════════════════════════════════════════╝ -->
+    <div class="header-card">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h4 class="page-title mb-1">
+                    <i class="bi bi-send-check me-2 text-primary"></i>Đề xuất giám đốc
+                </h4>
+                <p class="page-subtitle mb-0">Quản lý các đề xuất gửi lên giám đốc phê duyệt</p>
+            </div>
+            <button class="btn action-btn" (click)="openCreate()" *ngIf="mode === 'LIST'">
+                <i class="bi bi-plus-lg me-2"></i>Tạo đề xuất mới
+            </button>
+        </div>
+    </div>
+
+    <!-- ╔════════════════════════════════════════╗
+       ║              KPI CARDS                ║
+       ╚════════════════════════════════════════╝ -->
+    <div class="row g-4 mb-4" *ngIf="mode === 'LIST'">
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-primary">
+                <div class="kpi-icon"><i class="bi bi-collection"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Tổng đề xuất</span>
+                    <span class="kpi-value">{{ kpiTotal }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-warning">
+                <div class="kpi-icon"><i class="bi bi-hourglass-split"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Chờ duyệt</span>
+                    <span class="kpi-value">{{ kpiChoDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-success">
+                <div class="kpi-icon"><i class="bi bi-check2-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Đã duyệt</span>
+                    <span class="kpi-value">{{ kpiDaDuyet }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card kpi-danger">
+                <div class="kpi-icon"><i class="bi bi-x-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Từ chối</span>
+                    <span class="kpi-value">{{ kpiTuChoi }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ╔════════════════════════════════════════╗
+       ║           CREATE / EDIT FORM           ║
+       ╚════════════════════════════════════════╝ -->
+    <div class="content-card form-card" *ngIf="mode === 'CREATE' || mode === 'EDIT'">
+        <div class="form-card-header">
+            <h5 class="mb-0">
+                <i class="bi bi-pencil-square me-2 text-primary"></i>
+                {{ mode === 'CREATE' ? 'Tạo đề xuất mới' : 'Chỉnh sửa đề xuất' }}
+            </h5>
+        </div>
+        <div class="form-card-body">
+            <form [formGroup]="form" (ngSubmit)="save()">
+                <div class="row g-3">
+
+                    <!-- Tên đề xuất -->
+                    <div class="col-12 col-md-8">
+                        <label class="form-label fw-semibold">
+                            Tên đề xuất <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" formControlName="tenDeXuat"
+                            placeholder="Nhập tên đề xuất..."
+                            [class.is-invalid]="form.get('tenDeXuat')?.invalid && form.get('tenDeXuat')?.touched">
+                        <div class="invalid-feedback">Vui lòng nhập tên đề xuất (tối đa 300 ký tự)</div>
+                    </div>
+
+                    <!-- Ngày đề xuất -->
+                    <div class="col-12 col-md-4">
+                        <label class="form-label fw-semibold">
+                            Ngày đề xuất <span class="text-danger">*</span>
+                        </label>
+                        <input type="date" class="form-control" formControlName="ngayDeXuat"
+                            [class.is-invalid]="form.get('ngayDeXuat')?.invalid && form.get('ngayDeXuat')?.touched">
+                        <div class="invalid-feedback">Vui lòng chọn ngày đề xuất</div>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Mô tả đề xuất</label>
+                        <textarea class="form-control" formControlName="moTa" rows="4"
+                            placeholder="Mô tả chi tiết về đề xuất..."></textarea>
+                    </div>
+
+                    <!-- File đính kèm -->
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">File đính kèm</label>
+                        <div class="file-upload-area">
+                            <input #fileInput type="file" class="d-none" (change)="onFileSelected($event)"
+                                accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.zip">
+                            <div *ngIf="!pendingFile" class="file-placeholder" (click)="fileInput.click()">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                                <span>Nhấn để chọn file (PDF, Word, Excel, ảnh... tối đa 10MB)</span>
+                            </div>
+                            <div *ngIf="pendingFile" class="file-selected">
+                                <i class="bi bi-file-earmark-check text-success"></i>
+                                <span class="flex-fill">{{ pendingFile.name }}</span>
+                                <button type="button" class="btn btn-sm btn-outline-danger" (click)="clearFile()">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Form actions -->
+                <div class="d-flex gap-2 mt-4">
+                    <button type="button" class="btn btn-secondary" (click)="cancelForm()"
+                        [disabled]="saving || uploading">
+                        <i class="bi bi-x-lg me-1"></i>Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="saving || uploading">
+                        <span *ngIf="saving || uploading" class="spinner-border spinner-border-sm me-2"></span>
+                        <i class="bi bi-check-lg me-1" *ngIf="!saving && !uploading"></i>
+                        {{ mode === 'CREATE' ? 'Tạo đề xuất' : 'Lưu thay đổi' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ╔════════════════════════════════════════╗
+       ║             LIST TABLE                ║
+       ╚════════════════════════════════════════╝ -->
+    <div class="content-card" *ngIf="mode === 'LIST'">
+
+        <!-- Loading overlay -->
+        <div class="loading-overlay" *ngIf="loading">
+            <div class="spinner-container">
+                <div class="spinner-border" role="status"></div>
+                <div class="loading-text">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <div class="search-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" class="form-control search-input" [(ngModel)]="q" (ngModelChange)="applyFilter()"
+                    placeholder="Tìm theo tên, mô tả...">
+            </div>
+            <div class="filter-group">
+                <select class="form-select" [(ngModel)]="statusFilter" (ngModelChange)="applyFilter()">
+                    <option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive mt-3">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên đề xuất</th>
+                        <th>Ngày đề xuất</th>
+                        <th>File</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày gửi duyệt</th>
+                        <th class="text-end">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of filtered; trackBy: trackById; let i = index">
+                        <td class="text-muted">{{ i + 1 }}</td>
+                        <td>
+                            <div class="item-name">{{ item.tenDeXuat }}</div>
+                            <div class="item-desc text-muted" *ngIf="item.moTa">{{ item.moTa | slice:0:60 }}{{
+                                item.moTa.length > 60 ? '...' : '' }}</div>
+                        </td>
+                        <td>{{ item.ngayDeXuat | date:'dd/MM/yyyy' }}</td>
+                        <td>
+                            <a *ngIf="item.tepTinUrl" [href]="getFileUrl(item.tepTinUrl)" target="_blank"
+                                class="file-link" title="{{ item.tepTinTenGoc }}">
+                                <i class="bi bi-paperclip"></i>
+                                {{ (item.tepTinTenGoc ?? '') | slice:0:20 }}
+                            </a>
+                            <span *ngIf="!item.tepTinUrl" class="text-muted">—</span>
+                        </td>
+                        <td>
+                            <span class="status-badge" [ngClass]="BADGE[item.trangThai]">
+                                {{ LABEL[item.trangThai] }}
+                            </span>
+                        </td>
+                        <td class="text-muted">
+                            {{ item.ngayGuiDuyet ? (item.ngayGuiDuyet | date:'dd/MM/yyyy HH:mm') : '—' }}
+                        </td>
+                        <td>
+                            <div class="action-group">
+                                <!-- Xem chi tiết -->
+                                <button class="btn btn-sm btn-icon btn-detail" title="Xem chi tiết"
+                                    (click)="openDetail(item.id)">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                                <!-- Gửi duyệt (NHAP hoặc DA_THU_HOI) -->
+                                <button class="btn btn-sm btn-icon btn-send" title="Gửi giám đốc duyệt"
+                                    *ngIf="canGuiDuyet(item)" (click)="guiDuyet(item)">
+                                    <i class="bi bi-send"></i>
+                                </button>
+
+                                <!-- Thu hồi (CHO_DUYET) -->
+                                <button class="btn btn-sm btn-icon btn-recall" title="Thu hồi đề xuất"
+                                    *ngIf="canThuHoi(item)" (click)="thuHoi(item)">
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+                                </button>
+
+                                <!-- Sửa (NHAP hoặc DA_THU_HOI) -->
+                                <button class="btn btn-sm btn-icon btn-edit" title="Chỉnh sửa" *ngIf="canEdit(item)"
+                                    (click)="openEdit(item)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+
+                                <!-- Sửa bị khóa (CHO_DUYET) -->
+                                <button class="btn btn-sm btn-icon btn-locked" title="Thu hồi trước khi sửa"
+                                    *ngIf="item.trangThai === 'CHO_DUYET'" (click)="openEdit(item)" disabled>
+                                    <i class="bi bi-lock"></i>
+                                </button>
+
+                                <!-- Xóa (NHAP hoặc DA_THU_HOI) -->
+                                <button class="btn btn-sm btn-icon btn-delete" title="Xóa" *ngIf="canDelete(item)"
+                                    (click)="deleteItem(item)">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+
+                                <!-- Xóa bị khóa (CHO_DUYET) -->
+                                <button class="btn btn-sm btn-icon btn-locked" title="Thu hồi trước khi xóa"
+                                    *ngIf="item.trangThai === 'CHO_DUYET'" disabled>
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filtered.length === 0 && !loading">
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                            Không có đề xuất nào
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div><!-- /content-card -->
+</div><!-- /page-container -->
+
+<!-- ╔══════════════════════════════════════════════════════╗
+     ║                DETAIL MODAL                         ║
+     ╚══════════════════════════════════════════════════════╝ -->
+
+<div class="modal-backdrop fade" [class.show]="showDetailModal" *ngIf="showDetailModal" (click)="closeDetail()"></div>
+
+<div class="modal fade" [class.show]="showDetailModal" [style.display]="showDetailModal ? 'block' : 'none'"
+    tabindex="-1" *ngIf="showDetailModal">
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- Loading overlay -->
+            <div class="loading-overlay" *ngIf="detailLoading">
+                <div class="spinner-container">
+                    <div class="spinner-border" role="status"></div>
+                    <div class="loading-text">Đang tải chi tiết...</div>
+                </div>
+            </div>
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-file-earmark-text me-2"></i>Chi tiết đề xuất
+                </h5>
+                <button type="button" class="btn-close" (click)="closeDetail()"></button>
+            </div>
+
+            <div class="modal-body" *ngIf="!detailLoading && selectedDetail">
+                <!-- Header info -->
+                <div class="d-flex align-items-start justify-content-between mb-4">
+                    <div>
+                        <h5 class="fw-bold mb-1">{{ selectedDetail.tenDeXuat }}</h5>
+                        <div class="text-muted small">Tạo bởi: {{ selectedDetail.tenNguoiTao }}</div>
+                    </div>
+                    <span class="status-badge ms-3" [ngClass]="BADGE[selectedDetail.trangThai]">
+                        {{ LABEL[selectedDetail.trangThai] }}
+                    </span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="detail-label">Ngày đề xuất</label>
+                        <div class="detail-value">{{ selectedDetail.ngayDeXuat | date:'dd/MM/yyyy' }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="detail-label">Ngày tạo</label>
+                        <div class="detail-value">{{ selectedDetail.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                    </div>
+
+                    <div class="col-12" *ngIf="selectedDetail.moTa">
+                        <label class="detail-label">Mô tả</label>
+                        <div class="detail-value detail-desc">{{ selectedDetail.moTa }}</div>
+                    </div>
+
+                    <div class="col-md-6" *ngIf="selectedDetail.ngayGuiDuyet">
+                        <label class="detail-label">Ngày gửi duyệt</label>
+                        <div class="detail-value">{{ selectedDetail.ngayGuiDuyet | date:'dd/MM/yyyy HH:mm' }}</div>
+                    </div>
+                    <div class="col-md-6" *ngIf="selectedDetail.ngayDuyet">
+                        <label class="detail-label">Ngày duyệt</label>
+                        <div class="detail-value">{{ selectedDetail.ngayDuyet | date:'dd/MM/yyyy HH:mm' }}</div>
+                    </div>
+                    <div class="col-md-6" *ngIf="selectedDetail.tenNguoiDuyet">
+                        <label class="detail-label">Người duyệt</label>
+                        <div class="detail-value">{{ selectedDetail.tenNguoiDuyet }}</div>
+                    </div>
+
+                    <div class="col-12" *ngIf="selectedDetail.lyDoTuChoi">
+                        <label class="detail-label">Lý do từ chối</label>
+                        <div class="detail-value detail-reject">{{ selectedDetail.lyDoTuChoi }}</div>
+                    </div>
+
+                    <div class="col-12" *ngIf="selectedDetail.tepTinUrl">
+                        <label class="detail-label">File đính kèm</label>
+                        <div class="detail-value">
+                            <a [href]="getFileUrl(selectedDetail.tepTinUrl)" target="_blank" class="file-link">
+                                <i class="bi bi-paperclip me-1"></i>
+                                {{ selectedDetail.tepTinTenGoc }}
+                                <span class="text-muted ms-1" *ngIf="selectedDetail.tepTinSize">
+                                    ({{ formatFileSize(selectedDetail.tepTinSize) }})
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeDetail()">Đóng</button>
+            </div>
+
+        </div>
+    </div>
+</div>

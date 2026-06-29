@@ -1,0 +1,112 @@
+version: "3.8"
+
+services:
+  # ========================
+  # 1. MySQL Database
+  # ========================
+  mysql_db:
+    image: mysql:8.0
+    container_name: qlns_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: qlns1234
+      MYSQL_DATABASE: qlns_erp
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Bỏ comment dòng dưới nếu muốn import SQL dump khi khởi tạo lần đầu:
+      # - ./sql_init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - qlns_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pqlns1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ========================
+  # 2. Python InsightFace Service
+  # ========================
+  python_face:
+    build:
+      context: ./python_face_service
+      dockerfile: Dockerfile
+    container_name: qlns_python_face
+    restart: unless-stopped
+    networks:
+      - qlns_net
+    volumes:
+      - insightface_models:/root/.insightface
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    # KHÔNG expose ra ngoài - chỉ BE gọi internal
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')",
+        ]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
+
+  # ========================
+  # 3. .NET Backend API
+  # ========================
+  dotnet_api:
+    build:
+      context: ./QLNS_BE
+      dockerfile: Dockerfile
+    container_name: qlns_dotnet_api
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+    volumes:
+      # Persist uploaded files (avatar, STK images, v.v.)
+      - uploads_data:/app/wwwroot/uploads
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+      python_face:
+        condition: service_healthy
+    networks:
+      - qlns_net
+    ports:
+      - "5042:8080"
+
+  # ========================
+  # 4. Nginx (Reverse Proxy + Serve Angular)
+  # ========================
+  nginx:
+    image: nginx:alpine
+    container_name: qlns_nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend_dist:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+      # Uncomment nếu có SSL cert:
+      # - "443:443"
+    depends_on:
+      - dotnet_api
+    networks:
+      - qlns_net
+
+volumes:
+  mysql_data:
+  insightface_models:
+  uploads_data:
+
+networks:
+  qlns_net:
+    driver: bridge

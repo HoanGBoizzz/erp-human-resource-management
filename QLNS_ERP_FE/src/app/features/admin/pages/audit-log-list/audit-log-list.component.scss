@@ -1,0 +1,527 @@
+@import '../../../../../scss/variables';
+@import '../../../../../scss/mixins';
+
+// ================================
+// PAGE CONTAINER
+// ================================
+.page-container {
+  padding: 24px;
+  background: $bg-page;
+  min-height: 100vh;
+}
+
+// ================================
+// HEADER CARD
+// ================================
+.header-card {
+  background: $card-bg;
+  border-radius: $radius-2xl;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+
+  .page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0 0 8px 0;
+
+    i {
+      color: $primary;
+    }
+  }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+    color: $text-muted;
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+// ================================
+// CONTENT CARD (Base)
+// ================================
+.content-card {
+  background: $card-bg;
+  border-radius: $radius-2xl;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+
+  &:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba($primary, 0.1);
+  }
+}
+
+// ================================
+// FILTER CARD
+// ================================
+.filter-card {
+  &:hover {
+    transform: none; // Disable hover effect for filter card
+  }
+
+  .filter-header {
+    margin-bottom: 20px;
+
+    .filter-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0;
+
+      i {
+        color: $primary;
+      }
+    }
+  }
+
+  .filter-body {
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: $text-muted;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .form-control,
+    .form-select {
+      border: 1px solid $border-color;
+      border-radius: $radius-lg;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+
+      &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+      }
+    }
+  }
+
+  .filter-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid $border-color;
+    display: flex;
+    gap: 12px;
+  }
+}
+
+// ================================
+// TABLE CARD
+// ================================
+.table-card {
+  position: relative;
+
+  &:hover {
+    transform: none; // Disable hover effect for table card
+  }
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid $border-color;
+
+    .table-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .table-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: $text-dark;
+        margin: 0;
+      }
+
+      .record-count {
+        font-size: 0.85rem;
+        color: $text-muted;
+        background: $bg-page;
+        padding: 4px 12px;
+        border-radius: $radius-full;
+      }
+    }
+  }
+
+  .table-responsive {
+    border-radius: $radius-lg;
+    overflow: hidden;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    thead {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+      th {
+        padding: 14px 16px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: $text-dark;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid $border-color;
+        white-space: nowrap;
+
+        &:first-child {
+          border-top-left-radius: $radius-lg;
+        }
+
+        &:last-child {
+          border-top-right-radius: $radius-lg;
+        }
+      }
+    }
+
+    tbody {
+      .data-row {
+        transition: all 0.2s;
+        border-bottom: 1px solid $border-color;
+
+        &:hover {
+          background: rgba($primary, 0.02);
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        td {
+          padding: 16px;
+          font-size: 0.9rem;
+          color: $text-dark;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
+  .table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid $border-color;
+
+    .pagination-info {
+      font-size: 0.85rem;
+      color: $text-muted;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .page-display {
+        font-size: 0.85rem;
+        color: $text-dark;
+        font-weight: 600;
+        padding: 0 12px;
+      }
+    }
+  }
+}
+
+// ================================
+// TABLE CELLS - REDESIGNED
+// ================================
+
+// ID Badge
+.id-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: $text-dark;
+  border-radius: $radius-md;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+// Datetime Cell
+.datetime-cell {
+  .date {
+    font-weight: 600;
+    color: $text-dark;
+    font-size: 0.9rem;
+  }
+
+  .time {
+    font-size: 0.8rem;
+    color: $text-muted;
+    margin-top: 2px;
+  }
+}
+
+// Account Cell (Tài khoản & Ghi chú)
+.account-cell {
+  .account-name {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: $text-dark;
+    font-size: 0.9rem;
+
+    i {
+      color: $primary;
+      font-size: 1.1rem;
+    }
+  }
+
+  .account-note {
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: $radius-md;
+    font-size: 0.8rem;
+    color: #92400e;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    max-width: 300px;
+
+    i {
+      color: #d97706;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+  }
+}
+
+// Object Cell (Đối tượng)
+.object-cell {
+  .object-name {
+    font-weight: 600;
+    color: $text-dark;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+
+  .object-table {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    .table-badge-mini {
+      display: inline-block;
+      padding: 3px 8px;
+      background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+      color: #4338ca;
+      border-radius: $radius-sm;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .field-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      background: $bg-page;
+      color: $text-muted;
+      border-radius: $radius-sm;
+      font-size: 0.75rem;
+      font-weight: 500;
+      font-family: 'Courier New', monospace;
+    }
+  }
+}
+
+// Action Badge - NEW DESIGN with gradient and icon
+.action-badge-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: $radius-full;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 0.85rem;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Legacy - keep for backward compatibility
+.table-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: $text-dark;
+  border-radius: $radius-md;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.action-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: $radius-full;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.field-name {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text-dark;
+  background: $bg-page;
+  padding: 3px 8px;
+  border-radius: $radius-sm;
+}
+
+.note-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: $text-muted;
+  font-size: 0.85rem;
+}
+
+// ================================
+// BUTTONS
+// ================================
+.action-btn {
+  @include action-btn;
+}
+
+.btn-primary {
+  background: $primary !important;
+  color: white !important;
+  border-color: $primary !important;
+
+  &::before {
+    background: darken($primary, 10%) !important;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: darken($primary, 10%) !important;
+  }
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-lg;
+
+  i {
+    font-size: 1.1rem;
+
+    &.spin {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-view {
+  @include btn-icon;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, rgba($primary, 0.1) 0%, rgba($primary, 0.05) 100%);
+  color: $primary;
+  border: 1px solid rgba($primary, 0.2);
+  border-radius: $radius-lg;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: $primary;
+    color: white;
+    border-color: $primary;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($primary, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-page {
+  @include btn-icon;
+  width: 36px;
+  height: 36px;
+  background: $card-bg;
+  color: $text-dark;
+  border: 1px solid $border-color;
+
+  &:hover:not(:disabled) {
+    background: $primary;
+    color: white;
+    border-color: $primary;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+// ================================
+// LOADING OVERLAY
+// ================================
+.loading-overlay {
+  @include loading-overlay;
+}
+
+// ================================
+// EMPTY STATE
+// ================================
+.empty-state {
+  padding: 40px 20px;
+
+  i {
+    opacity: 0.3;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+}

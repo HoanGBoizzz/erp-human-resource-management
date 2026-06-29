@@ -1,0 +1,352 @@
+﻿@use "sass:color";
+@import "src/scss/variables";
+
+// ===========================================================
+// BANG LUONG NHAN VIEN  Design System Aligned
+// ===========================================================
+
+.page-container { padding: 0; }
+
+//  Header card 
+.header-card {
+  background: #fff;
+  border-left: 4px solid $primary;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-md;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+
+  h3 { color: $slate-800; font-size: 1.25rem; }
+  i.bi-cash-stack { color: $primary; }
+}
+
+//  KPI Cards 
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-md;
+  padding: 1.25rem 1.5rem;
+  transition: transform $transition-base, box-shadow $transition-base;
+  border-top: 3px solid transparent;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: $shadow-lg;
+  }
+
+  &.kpi-primary { border-top-color: $primary; .kpi-icon { background: rgba($primary, .08); color: $primary; } }
+  &.kpi-info    { border-top-color: $info;    .kpi-icon { background: rgba($info, .08);    color: $info;    } }
+  &.kpi-success { border-top-color: $success; .kpi-icon { background: rgba($success,.08);  color: $success; } }
+  &.kpi-warning { border-top-color: $warning; .kpi-icon { background: rgba($warning,.08);  color: $warning; } }
+
+  .kpi-icon {
+    width: 48px; height: 48px; border-radius: $radius-xl;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+
+  .kpi-body { flex: 1; min-width: 0; }
+  .kpi-label { font-size: .72rem; font-weight: 600; color: $slate-500; text-transform: uppercase; letter-spacing: .4px; margin-bottom: .3rem; }
+  .kpi-value { font-size: 1.35rem; font-weight: 700; color: $slate-800; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kpi-sub   { font-size: .75rem; color: $slate-500; margin-top: .2rem; }
+}
+
+//  Content card (shared) 
+.content-card {
+  background: #fff;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-md;
+  padding: 1.25rem 1.5rem;
+  border-top: 3px solid $primary;
+}
+
+//  Filter row 
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: .75rem;
+
+  .filter-label {
+    display: block;
+    font-size: .72rem;
+    font-weight: 600;
+    color: $slate-500;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: .3rem;
+  }
+
+  .filter-item        { flex: 0 0 110px; }
+  .filter-item-wide   { flex: 0 0 200px; }
+  .filter-item-search { flex: 1 1 200px; }
+  .filter-result      { flex: 0 0 auto; align-self: flex-end; padding-bottom: 2px; }
+}
+
+//  Salary list 
+.salary-list {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.salary-row {
+  border: 1px solid $slate-200;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  transition: border-color $transition-base, box-shadow $transition-base;
+
+  &:hover         { border-color: rgba($primary, .4); box-shadow: 0 2px 12px rgba($primary, .08); }
+  &.expanded      { border-color: $primary; box-shadow: 0 4px 16px rgba($primary, .12); }
+  &.row-approved  { border-left: 3px solid $success; }
+}
+
+// Row header (clickable)
+.row-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background $transition-fast;
+
+  &:hover { background: $slate-50; }
+}
+
+// Month badge
+.month-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, $primary 0%, color.adjust($primary, $lightness: 15%) 100%);
+  border-radius: $radius-xl;
+  flex-shrink: 0;
+
+  .month-num  { font-size: 1.15rem; font-weight: 700; color: #fff; line-height: 1; }
+  .month-year { font-size: .65rem; color: rgba(255,255,255,.75); margin-top: 2px; }
+}
+
+// Row info section
+.row-info { min-width: 0; }
+
+// Mini formula inline text
+.mini-formula {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .25rem;
+  font-size: .78rem;
+
+  .mf-base   { color: $slate-700; font-weight: 600; }
+  .mf-plus   { color: $info;    font-weight: 600; }
+  .mf-bonus  { color: $success; font-weight: 600; }
+  .mf-deduct { color: $danger;  font-weight: 600; }
+  .mf-total  { color: $primary; font-weight: 700; font-size: .82rem; }
+  .mf-sep    { color: $slate-400; font-size: .75rem; }
+  .mf-eq     { color: $slate-500; font-weight: 700; }
+}
+
+// Right side net salary
+.row-net {
+  text-align: right;
+  flex-shrink: 0;
+
+  .net-value { font-size: 1.1rem; font-weight: 700; color: $primary; white-space: nowrap; }
+  .net-unit  { font-size: .7rem; color: $slate-400; }
+}
+
+// Expand chevron
+.expand-icon {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  color: $slate-500;
+  transition: transform $transition-base, background $transition-fast;
+  flex-shrink: 0;
+
+  .salary-row.expanded & { transform: none; background: rgba($primary,.08); color: $primary; }
+}
+
+// Status pills
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .2rem .6rem;
+  border-radius: $radius-md;
+  font-size: .72rem;
+  font-weight: 600;
+
+  &.badge-da-duyet   { background: rgba($success,.1); color: $success; }
+  &.badge-tam-tinh   { background: rgba($slate-500,.1); color: $slate-600; }
+  &.badge-cho-duyet  { background: rgba($warning,.12); color: $warning; }
+  &.badge-tu-choi    { background: rgba($danger,.1); color: $danger; }
+  &.badge-secondary  { background: $slate-100; color: $slate-600; }
+}
+
+//  Detail Panel 
+.detail-panel {
+  padding: 0 1.25rem 1.25rem;
+  background: $slate-50;
+  animation: slideDown .2s ease-out;
+}
+
+.detail-divider {
+  height: 1px;
+  background: $slate-200;
+  margin-bottom: 1.25rem;
+}
+
+// Formula banner (step flow)
+.formula-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5rem;
+  background: #fff;
+  border: 1px solid $slate-200;
+  border-radius: $radius-xl;
+  padding: .875rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.formula-step {
+  text-align: center;
+  padding: .4rem .75rem;
+  border-radius: $radius-lg;
+  min-width: 80px;
+
+  .fs-label { font-size: .65rem; font-weight: 600; color: $slate-500; text-transform: uppercase; margin-bottom: .2rem; }
+  .fs-value { font-size: .95rem; font-weight: 700; color: $slate-800; }
+
+  &.step-base   { background: rgba($primary,.06); .fs-value { color: $primary; } }
+  &.step-plus   { background: rgba($info,.06);    .fs-value { color: $info; } }
+  &.step-bonus  { background: rgba($success,.06); .fs-value { color: $success; } }
+  &.step-deduct { background: rgba($danger,.06);  }
+  &.step-total  { background: rgba($primary,.1);  border: 1px solid rgba($primary,.2); }
+}
+
+.formula-op {
+  font-size: 1rem; font-weight: 700; color: $slate-400;
+  &.op-plus  { color: $info; }
+  &.op-minus { color: $danger; }
+  &.op-eq    { color: $slate-600; font-size: 1.2rem; }
+}
+
+.total-highlight { color: $primary !important; font-size: 1rem !important; }
+
+// Detail grid
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: #fff;
+  border: 1px solid $slate-200;
+  border-radius: $radius-lg;
+  padding: .75rem 1rem;
+}
+
+.di-icon {
+  width: 36px; height: 36px; border-radius: $radius-lg;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+
+  &.di-primary { background: rgba($primary,.08); color: $primary; }
+  &.di-info    { background: rgba($info,.08);    color: $info; }
+  &.di-success { background: rgba($success,.08); color: $success; }
+  &.di-danger  { background: rgba($danger,.08);  color: $danger; }
+  &.di-warning { background: rgba($warning,.08); color: $warning; }
+  &.di-purple  { background: rgba(#7c3aed,.08);  color: #7c3aed; }
+}
+
+.di-label { font-size: .7rem; color: $slate-500; margin-bottom: .15rem; }
+.di-val   { font-size: .95rem; font-weight: 700; color: $slate-800; }
+.di-unit  { font-size: .75rem; font-weight: 400; color: $slate-500; }
+
+// Progress bars
+.pct-section {
+  background: #fff;
+  border: 1px solid $slate-200;
+  border-radius: $radius-xl;
+  padding: .875rem 1.25rem;
+}
+
+.pct-title {
+  font-size: .72rem; font-weight: 700; color: $slate-500;
+  text-transform: uppercase; letter-spacing: .4px; margin-bottom: .75rem;
+}
+
+.pct-bar-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .5rem;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.pct-name  { font-size: .75rem; color: $slate-600; width: 60px; flex-shrink: 0; }
+.pct-track {
+  flex: 1; height: 6px; background: $slate-100; border-radius: 99px; overflow: hidden;
+
+  .pct-fill {
+    height: 100%; border-radius: 99px; transition: width .5s ease;
+    &.fill-base   { background: $primary; }
+    &.fill-plus   { background: $info; }
+    &.fill-bonus  { background: $success; }
+    &.fill-deduct { background: $danger; }
+  }
+}
+.pct-val { font-size: .75rem; font-weight: 600; color: $slate-600; width: 40px; text-align: right; flex-shrink: 0; }
+
+// Empty state
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: $slate-400;
+
+  i { font-size: 3rem; display: block; margin-bottom: 1rem; }
+  p { margin: 0; font-size: .9rem; }
+}
+
+//  Spin animation 
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.spin { animation: spin .8s linear infinite; }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+//  Responsive 
+@media (max-width: 768px) {
+  .filter-item, .filter-item-wide, .filter-item-search { flex: 1 1 100%; }
+
+  .row-net { display: none; }
+
+  .formula-banner { display: none; }
+
+  .detail-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .month-badge { width: 44px; height: 44px; .month-num { font-size: 1rem; } }
+  .detail-grid { grid-template-columns: 1fr; }
+}

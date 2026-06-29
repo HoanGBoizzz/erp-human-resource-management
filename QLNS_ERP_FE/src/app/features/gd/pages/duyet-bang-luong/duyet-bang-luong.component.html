@@ -1,0 +1,604 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="header-card">
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div>
+                <h4 class="fw-bold mb-1">
+                    <i class="bi bi-shield-check me-2 text-success"></i>Duyệt bảng lương
+                </h4>
+                <p class="text-muted mb-0">Xem và duyệt/từ chối bảng lương nhân viên</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="action-btn btn-success" (click)="openBulkApproveModal()"
+                    [disabled]="loadingList || getBangLuongChoDuyet().length === 0">
+                    <i class="bi bi-check-circle-fill me-1"></i>
+                    <span>Duyệt tất cả ({{ getBangLuongChoDuyet().length }})</span>
+                </button>
+                <button class="action-btn" (click)="loadList()" [disabled]="loadingList">
+                    <i class="bi" [ngClass]="loadingList ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+                    <span class="ms-1">{{ loadingList ? 'Đang tải...' : 'Tải lại' }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="errorMsg" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMsg }}
+        <button type="button" class="btn-close" (click)="errorMsg = ''"></button>
+    </div>
+
+    <!-- Table Card -->
+    <div class="content-card">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" *ngIf="loadingList">
+            <div class="spinner-container">
+                <div class="spinner-border" role="status"></div>
+                <div class="loading-text">Đang tải dữ liệu...</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+            <div class="flex-grow-1" style="max-width: 320px; min-width: 260px;">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0 rounded-3"
+                        placeholder="Tìm theo tên nhân viên" [(ngModel)]="keyword"
+                        (keyup.enter)="pageIndex = 1; applyFilters()" />
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <select class="form-select rounded-3" style="width: 120px;" [(ngModel)]="namFilter"
+                    (change)="applyFilters()" [disabled]="loadingList">
+                    <option *ngFor="let year of availableYears" [ngValue]="year">{{ year }}</option>
+                </select>
+                <select class="form-select rounded-3" style="width: 140px;" [(ngModel)]="thangFilter"
+                    (change)="applyFilters()" [disabled]="loadingList">
+                    <option [ngValue]="'ALL'">Tất cả tháng</option>
+                    <option *ngFor="let month of availableMonths" [ngValue]="month">Tháng {{ month }}</option>
+                </select>
+                <select class="form-select rounded-3" style="width: 160px;" [(ngModel)]="statusFilter"
+                    (change)="applyFilters()" [disabled]="loadingList">
+                    <option value="ALL">Tất cả trạng thái</option>
+                    <option value="CHO_DUYET_GIAM_DOC">Chờ duyệt</option>
+                    <option value="DA_DUYET">Đã duyệt</option>
+                    <option value="TU_CHOI">Từ chối</option>
+                </select>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted small">Hiển thị</span>
+                    <select class="form-select rounded-3" style="width: 100px;" [(ngModel)]="pageSize"
+                        (change)="pageIndex = 1; updatePagination()" [disabled]="loadingList">
+                        <option [ngValue]="10">10</option>
+                        <option [ngValue]="20">20</option>
+                        <option [ngValue]="50">50</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Nhân viên</th>
+                        <th class="text-center">Tháng/Năm</th>
+                        <th class="text-center">Công</th>
+                        <th class="text-center">OT (h)</th>
+                        <th class="text-end">Lương CB</th>
+                        <th class="text-end">Phụ cấp</th>
+                        <th class="text-end">Thưởng</th>
+                        <th class="text-end">Khấu trừ</th>
+                        <th class="text-end">Tổng lương</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of paginatedList" (click)="openDetail(item.id)" style="cursor: pointer;">
+                        <td class="fw-semibold">{{ item.hoTen }}</td>
+                        <td class="text-center">{{ item.thang }}/{{ item.nam }}</td>
+                        <td class="text-center">
+                            <span class="badge bg-light text-dark">{{ item.tongCong }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-light text-dark">{{ item.tongOt }}</span>
+                        </td>
+                        <td class="text-end">{{ formatCurrency(item.luongCoBanTinh) }}</td>
+                        <td class="text-end">{{ formatCurrency(item.phuCapTinh) }}</td>
+                        <td class="text-end text-success">{{ item.thuong > 0 ? formatCurrency(item.thuong) : '-' }}</td>
+                        <td class="text-end text-danger">{{ item.khauTru > 0 ? formatCurrency(item.khauTru) : '-' }}
+                        </td>
+                        <td class="text-end fw-bold text-primary">{{ formatCurrency(item.tongLuong) }}</td>
+                        <td>
+                            <span [class]="getStatusBadge(item.trangThai)">
+                                {{ getStatusLabel(item.trangThai) }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="action-btn btn-sm" type="button"
+                                (click)="$event.stopPropagation(); openDetail(item.id)">
+                                <i class="bi bi-eye me-1"></i>Xem
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="paginatedList.length === 0">
+                        <td colspan="11" class="text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            Không có bảng lương cần duyệt
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+            <div class="text-muted small">Hiển thị {{ paginatedList.length }} / {{ totalCount }} bảng lương</div>
+            <nav aria-label="Phân trang">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="pageIndex === 1">
+                        <a class="page-link" href="javascript:void(0)" (click)="changePage(pageIndex - 1)">
+                            <i class="bi bi-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === pageIndex">
+                        <a class="page-link" href="javascript:void(0)" (click)="changePage(page)">{{ page }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="pageIndex >= getTotalPages()">
+                        <a class="page-link" href="javascript:void(0)" (click)="changePage(pageIndex + 1)">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ========== MODAL CHI TIẾT ========== -->
+    <div class="modal fade" [class.show]="showDetailModal" [style.display]="showDetailModal ? 'block' : 'none'"
+        tabindex="-1" (click)="closeDetail()">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" (click)="$event.stopPropagation()">
+            <div class="modal-content">
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" *ngIf="loadingDetail" style="border-radius: 12px;">
+                    <div class="spinner-container">
+                        <div class="spinner-border" role="status"></div>
+                        <div class="loading-text">Đang tải chi tiết...</div>
+                    </div>
+                </div>
+
+                <!-- Header -->
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title fw-bold">
+                            <i class="bi bi-file-earmark-text me-2 text-primary"></i>Chi tiết bảng lương
+                        </h5>
+                        <div class="text-muted small mt-1">
+                            <i class="bi bi-person me-1"></i>{{ detail?.hoTen }}
+                            &nbsp;·&nbsp;
+                            <i class="bi bi-calendar3 me-1"></i>Tháng {{ detail?.thang }}/{{ detail?.nam }}
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span *ngIf="detail" [class]="getStatusBadge(detail.trangThai)" class="px-3 py-2">
+                            {{ getStatusLabel(detail.trangThai) }}
+                        </span>
+                        <button type="button" class="btn-close" (click)="closeDetail()"></button>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body" *ngIf="detail">
+                    <!-- Info Cards Grid -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="detail-info-card">
+                                <div class="detail-info-icon bg-primary-subtle text-primary">
+                                    <i class="bi bi-calendar-check"></i>
+                                </div>
+                                <div class="detail-info-label">Tổng công</div>
+                                <div class="detail-info-value">{{ detail.tongCong }} <span class="unit">ngày</span></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="detail-info-card">
+                                <div class="detail-info-icon bg-warning-subtle text-warning">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <div class="detail-info-label">Tổng OT</div>
+                                <div class="detail-info-value">{{ detail.tongOt }} <span class="unit">giờ</span></div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="detail-info-card">
+                                <div class="detail-info-icon bg-success-subtle text-success">
+                                    <i class="bi bi-gift"></i>
+                                </div>
+                                <div class="detail-info-label">Thưởng</div>
+                                <div class="detail-info-value text-success">{{ formatCurrency(detail.thuong) }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="detail-info-card">
+                                <div class="detail-info-icon bg-danger-subtle text-danger">
+                                    <i class="bi bi-dash-circle"></i>
+                                </div>
+                                <div class="detail-info-label">Khấu trừ</div>
+                                <div class="detail-info-value text-danger">{{ formatCurrency(detail.khauTru) }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Salary Breakdown -->
+                    <div class="salary-breakdown mb-4">
+                        <div class="salary-row">
+                            <span class="salary-label">
+                                <i class="bi bi-bank me-2 text-muted"></i>Lương cơ bản
+                            </span>
+                            <span class="salary-amount">{{ formatCurrency(detail.luongCoBanTinh) }} đ</span>
+                        </div>
+                        <div class="salary-row">
+                            <span class="salary-label">
+                                <i class="bi bi-plus-circle me-2 text-muted"></i>Phụ cấp
+                            </span>
+                            <span class="salary-amount">{{ formatCurrency(detail.phuCapTinh) }} đ</span>
+                        </div>
+                        <div class="salary-row text-success" *ngIf="detail.thuong > 0">
+                            <span class="salary-label">
+                                <i class="bi bi-gift me-2"></i>Thưởng
+                            </span>
+                            <span class="salary-amount fw-semibold">+{{ formatCurrency(detail.thuong) }} đ</span>
+                        </div>
+                        <div class="salary-row text-danger" *ngIf="detail.khauTru > 0">
+                            <span class="salary-label">
+                                <i class="bi bi-dash-circle me-2"></i>Khấu trừ
+                            </span>
+                            <span class="salary-amount fw-semibold">-{{ formatCurrency(detail.khauTru) }} đ</span>
+                        </div>
+                        <div class="salary-total">
+                            <span class="salary-total-label">
+                                <i class="bi bi-wallet2 me-2"></i>Tổng lương thực nhận
+                            </span>
+                            <span class="salary-total-amount">{{ formatCurrency(detail.tongLuong) }} đ</span>
+                        </div>
+                    </div>
+
+                    <!-- Ghi chú / Lý do từ chối -->
+                    <div *ngIf="detail.ghiChu" class="alert alert-info d-flex gap-2 align-items-start mb-3">
+                        <i class="bi bi-info-circle-fill mt-1 flex-shrink-0"></i>
+                        <div>
+                            <div class="fw-semibold mb-1 small">Ghi chú</div>
+                            <div>{{ detail.ghiChu }}</div>
+                        </div>
+                    </div>
+                    <div *ngIf="detail.trangThai === 'TU_CHOI' && detail.lyDoTuChoi"
+                        class="alert alert-danger d-flex gap-2 align-items-start mb-0">
+                        <i class="bi bi-x-circle-fill mt-1 flex-shrink-0"></i>
+                        <div>
+                            <div class="fw-semibold mb-1 small">Lý do từ chối</div>
+                            <div>{{ detail.lyDoTuChoi }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <ng-container *ngIf="detail?.trangThai === 'CHO_DUYET_GIAM_DOC'">
+                        <button type="button" class="btn btn-outline-danger px-4" (click)="openDuyetModal('reject')">
+                            <i class="bi bi-x-circle me-2"></i>Từ chối
+                        </button>
+                        <button type="button" class="btn btn-success px-4" (click)="openDuyetModal('approve')">
+                            <i class="bi bi-check-circle me-2"></i>Duyệt bảng lương
+                        </button>
+                    </ng-container>
+                    <button type="button" class="btn btn-outline-secondary" (click)="closeDetail()">
+                        <i class="bi bi-x-lg me-1"></i>Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" [class.show]="showDetailModal" *ngIf="showDetailModal"></div>
+
+    <!-- ========== MODAL DUYỆT / TỪ CHỐI ========== -->
+    <div class="modal fade" [class.show]="showDuyetModal" [style.display]="showDuyetModal ? 'block' : 'none'"
+        tabindex="-1" (click)="closeDuyetModal()">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;" (click)="$event.stopPropagation()">
+            <div class="modal-content">
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" *ngIf="processing" style="border-radius: 12px;">
+                    <div class="spinner-container">
+                        <div class="spinner-border" role="status"></div>
+                        <div class="loading-text">Đang xử lý...</div>
+                    </div>
+                </div>
+
+                <!-- Header -->
+                <div class="modal-header border-0 pb-2">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="confirm-icon-wrap"
+                            [class.confirm-approve]="duyetAction === 'approve'"
+                            [class.confirm-reject]="duyetAction === 'reject'">
+                            <i class="bi fs-3"
+                                [class.bi-check-circle-fill]="duyetAction === 'approve'"
+                                [class.bi-x-circle-fill]="duyetAction === 'reject'"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold fs-5"
+                                [class.text-success]="duyetAction === 'approve'"
+                                [class.text-danger]="duyetAction === 'reject'">
+                                {{ duyetAction === 'approve' ? 'Duyệt bảng lương' : 'Từ chối bảng lương' }}
+                            </div>
+                            <div class="text-muted small">{{ detail?.hoTen }} · Tháng {{ detail?.thang }}/{{ detail?.nam }}</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" (click)="closeDuyetModal()"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body pt-2">
+                    <!-- Salary summary -->
+                    <div class="confirm-summary-box mb-4"
+                        [class.confirm-summary-approve]="duyetAction === 'approve'"
+                        [class.confirm-summary-reject]="duyetAction === 'reject'">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="small fw-semibold">Tổng lương:</span>
+                            <span class="fw-bold fs-5">{{ formatCurrency(detail?.tongLuong || 0) }} đ</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-1">
+                            <span class="small fw-semibold">Tổng công:</span>
+                            <span class="fw-semibold">{{ detail?.tongCong }} ngày</span>
+                        </div>
+                    </div>
+
+                    <!-- Approve confirmation text -->
+                    <div *ngIf="duyetAction === 'approve'" class="text-center pb-2">
+                        <p class="text-muted mb-0">
+                            Bảng lương sẽ được <strong class="text-success">duyệt chính thức</strong>
+                            và thông báo đến nhân viên.
+                        </p>
+                    </div>
+
+                    <!-- Reject reason -->
+                    <form [formGroup]="duyetForm" *ngIf="duyetAction === 'reject'">
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">
+                                Lý do từ chối <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" rows="3" formControlName="lyDoTuChoi"
+                                placeholder="Nhập lý do từ chối để kế toán biết cần điều chỉnh..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" (click)="closeDuyetModal()"
+                        [disabled]="processing">
+                        <i class="bi bi-x-lg me-1"></i>Hủy
+                    </button>
+                    <button type="button" class="btn"
+                        [disabled]="processing || (duyetAction === 'reject' && !duyetForm.value.lyDoTuChoi?.trim())"
+                        [class.btn-success]="duyetAction === 'approve'"
+                        [class.btn-danger]="duyetAction === 'reject'"
+                        (click)="saveDuyet()">
+                        <span class="spinner-border spinner-border-sm me-2" *ngIf="processing"></span>
+                        <ng-container *ngIf="!processing">
+                            <i class="bi me-2"
+                                [class.bi-check-circle-fill]="duyetAction === 'approve'"
+                                [class.bi-x-circle-fill]="duyetAction === 'reject'"></i>
+                        </ng-container>
+                        {{ duyetAction === 'approve' ? 'Xác nhận duyệt' : 'Xác nhận từ chối' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" [class.show]="showDuyetModal" *ngIf="showDuyetModal"></div>
+
+    <!-- ========== MODAL DUYỆT HÀNG LOẠT ========== -->
+    <div class="modal fade" [class.show]="showBulkApproveModal"
+        [style.display]="showBulkApproveModal ? 'block' : 'none'" tabindex="-1" (click)="closeBulkApproveModal()">
+        <div class="modal-dialog modal-dialog-centered modal-lg" (click)="$event.stopPropagation()">
+            <div class="modal-content">
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" *ngIf="processingBulk" style="border-radius: 12px;">
+                    <div class="spinner-container">
+                        <div class="spinner-border" role="status"></div>
+                        <div class="loading-text">Đang xử lý duyệt hàng loạt...</div>
+                    </div>
+                </div>
+
+                <!-- Header -->
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="confirm-icon-wrap confirm-approve">
+                            <i class="bi bi-check-circle-fill fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold text-success mb-0">Duyệt hàng loạt bảng lương</h5>
+                            <div class="text-muted small mt-1">
+                                Tháng {{ thangFilter === 'ALL' ? 'tất cả' : thangFilter }}/{{ namFilter }}
+                                &nbsp;·&nbsp;
+                                <strong class="text-success">{{ getBangLuongChoDuyet().length }}</strong> bảng lương chờ duyệt
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" (click)="closeBulkApproveModal()"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body">
+
+                    <!-- Progress Bar (khi đang xử lý) -->
+                    <div *ngIf="processingBulk" class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small fw-semibold">Tiến độ xử lý</span>
+                            <span class="small text-muted">{{ bulkProgress.current }}/{{ bulkProgress.total }}</span>
+                        </div>
+                        <div class="progress" style="height: 22px; border-radius: 11px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                [style.width.%]="(bulkProgress.current / bulkProgress.total) * 100">
+                                {{ ((bulkProgress.current / bulkProgress.total) * 100).toFixed(0) }}%
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2 small">
+                            <span class="text-success fw-semibold">
+                                <i class="bi bi-check-circle-fill me-1"></i>Thành công: {{ bulkProgress.success }}
+                            </span>
+                            <span class="text-danger fw-semibold" *ngIf="bulkProgress.failed > 0">
+                                <i class="bi bi-x-circle-fill me-1"></i>Thất bại: {{ bulkProgress.failed }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Danh sách (khi chưa xử lý) -->
+                    <ng-container *ngIf="!processingBulk">
+                        <!-- Alert thông báo -->
+                        <div class="alert alert-success d-flex gap-3 align-items-start mb-4">
+                            <i class="bi bi-info-circle-fill fs-5 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <div class="fw-semibold">Xác nhận duyệt {{ getBangLuongChoDuyet().length }} bảng lương</div>
+                                <div class="small mt-1 opacity-75">
+                                    Hệ thống sẽ duyệt tất cả bảng lương đang ở trạng thái "Chờ duyệt"
+                                </div>
+                                <div class="small text-danger mt-1" *ngIf="excludedFromBulk.length > 0">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>
+                                    {{ excludedFromBulk.length }} bảng lương đã từ chối sẽ bị bỏ qua
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tổng tiền -->
+                        <div class="bulk-total-box mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold text-muted small">TỔNG LƯƠNG PHẢI DUYỆT</span>
+                                <span class="fs-4 fw-bold text-success">
+                                    {{ formatCurrency(getTongLuongChoDuyet()) }} đ
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Table danh sách -->
+                        <div class="fw-semibold mb-2 small text-muted">
+                            <i class="bi bi-list-check me-1"></i>Danh sách sẽ được duyệt:
+                        </div>
+                        <div class="table-responsive" style="max-height: 280px; overflow-y: auto; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <table class="table table-sm table-hover align-middle mb-0">
+                                <thead class="table-light sticky-top">
+                                    <tr>
+                                        <th style="width: 36px;" class="ps-3">#</th>
+                                        <th>Nhân viên</th>
+                                        <th class="text-center">Tháng/Năm</th>
+                                        <th class="text-end">Tổng lương</th>
+                                        <th class="text-center pe-3" style="width: 80px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of getBangLuongChoDuyet(); let i = index">
+                                        <td class="text-muted ps-3">{{ i + 1 }}</td>
+                                        <td class="fw-semibold">{{ item.hoTen }}</td>
+                                        <td class="text-center">{{ item.thang }}/{{ item.nam }}</td>
+                                        <td class="text-end fw-bold text-primary">{{ formatCurrency(item.tongLuong) }} đ</td>
+                                        <td class="text-center pe-3">
+                                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                (click)="viewDetailInBulk(item.id)" title="Xem chi tiết">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="getBangLuongChoDuyet().length === 0">
+                                        <td colspan="5" class="text-center text-muted py-3">
+                                            <i class="bi bi-inbox d-block fs-3 mb-2"></i>
+                                            Không còn bảng lương nào cần duyệt
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Detail view trong Bulk Modal -->
+                        <div *ngIf="bulkDetailId && detail" class="mt-4">
+                            <hr class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="fw-bold mb-0">
+                                    <i class="bi bi-person-badge me-2 text-primary"></i>Chi tiết: {{ detail.hoTen }}
+                                </h6>
+                                <button type="button" class="btn-close btn-sm" (click)="closeBulkDetail()"></button>
+                            </div>
+
+                            <div class="position-relative" style="min-height: 120px;">
+                                <div class="loading-overlay" *ngIf="loadingBulkDetail"
+                                    style="border-radius: 8px; position: absolute;">
+                                    <div class="spinner-container">
+                                        <div class="spinner-border" role="status"></div>
+                                        <div class="loading-text">Đang tải...</div>
+                                    </div>
+                                </div>
+                                <div *ngIf="!loadingBulkDetail">
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6 col-md-3">
+                                            <div class="bulk-detail-stat">
+                                                <div class="bds-label">Tổng công</div>
+                                                <div class="bds-value">{{ detail.tongCong }} ngày</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="bulk-detail-stat">
+                                                <div class="bds-label">Tổng OT</div>
+                                                <div class="bds-value">{{ detail.tongOt }} giờ</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="bulk-detail-stat">
+                                                <div class="bds-label">Lương CB</div>
+                                                <div class="bds-value small">{{ formatCurrency(detail.luongCoBanTinh) }} đ</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="bulk-detail-stat bulk-detail-total">
+                                                <div class="bds-label">Tổng lương</div>
+                                                <div class="bds-value text-primary">{{ formatCurrency(detail.tongLuong) }} đ</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                            (click)="closeBulkDetail()">
+                                            <i class="bi bi-x-lg me-1"></i>Đóng
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                            (click)="rejectAndExcludeFromBulk()" [disabled]="processing">
+                                            <i class="bi bi-x-circle me-1"></i>Từ chối ngay
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" (click)="closeBulkApproveModal()"
+                        [disabled]="processingBulk">
+                        <i class="bi bi-x-lg me-1"></i>Hủy
+                    </button>
+                    <button type="button" class="btn btn-success px-4"
+                        [disabled]="processingBulk || getBangLuongChoDuyet().length === 0"
+                        (click)="processBulkApproval()">
+                        <span class="spinner-border spinner-border-sm me-2" *ngIf="processingBulk"></span>
+                        <ng-container *ngIf="!processingBulk">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                        </ng-container>
+                        Xác nhận duyệt tất cả ({{ getBangLuongChoDuyet().length }})
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade" [class.show]="showBulkApproveModal" *ngIf="showBulkApproveModal"></div>
+
+</div>

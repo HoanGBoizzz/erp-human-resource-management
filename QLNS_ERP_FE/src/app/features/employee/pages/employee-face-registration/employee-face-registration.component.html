@@ -1,0 +1,269 @@
+<div class="page-container">
+    <!-- Header Card -->
+    <div class="header-card">
+        <div class="header-top">
+            <div class="header-title-group">
+                <h1 class="page-title">
+                    <i class="bi bi-person-badge"></i>
+                    Khuôn Mặt Của Tôi
+                </h1>
+                <p class="page-subtitle">Quản lý dữ liệu sinh trắc học cho hệ thống chấm công tự động</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Card -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="kpi-card kpi-success">
+                <div class="kpi-icon">
+                    <i class="bi bi-images"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Ảnh đã đăng ký</div>
+                    <div class="kpi-value">{{ myFaceData.length }}</div>
+                    <div class="kpi-unit">/ 3 ảnh</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="kpi-card kpi-info">
+                <div class="kpi-icon">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Trạng thái</div>
+                    <div class="kpi-value">{{ myFaceData.length > 0 ? 'Đã kích hoạt' : 'Chưa đăng ký' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row g-4">
+        <!-- Left: Registration Form -->
+        <div class="col-lg-8">
+            <div class="content-card">
+                <div class="mb-3">
+                    <h5 class="section-title">
+                        <i class="bi bi-camera"></i>
+                        Đăng Ký Khuôn Mặt
+                    </h5>
+                    <p class="text-muted small mb-3">Chọn phương thức chụp ảnh để đăng ký khuôn mặt của bạn</p>
+                </div>
+
+                <!-- Capture Options (nếu chưa có ảnh preview) -->
+                <div *ngIf="!previewUrl">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="capture-option" (click)="openCameraModal()">
+                                <div class="option-icon bg-primary-subtle">
+                                    <i class="bi bi-camera text-primary"></i>
+                                </div>
+                                <div class="option-content">
+                                    <h6 class="mb-1">Chụp từ Camera</h6>
+                                    <p class="text-muted small mb-0">Sử dụng webcam để chụp ảnh trực tiếp</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="capture-option" (click)="triggerFileInput()">
+                                <div class="option-icon bg-success-subtle">
+                                    <i class="bi bi-cloud-upload text-success"></i>
+                                </div>
+                                <div class="option-content">
+                                    <h6 class="mb-1">Tải Ảnh Lên</h6>
+                                    <p class="text-muted small mb-0">Chọn ảnh từ thiết bị của bạn</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+
+                    <!-- Guidelines Card -->
+                    <div class="guidelines-card">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            <strong class="text-dark">Hướng Dẫn Chụp Ảnh Đạt Chuẩn</strong>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <div class="guideline-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span>Khuôn mặt quay thẳng vào camera</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="guideline-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span>Ánh sáng đầy đủ, không bị tối</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="guideline-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span>Không đeo khẩu trang, kính đen</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="guideline-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span>Khuôn mặt không bị che khuất</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview & Confirm (nếu đã có ảnh) -->
+                <div *ngIf="previewUrl">
+                    <div class="mb-3">
+                        <h5 class="section-title">
+                            <i class="bi bi-check-circle"></i>
+                            Xác Nhận Đăng Ký
+                        </h5>
+                        <p class="text-muted small mb-3">Kiểm tra ảnh và xác nhận đăng ký</p>
+                    </div>
+
+                    <div class="preview-wrapper mb-3">
+                        <img [src]="previewUrl" alt="Preview" class="preview-image">
+
+                        <div class="preview-details">
+                            <div class="detail-row">
+                                <i class="bi bi-person-fill text-primary"></i>
+                                <div>
+                                    <div class="fw-semibold">{{ currentUser?.fullName || 'Nhân viên' }}</div>
+                                    <div class="text-muted small">{{ currentUser?.employeeCode || '' }}</div>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <i class="bi bi-images text-primary"></i>
+                                <span>Ảnh {{ myFaceData.length + 1 }}/3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary flex-fill" (click)="resetCapture()" [disabled]="isUploading">
+                            <i class="bi bi-arrow-repeat"></i> Chụp Lại
+                        </button>
+                        <button class="btn btn-primary flex-fill action-btn" (click)="registerMyFace()" [disabled]="isUploading">
+                            <i class="bi bi-hourglass-split" *ngIf="isUploading"></i>
+                            <i class="bi bi-check-lg" *ngIf="!isUploading"></i>
+                            {{ isUploading ? 'Đang Xử Lý...' : 'Xác Nhận Đăng Ký' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: My Registered Faces -->
+        <div class="col-lg-4">
+            <div class="content-card">
+                <div class="card-header-custom mb-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-images"></i>
+                        Ảnh Đã Đăng Ký
+                    </h5>
+                </div>
+
+                <div class="registered-list-container">
+                    <div class="loading-overlay" *ngIf="isLoading">
+                        <div class="spinner-container">
+                            <div class="spinner-border text-primary"></div>
+                            <div class="loading-text">Đang tải...</div>
+                        </div>
+                    </div>
+
+                    <!-- My Faces Grid -->
+                    <div class="faces-grid" *ngIf="!isLoading && myFaceData.length > 0">
+                        <div class="face-thumb" *ngFor="let face of myFaceData">
+                            <img [src]="face.faceImageUrl || '/assets/images/default-avatar.png'" alt="My Face">
+                            <div class="thumb-overlay">
+                                <button class="btn btn-sm btn-danger" (click)="deleteMyFace(face.id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="thumb-quality" *ngIf="face.qualityScore">
+                                <i class="bi bi-star-fill"></i> {{ face.qualityScore * 100 | number:'1.0-0' }}%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" *ngIf="!isLoading && myFaceData.length === 0">
+                        <i class="bi bi-inbox"></i>
+                        <p class="text-muted">Bạn chưa đăng ký khuôn mặt nào</p>
+                    </div>
+
+                    <!-- Info Box -->
+                    <div class="alert alert-info mt-3" *ngIf="myFaceData.length > 0 && myFaceData.length < 3">
+                        <i class="bi bi-info-circle"></i>
+                        Bạn có thể đăng ký tối đa 3 ảnh để tăng độ chính xác chấm công
+                    </div>
+
+                    <div class="alert alert-success mt-3" *ngIf="myFaceData.length === 3">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Bạn đã đăng ký đủ 3 ảnh. Hệ thống sẵn sàng cho chấm công!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Modal -->
+    <div class="modal-backdrop-custom" *ngIf="isWebcamActive" (click)="closeCameraModal()">
+        <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+            <div class="modal-header-custom">
+                <h5 class="modal-title">
+                    <i class="bi bi-camera"></i> Chụp Ảnh Khuôn Mặt
+                </h5>
+                <button type="button" class="btn-close" (click)="closeCameraModal()"></button>
+            </div>
+
+            <div class="modal-body-custom">
+                <div class="camera-preview">
+                    <video #videoElement autoplay playsinline></video>
+                    <canvas #canvasElement style="display: none;"></canvas>
+
+                    <!-- Face Guide -->
+                    <div class="face-guide">
+                        <div class="guide-frame">
+                            <div class="corner top-left"></div>
+                            <div class="corner top-right"></div>
+                            <div class="corner bottom-left"></div>
+                            <div class="corner bottom-right"></div>
+                        </div>
+                        <div class="guide-hint">Đặt khuôn mặt vào trong khung</div>
+                    </div>
+                </div>
+
+                <div class="camera-hints">
+                    <div class="hint-item">
+                        <i class="bi bi-person text-primary"></i>
+                        <span>Khuôn mặt quay thẳng</span>
+                    </div>
+                    <div class="hint-item">
+                        <i class="bi bi-lightbulb text-primary"></i>
+                        <span>Ánh sáng đầy đủ</span>
+                    </div>
+                    <div class="hint-item">
+                        <i class="bi bi-emoji-smile text-primary"></i>
+                        <span>Không đeo khẩu trang</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+                <button class="btn btn-secondary" (click)="closeCameraModal()">
+                    <i class="bi bi-x-lg"></i> Hủy
+                </button>
+                <button class="btn btn-primary action-btn" (click)="capturePhoto()">
+                    <i class="bi bi-camera"></i> Chụp Ảnh
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
