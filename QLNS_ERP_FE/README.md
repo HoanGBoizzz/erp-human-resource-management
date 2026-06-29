@@ -1,23 +1,29 @@
 # QLNS_ERP_FE
 
-Frontend cho hệ thống quản lý nhân sự, xây dựng bằng Angular 16.
+Frontend application for the **ERP Human Resource Management System**, developed using **Angular 16**. This project provides the user interface for employee management, attendance tracking, payroll, authentication, and other HR-related features.
 
-## 1. Công nghệ và phiên bản chính
+---
+
+# 1. Technologies
 
 - Angular CLI: 16.2.16
-- Angular framework: 16.2.x
+- Angular Framework: 16.2.x
 - TypeScript: ~5.1.3
 - RxJS: ~7.8.0
-- SCSS + Bootstrap 5 + Bootstrap Icons
+- SCSS
+- Bootstrap 5
+- Bootstrap Icons
 
-## 2. Yêu cầu môi trường
+---
 
-Khuyến nghị dùng đúng phiên bản để tránh lỗi lệch thư viện.
+# 2. System Requirements
 
-- Node.js: 18 LTS (khuyên dùng 18.20.x)
-- npm: 9.x hoặc 10.x
+To ensure compatibility and avoid dependency issues, it is recommended to use the following versions:
 
-Kiểm tra nhanh:
+- Node.js 18 LTS (recommended: 18.20.x)
+- npm 9.x or 10.x
+
+Verify your environment:
 
 ```bash
 node -v
@@ -25,147 +31,202 @@ npm -v
 npx ng version
 ```
 
-Luu y:
+> **Note**
+>
+> - Installing Angular CLI globally is optional because the project already includes `@angular/cli` in `devDependencies`.
+> - It is recommended to use `npx ng` to execute the local Angular CLI version.
 
-- Khong bat buoc cai Angular CLI global vi du an da co @angular/cli trong devDependencies.
-- Co the dung npx ng ... de chay CLI local theo dung version cua du an.
+---
 
-## 3. Cai dat va chay du an
+# 3. Installation
 
-Di chuyen vao thu muc FE:
+Navigate to the frontend directory:
 
 ```bash
 cd QLNS_ERP_FE
 ```
 
-Cai dependencies:
+Install dependencies:
 
 ```bash
 npm ci
 ```
 
-Neu can cai theo cach thong thuong:
+Or:
 
 ```bash
 npm install
 ```
 
-Chay local:
+Run the development server:
 
 ```bash
 npm start
 ```
 
-Ung dung mac dinh chay tai:
+The application will be available at:
 
-- http://localhost:4200
+```
+http://localhost:4200
+```
 
-## 4. Cac script npm dang co
+---
 
-- npm run ng: chay Angular CLI
-- npm start: chay dev server (ng serve)
-- npm run build: build ung dung
-- npm run watch: build watch voi cau hinh development
-- npm test: chay unit test voi Karma/Jasmine
+# 4. Available npm Scripts
 
-## 5. Cau hinh moi truong (environment)
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start the Angular development server |
+| `npm run build` | Build the application |
+| `npm run watch` | Build in watch mode |
+| `npm test` | Run unit tests using Karma & Jasmine |
+| `npm run ng` | Execute Angular CLI commands |
 
-Du an su dung 2 file moi truong:
+---
 
-- src/environments/environment.development.ts
-- src/environments/environment.ts
+# 5. Environment Configuration
 
-Noi dung chinh:
+The project uses two environment configuration files:
 
-- Development:
-  - production = false
-  - apiBaseUrl = http://localhost:5042
-- Production:
-  - production = true
-  - apiBaseUrl = https://YOUR_RENDER_APP.onrender.com
+```
+src/environments/environment.development.ts
+src/environments/environment.ts
+```
 
-### Co che thay the file environment
+### Development
 
-Trong angular.json, cau hinh serve mac dinh la development.
+```text
+production = false
+apiBaseUrl = http://localhost:5042
+```
 
-Khi chay local bang npm start, Angular su dung file replacement:
+### Production
 
-- thay src/environments/environment.ts
-- bang src/environments/environment.development.ts
+```text
+production = true
+apiBaseUrl = https://YOUR_RENDER_APP.onrender.com
+```
 
-Khi build production, su dung gia tri trong environment.ts.
+## Environment Replacement
 
-### Can chinh gi khi ket noi Backend
+When running the application locally:
 
-- Chay local BE: giu apiBaseUrl trong environment.development.ts la http://localhost:5042 (hoac cap nhat theo cong BE that su)
-- Deploy production: doi apiBaseUrl trong environment.ts thanh URL backend thuc te
+```bash
+npm start
+```
 
-## 6. Cau truc thu muc du an va tac dung
+Angular automatically replaces:
 
-### Thu muc goc
+```
+src/environments/environment.ts
+```
 
-- .angular/: cache va du lieu tam cua Angular CLI
-- .vscode/: cau hinh VS Code cho workspace
-- node_modules/: toan bo goi npm da cai
-- dist/: output sau khi build
-- src/: ma nguon chinh cua ung dung
-- angular.json: cau hinh build/serve/test cua Angular
-- package.json: scripts va danh sach dependencies
-- package-lock.json: khoa phien ban goi de dong bo moi truong
-- tsconfig.json, tsconfig.app.json, tsconfig.spec.json: cau hinh TypeScript
-- vercel.json: cau hinh deploy Vercel (neu dung)
+with
 
-### Thu muc src
+```
+src/environments/environment.development.ts
+```
 
-- src/main.ts: diem vao khoi dong Angular app
-- src/index.html: HTML host goc
-- src/styles.scss: global styles
-- src/assets/: tai nguyen tinh (anh, icon, file static)
-- src/scss/: cac file SCSS dung chung
-- src/environments/: cau hinh moi truong (dev/prod)
-- src/app/: logic ung dung
+During a production build, Angular uses:
 
-### Thu muc src/app
+```
+environment.ts
+```
 
-- src/app/app.module.ts: module goc cua ung dung
-- src/app/app-routing.module.ts: khai bao route tong
-- src/app/app.component.\*: component goc
-- src/app/core/: cac thanh phan dung toan app, thuong chi import 1 lan
-- src/app/features/: module/man hinh theo nghiep vu
-- src/app/shared/: thanh phan tai su dung chung cho nhieu feature
+### Backend Configuration
 
-### Thu muc src/app/core
+For local development:
 
-- core.module.ts: module gom tai nguyen core
-- guards/: route guard (bao ve route)
-- interceptors/: chan request/response HTTP
-- layout/: layout khung ung dung
-- models/: model dung chung cap app
-- services/: service cap he thong (auth, api, ...)
+```
+apiBaseUrl = http://localhost:5042
+```
 
-### Thu muc src/app/features
+For production deployment:
 
-- admin/: chuc nang quan tri
-- attendance-kiosk/: cham cong kiosk
-- auth/: dang nhap, xac thuc, phan quyen
-- employee/: nghiep vu nhan vien
-- gd/: nhom chuc nang lien quan giam doc
-- hr/: nhom chuc nang nhan su
-- not-found/: trang 404
+Replace the API URL in `environment.ts` with the actual backend endpoint.
 
-### Thu muc src/app/shared
+---
 
-- components/: UI components dung lai
-- directives/: custom directives
-- enums/: danh sach enum dung chung
-- pipes/: custom pipes
-- services/: service dung chung
-- material.module.ts: tap trung import/export Angular Material
-- shared.module.ts: module chia se tai su dung
+# 6. Project Structure
 
-## 7. Cac goi npm quan trong
+## Root Directory
 
-Nhom Angular co ban:
+```
+.angular/           Angular CLI cache
+.vscode/            VS Code workspace settings
+node_modules/       Installed npm packages
+dist/               Production build output
+src/                Application source code
+angular.json        Angular workspace configuration
+package.json        Project metadata and dependencies
+package-lock.json   Dependency lock file
+tsconfig*.json      TypeScript configuration
+vercel.json         Vercel deployment configuration
+```
+
+## Source Folder
+
+```
+src/
+│── app/
+│── assets/
+│── environments/
+│── scss/
+│── index.html
+│── main.ts
+│── styles.scss
+```
+
+### app/
+
+```
+core/
+features/
+shared/
+app-routing.module.ts
+app.module.ts
+app.component.*
+```
+
+### core/
+
+```
+guards/
+interceptors/
+layout/
+models/
+services/
+```
+
+### features/
+
+```
+admin/
+attendance-kiosk/
+auth/
+employee/
+gd/
+hr/
+not-found/
+```
+
+### shared/
+
+```
+components/
+directives/
+enums/
+pipes/
+services/
+material.module.ts
+shared.module.ts
+```
+
+---
+
+# 7. Main Dependencies
+
+## Angular
 
 - @angular/core
 - @angular/common
@@ -173,39 +234,47 @@ Nhom Angular co ban:
 - @angular/router
 - @angular/platform-browser
 
-Nhom UI va bieu do:
+## UI
 
 - @angular/material
 - @angular/cdk
-- bootstrap
-- bootstrap-icons
-- chart.js
+- Bootstrap 5
+- Bootstrap Icons
+
+## Charts
+
+- Chart.js
 - @swimlane/ngx-charts
 
-Nhom xuat bao cao:
+## Reports
 
-- exceljs
+- ExcelJS
 - xlsx
-- jspdf
+- jsPDF
 - html2canvas
 
-Nhom giao tiep realtime:
+## Real-time Communication
 
 - @microsoft/signalr
 
-## 8. Loi thuong gap khi setup
+---
 
-### Loi ng is not recognized
+# 8. Common Setup Issues
+
+## 'ng' is not recognized
+
+Run:
 
 ```bash
 npm ci
 npx ng serve
 ```
 
-### Loi khong tuong thich Node
+---
 
-- Chuyen sang Node 18 LTS
-- Xoa node_modules va cai lai dependencies
+## Node.js Version Compatibility
+
+Switch to **Node.js 18 LTS**, remove the existing dependencies, and reinstall them.
 
 PowerShell:
 
@@ -214,7 +283,9 @@ Remove-Item -Recurse -Force node_modules
 npm ci
 ```
 
-## 9. Quy trinh nhanh cho may moi
+---
+
+# 9. Quick Start
 
 ```bash
 cd QLNS_ERP_FE
@@ -222,4 +293,8 @@ npm ci
 npm start
 ```
 
-Neu can thong tin setup chi tiet hon ve dependencies va cach xu ly loi, xem them file SetUp.md.
+---
+
+# Additional Information
+
+For more detailed installation instructions, dependency configuration, and troubleshooting, please refer to **SetUp.md**.
