@@ -1,31 +1,44 @@
-# SQL Migration — Module Nơi Làm Việc
+# SQL Migration - Module Nơi Làm Việc
 
-## Mô tả
+## Tổng quan
 
-Migration tạo 3 bảng mới phục vụ module **Nơi Làm Việc** (phiếu đề xuất dụng cụ, phiếu tạm ứng, đơn đi muộn/về sớm).
+Tài liệu này mô tả SQL Migration dùng để tạo các bảng cho module **Nơi Làm Việc** trong hệ thống QLNS ERP.
 
-- **Database**: `qlns_erp`
-- **Ngày thực thi**: 2026-02-27
-- **Trạng thái**: ✅ Đã thực thi thành công
+### Thông tin
 
----
-
-## Các bảng được tạo
-
-| Tên bảng | Mô tả |
-|---|---|
-| `phieu_de_xuat_dung_cu` | Phiếu đề xuất mua dụng cụ/thiết bị |
-| `phieu_tam_ung` | Phiếu tạm ứng tiền công tác / chi phí |
-| `don_di_muon` | Đơn xin đi muộn / về sớm / ca hai |
+| Thuộc tính | Giá trị |
+|------------|----------|
+| Database | `qlns_erp` |
+| Module | Nơi Làm Việc |
+| Ngày thực thi | `2026-02-27` |
+| Trạng thái | ✅ Đã thực thi thành công |
 
 ---
 
-## Script SQL
+# Các bảng được tạo
 
-> ⚠️ **Yêu cầu**: Script dưới đây cần được **ACCEPT / xác nhận** trước khi thực thi nếu chạy lại trên môi trường mới.
-> Chỉ chạy khi đã kết nối đúng database `qlns_erp`.
+Migration tạo 3 bảng phục vụ các chức năng của module.
 
-### 1. Bảng `phieu_de_xuat_dung_cu`
+| Bảng | Chức năng |
+|------|-----------|
+| `phieu_de_xuat_dung_cu` | Phiếu đề xuất mua dụng cụ, thiết bị |
+| `phieu_tam_ung` | Phiếu tạm ứng công tác hoặc chi phí |
+| `don_di_muon` | Đơn đi muộn, về sớm hoặc cả hai |
+
+---
+
+# Yêu cầu trước khi chạy
+
+- Đảm bảo đã kết nối đúng database `qlns_erp`
+- Kiểm tra quyền tạo bảng
+- Chỉ thực thi trên môi trường chưa có các bảng tương ứng
+- Nếu triển khai Production, cần được xác nhận trước khi chạy
+
+---
+
+# SQL Migration
+
+## 1. Tạo bảng `phieu_de_xuat_dung_cu`
 
 ```sql
 CREATE TABLE IF NOT EXISTS `phieu_de_xuat_dung_cu` (
@@ -52,11 +65,17 @@ CREATE TABLE IF NOT EXISTS `phieu_de_xuat_dung_cu` (
 );
 ```
 
-**Giá trị `trang_thai` hợp lệ**: `CHO_DUYET` | `DA_DUYET` | `TU_CHOI`
+### Giá trị hợp lệ của `trang_thai`
+
+| Giá trị | Ý nghĩa |
+|----------|----------|
+| `CHO_DUYET` | Chờ duyệt |
+| `DA_DUYET` | Đã duyệt |
+| `TU_CHOI` | Từ chối |
 
 ---
 
-### 2. Bảng `phieu_tam_ung`
+## 2. Tạo bảng `phieu_tam_ung`
 
 ```sql
 CREATE TABLE IF NOT EXISTS `phieu_tam_ung` (
@@ -81,9 +100,17 @@ CREATE TABLE IF NOT EXISTS `phieu_tam_ung` (
 );
 ```
 
+### Giá trị hợp lệ của `trang_thai`
+
+| Giá trị | Ý nghĩa |
+|----------|----------|
+| `CHO_DUYET` | Chờ duyệt |
+| `DA_DUYET` | Đã duyệt |
+| `TU_CHOI` | Từ chối |
+
 ---
 
-### 3. Bảng `don_di_muon`
+## 3. Tạo bảng `don_di_muon`
 
 ```sql
 CREATE TABLE IF NOT EXISTS `don_di_muon` (
@@ -110,55 +137,139 @@ CREATE TABLE IF NOT EXISTS `don_di_muon` (
 );
 ```
 
-**Giá trị `loai` hợp lệ**: `DI_MUON` | `VE_SOM` | `CA_HAI`
+### Giá trị hợp lệ của `loai`
+
+| Giá trị | Ý nghĩa |
+|----------|----------|
+| `DI_MUON` | Đi muộn |
+| `VE_SOM` | Về sớm |
+| `CA_HAI` | Đi muộn và về sớm |
+
+### Giá trị hợp lệ của `trang_thai`
+
+| Giá trị | Ý nghĩa |
+|----------|----------|
+| `CHO_DUYET` | Chờ duyệt |
+| `DA_DUYET` | Đã duyệt |
+| `TU_CHOI` | Từ chối |
 
 ---
 
-## Rollback
+# Quan hệ giữa các bảng
 
-Nếu cần xóa các bảng đã tạo:
+```
+nv_ho_so
+│
+├── phieu_de_xuat_dung_cu
+├── phieu_tam_ung
+└── don_di_muon
+
+tai_khoan
+│
+├── nguoi_duyet_id → phieu_de_xuat_dung_cu
+├── nguoi_duyet_id → phieu_tam_ung
+└── nguoi_duyet_id → don_di_muon
+```
+
+---
+
+# Rollback Migration
+
+Nếu cần xóa toàn bộ các bảng vừa tạo:
+
+> **Lưu ý:** Thao tác này sẽ xóa toàn bộ dữ liệu trong các bảng.
 
 ```sql
--- ⚠️ NGUY HIỂM: Xóa toàn bộ dữ liệu. Chỉ chạy khi đã xác nhận!
 SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS `don_di_muon`;
 DROP TABLE IF EXISTS `phieu_tam_ung`;
 DROP TABLE IF EXISTS `phieu_de_xuat_dung_cu`;
+
 SET FOREIGN_KEY_CHECKS = 1;
 ```
 
 ---
 
-## Xác minh sau thực thi
+# Kiểm tra sau khi Migration
+
+Kiểm tra các bảng đã được tạo thành công:
 
 ```sql
-SELECT TABLE_NAME, TABLE_ROWS, CREATE_TIME
+SELECT TABLE_NAME,
+       TABLE_ROWS,
+       CREATE_TIME
 FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_SCHEMA = 'qlns_erp'
-  AND TABLE_NAME IN ('phieu_de_xuat_dung_cu', 'phieu_tam_ung', 'don_di_muon');
+  AND TABLE_NAME IN (
+      'phieu_de_xuat_dung_cu',
+      'phieu_tam_ung',
+      'don_di_muon'
+  );
 ```
 
-**Kết quả mong đợi**: 3 rows trả về với `CREATE_TIME` hợp lệ.
+### Kết quả mong đợi
+
+- Có đúng **3 bản ghi** được trả về.
+- `CREATE_TIME` khác `NULL`.
+- Tên bảng đúng như thiết kế.
 
 ---
 
-## Quan hệ bảng
+# Cấu trúc tổng thể
 
 ```
-nv_ho_so (id) ←── nv_ho_so_id ─── phieu_de_xuat_dung_cu
-nv_ho_so (id) ←── nv_ho_so_id ─── phieu_tam_ung
-nv_ho_so (id) ←── nv_ho_so_id ─── don_di_muon
-
-tai_khoan (id) ←── nguoi_duyet_id ─── phieu_de_xuat_dung_cu
-tai_khoan (id) ←── nguoi_duyet_id ─── phieu_tam_ung
-tai_khoan (id) ←── nguoi_duyet_id ─── don_di_muon
+qlns_erp
+│
+├── nv_ho_so
+├── tai_khoan
+│
+├── phieu_de_xuat_dung_cu
+├── phieu_tam_ung
+└── don_di_muon
 ```
 
 ---
 
-## File nguồn
+# Các trạng thái sử dụng
 
-- SQL gốc: `QLNS_ERP_BE/sql/noi_lam_viec_migration.sql`
-- BE Service: `QLNS_BE/Services/NoiLamViecService.cs`
-- BE Controller: `QLNS_BE/Controllers/NoiLamViecController.cs`
-- FE API Service: `src/app/core/services/api/noi-lam-viec-api.service.ts`
+## Trạng thái phê duyệt
+
+| Giá trị | Mô tả |
+|----------|--------|
+| `CHO_DUYET` | Chờ người có thẩm quyền duyệt |
+| `DA_DUYET` | Đã được phê duyệt |
+| `TU_CHOI` | Bị từ chối |
+
+## Loại đơn đi muộn
+
+| Giá trị | Mô tả |
+|----------|--------|
+| `DI_MUON` | Xin đi làm muộn |
+| `VE_SOM` | Xin về sớm |
+| `CA_HAI` | Vừa đi muộn vừa về sớm |
+
+---
+
+# File liên quan
+
+| Thành phần | Đường dẫn |
+|------------|-----------|
+| SQL Migration | `QLNS_ERP_BE/sql/noi_lam_viec_migration.sql` |
+| Backend Service | `QLNS_BE/Services/NoiLamViecService.cs` |
+| Backend Controller | `QLNS_BE/Controllers/NoiLamViecController.cs` |
+| Frontend API Service | `src/app/core/services/api/noi-lam-viec-api.service.ts` |
+
+---
+
+# Checklist triển khai
+
+- [ ] Kết nối đúng database `qlns_erp`
+- [ ] Backup dữ liệu (nếu cần)
+- [ ] Chạy toàn bộ script migration
+- [ ] Kiểm tra 3 bảng đã được tạo
+- [ ] Kiểm tra Foreign Key
+- [ ] Kiểm tra Index
+- [ ] Kiểm tra quyền truy cập của ứng dụng
+- [ ] Khởi động Backend và kiểm tra API hoạt động
+- [ ] Kiểm tra Frontend gọi API thành công
