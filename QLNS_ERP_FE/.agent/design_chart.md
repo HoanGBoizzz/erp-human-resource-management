@@ -1,25 +1,34 @@
 # Chart Design Guidelines
 
 ## Overview
-Tất cả biểu đồ trong hệ thống sử dụng **Bar Chart** để đảm bảo tính nhất quán và dễ đọc.
+
+To maintain consistency and improve readability across the Human Resource Management System, **all statistical visualizations are implemented using Bar Charts**.
+
+This design standard ensures a uniform user experience and simplifies data comparison throughout the application.
 
 ---
 
-## Color Palette
+# Color Palette
+
+The following color palette should be used consistently across all charts.
+
 ```scss
-$chart-primary:  #2563eb;  // Blue - main metric
-$chart-success:  #16a34a;  // Green - positive/completed
-$chart-warning:  #ea580c;  // Orange - pending/attention
-$chart-danger:   #ef4444;  // Red - rejected/error
-$chart-info:     #7c3aed;  // Purple - secondary info
-$chart-gray:     #94a3b8;  // Gray - inactive/neutral
+$chart-primary:  #2563eb;  // Primary metric (Blue)
+$chart-success:  #16a34a;  // Success / Completed (Green)
+$chart-warning:  #ea580c;  // Pending / Attention (Orange)
+$chart-danger:   #ef4444;  // Error / Rejected (Red)
+$chart-info:     #7c3aed;  // Secondary information (Purple)
+$chart-gray:     #94a3b8;  // Neutral / Inactive (Gray)
 ```
 
 ---
 
-## Standard Configurations
+# Standard Chart Configurations
 
-### Single Bar Chart (Comparison)
+## Single Bar Chart
+
+Use this configuration when displaying a single metric across multiple categories.
+
 ```typescript
 const config: ChartConfiguration<'bar'> = {
   type: 'bar',
@@ -37,59 +46,110 @@ const config: ChartConfiguration<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false }
+      legend: {
+        display: false
+      }
     },
     scales: {
       y: {
         beginAtZero: true,
-        grid: { color: '#f1f5f9' },
-        ticks: { font: { size: 12 } }
+        grid: {
+          color: '#f1f5f9'
+        },
+        ticks: {
+          font: {
+            size: 12
+          }
+        }
       },
       x: {
-        grid: { display: false },
-        ticks: { font: { size: 12, weight: 'bold' } }
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            size: 12,
+            weight: 'bold'
+          }
+        }
       }
     }
   }
 };
 ```
 
-### Grouped Bar Chart (Multi-Dataset)
+---
+
+## Grouped Bar Chart
+
+Use this configuration to compare multiple datasets within the same category.
+
 ```typescript
 const config: ChartConfiguration<'bar'> = {
   type: 'bar',
   data: {
     labels: ['Category 1', 'Category 2', 'Category 3'],
     datasets: [
-      { label: 'Pending', data: [...], backgroundColor: '#ea580c' },
-      { label: 'Approved', data: [...], backgroundColor: '#16a34a' },
-      { label: 'Rejected', data: [...], backgroundColor: '#ef4444' }
+      {
+        label: 'Pending',
+        data: [...],
+        backgroundColor: '#ea580c'
+      },
+      {
+        label: 'Approved',
+        data: [...],
+        backgroundColor: '#16a34a'
+      },
+      {
+        label: 'Rejected',
+        data: [...],
+        backgroundColor: '#ef4444'
+      }
     ]
   },
   options: {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { 
+      legend: {
         position: 'bottom',
-        labels: { usePointStyle: true, padding: 16 }
+        labels: {
+          usePointStyle: true,
+          padding: 16
+        }
       }
     },
     scales: {
-      y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-      x: { grid: { display: false } }
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: '#f1f5f9'
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        }
+      }
     }
   }
 };
 ```
 
-### Horizontal Bar Chart
+---
+
+## Horizontal Bar Chart
+
+Use a horizontal layout when category labels are long or when ranking information is displayed.
+
 ```typescript
 const config: ChartConfiguration<'bar'> = {
   type: 'bar',
-  data: { ... },
+  data: {
+    ...
+  },
   options: {
-    indexAxis: 'y',  // Makes it horizontal
+    indexAxis: 'y',
     responsive: true,
     maintainAspectRatio: false,
     ...
@@ -99,7 +159,10 @@ const config: ChartConfiguration<'bar'> = {
 
 ---
 
-## Chart Container Sizing
+# Chart Container Size
+
+The following container dimensions are recommended for all dashboard charts.
+
 ```scss
 .chart-container {
   height: 280px;
@@ -111,9 +174,39 @@ const config: ChartConfiguration<'bar'> = {
 
 ---
 
-## Usage Rules
-1. **No Pie/Doughnut Charts** - Always use bar charts
-2. **Consistent Colors** - Use palette above
-3. **Border Radius** - Use `borderRadius: 6` for modern look
-4. **Legend Position** - Bottom for grouped charts, hidden for single
-5. **Grid Lines** - Light gray (#f1f5f9) for Y-axis, none for X-axis
+# Design Guidelines
+
+To maintain a consistent appearance throughout the system, follow these recommendations:
+
+1. **Use Bar Charts Only**
+   - Avoid Pie Charts and Doughnut Charts.
+   - Bar Charts provide better readability and comparison.
+
+2. **Use the Standard Color Palette**
+   - Always apply the predefined colors.
+   - Avoid introducing additional colors unless absolutely necessary.
+
+3. **Rounded Corners**
+   - Set `borderRadius: 6` for all bars to achieve a modern and consistent appearance.
+
+4. **Legend Placement**
+   - Hide the legend for single-dataset charts.
+   - Place the legend at the bottom for grouped charts.
+
+5. **Grid Lines**
+   - Display light gray (`#f1f5f9`) grid lines on the Y-axis.
+   - Hide grid lines on the X-axis to reduce visual clutter.
+
+6. **Responsive Layout**
+   - Enable `responsive: true`.
+   - Set `maintainAspectRatio: false` to allow flexible resizing within the container.
+
+7. **Consistent Typography**
+   - Use a font size of **12px** for axis labels.
+   - Use **bold** text for X-axis category labels where appropriate.
+
+---
+
+# Summary
+
+These chart design guidelines establish a consistent visualization standard for the Human Resource Management ERP system. Following these recommendations improves readability, enhances the user experience, and ensures that all dashboard components maintain a unified visual style.
