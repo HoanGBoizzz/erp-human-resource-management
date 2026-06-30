@@ -1,26 +1,40 @@
-# 🎨 QLNS ERP - Design System (Clean UI)
+# QLNS ERP - Design System (Clean UI)
 
-## 1. Triết lý thiết kế (Design Philosophy)
-- **Clean & Modern**: Sử dụng nhiều khoảng trắng (whitespace), bo góc mềm mại (12px).
-- **White Cards**: Nền trang màu xám nhạt (`#f3f6f9`), các khối nội dung là thẻ trắng (`#ffffff`) nổi bật.
-- **Interactive**: Hiệu ứng hover nhẹ nhàng (nổi lên, đổ bóng sâu hơn) để tăng trải nghiệm người dùng.
-- **Consistent**: Đồng bộ về màu sắc, font chữ và spacing.
+## Overview
 
-## 2. Bảng màu (Color Palette)
+This document defines the design system used throughout the QLNS ERP application. It provides consistent guidelines for colors, layout, typography, components, spacing, and interaction patterns to ensure a modern, clean, and maintainable user interface.
 
-| Tên biến | Mã màu | Sử dụng |
-|----------|--------|---------|
-| `$primary` | `#2563eb` | Màu chủ đạo (Blue), nút bấm, link |
-| `$bg-page` | `#f3f6f9` | Nền trang (Light Gray Blue) |
-| `$card-bg` | `#ffffff` | Nền thẻ (White) |
-| `$text-dark` | `#1e293b` | Tiêu đề, nội dung chính |
-| `$text-muted` | `#64748b` | Text phụ, label |
-| `$border-color` | `#e2e8f0` | Đường viền nhẹ |
+---
 
-## 3. Components (SCSS)
+# 1. Design Philosophy
 
-### 3.1. Header Card
-Thẻ tiêu đề đầu trang, chứa Title, Subtitle và các nút hành động.
+The user interface follows these core principles:
+
+- **Clean & Modern** – Use generous whitespace and soft rounded corners (12px).
+- **Card-Based Layout** – Pages use a light gray background (`#f3f6f9`) with white content cards.
+- **Interactive Experience** – Components include subtle hover animations and elevation effects.
+- **Consistency** – Colors, typography, spacing, and component behaviors remain consistent throughout the application.
+
+---
+
+# 2. Color Palette
+
+| Variable | Color | Usage |
+|----------|--------|-------|
+| `$primary` | `#2563eb` | Primary brand color, buttons, links |
+| `$bg-page` | `#f3f6f9` | Page background |
+| `$card-bg` | `#ffffff` | Card background |
+| `$text-dark` | `#1e293b` | Primary text |
+| `$text-muted` | `#64748b` | Secondary text and labels |
+| `$border-color` | `#e2e8f0` | Borders and dividers |
+
+---
+
+# 3. UI Components
+
+## 3.1 Header Card
+
+The page header contains the page title, subtitle, and action buttons.
 
 ```scss
 .header-card {
@@ -32,8 +46,11 @@ Thẻ tiêu đề đầu trang, chứa Title, Subtitle và các nút hành độ
 }
 ```
 
-### 3.2. Content Card (Thẻ nội dung)
-Thẻ chứa thông tin chính, có hiệu ứng hover.
+---
+
+## 3.2 Content Card
+
+Content cards are used to display the main information on each page.
 
 ```scss
 .content-card {
@@ -45,31 +62,37 @@ Thẻ chứa thông tin chính, có hiệu ứng hover.
   border: 1px solid transparent;
 
   &:hover {
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); // Bóng đổ sâu hơn
-    transform: translateY(-2px); // Nổi lên nhẹ
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
     border-color: rgba($primary, 0.1);
   }
 }
 ```
 
-### 3.3. KPI Card (Thẻ thống kê)
-Thẻ hiển thị chỉ số KPI với hiệu ứng "Slide-in" gradient khi hover.
+---
 
-**Cấu trúc HTML:**
+## 3.3 KPI Card
+
+KPI Cards display summary statistics with animated gradient backgrounds.
+
+### HTML Structure
+
 ```html
-<div class="kpi-card kpi-primary"> <!-- hoặc kpi-success, kpi-warning, kpi-danger, kpi-info -->
+<div class="kpi-card kpi-primary">
   <div class="kpi-icon">
     <i class="bi bi-wallet2"></i>
   </div>
+
   <div class="kpi-content">
-    <div class="kpi-label">Tổng lương năm</div>
+    <div class="kpi-label">Total Annual Salary</div>
     <div class="kpi-value">{{ value | number }}</div>
-    <div class="kpi-unit">đ</div> <!-- Optional -->
+    <div class="kpi-unit">VND</div>
   </div>
 </div>
 ```
 
-**SCSS:**
+### SCSS
+
 ```scss
 .kpi-card {
   position: relative;
@@ -83,8 +106,7 @@ Thẻ hiển thị chỉ số KPI với hiệu ứng "Slide-in" gradient khi hov
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   z-index: 0;
-  
-  // Slide-in gradient background
+
   &::before {
     content: '';
     position: absolute;
@@ -97,19 +119,23 @@ Thẻ hiển thị chỉ số KPI với hiệu ứng "Slide-in" gradient khi hov
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    
-    &::before { transform: translateX(0); } // Gradient trượt từ trái sang phải
-    
+
+    &::before {
+      transform: translateX(0);
+    }
+
     .kpi-icon {
       background: rgba(255, 255, 255, 0.2) !important;
       color: white !important;
     }
-    
-    .kpi-label, .kpi-value, .kpi-unit {
-      color: white !important; // Text chuyển sang trắng
+
+    .kpi-label,
+    .kpi-value,
+    .kpi-unit {
+      color: white !important;
     }
   }
-  
+
   .kpi-icon {
     width: 56px;
     height: 56px;
@@ -120,11 +146,11 @@ Thẻ hiển thị chỉ số KPI với hiệu ứng "Slide-in" gradient khi hov
     font-size: 24px;
     transition: all 0.3s ease;
   }
-  
+
   .kpi-content {
     flex: 1;
   }
-  
+
   .kpi-label {
     display: block;
     font-size: 0.75rem;
@@ -135,7 +161,7 @@ Thẻ hiển thị chỉ số KPI với hiệu ứng "Slide-in" gradient khi hov
     margin-bottom: 0.5rem;
     transition: color 0.3s ease;
   }
-  
+
   .kpi-value {
     display: block;
     font-size: 1.5rem;
@@ -144,7 +170,7 @@ Thẻ hiển thị chỉ số KPI với hiệu ứng "Slide-in" gradient khi hov
     line-height: 1;
     transition: color 0.3s ease;
   }
-  
+
   .kpi-unit {
     display: block;
     font-size: 0.85rem;
@@ -153,53 +179,57 @@ Thẻ hiển thị chỉ số KPI với hiệu ứng "Slide-in" gradient khi hov
     font-weight: 500;
     transition: color 0.3s ease;
   }
-  
-  // Variants
+
   &.kpi-primary {
     .kpi-icon {
       background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
       color: #2563eb;
     }
+
     &::before {
       background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     }
   }
-  
+
   &.kpi-success {
     .kpi-icon {
       background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
       color: #16a34a;
     }
+
     &::before {
       background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
     }
   }
-  
+
   &.kpi-warning {
     .kpi-icon {
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       color: #f59e0b;
     }
+
     &::before {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     }
   }
-  
+
   &.kpi-danger {
     .kpi-icon {
       background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
       color: #ef4444;
     }
+
     &::before {
       background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     }
   }
-  
+
   &.kpi-info {
     .kpi-icon {
       background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
       color: #3b82f6;
     }
+
     &::before {
       background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     }
@@ -207,15 +237,27 @@ Thẻ hiển thị chỉ số KPI với hiệu ứng "Slide-in" gradient khi hov
 }
 ```
 
-**Lưu ý:**
-- Label luôn đứng **trước** value (thứ tự: label → value → unit)
-- Sử dụng `.kpi-content` thay vì `.kpi-info`
-- Icon backgrounds sử dụng **linear-gradient** với 2 điểm dừng
-- Class variants: `kpi-primary`, `kpi-success`, `kpi-warning`, `kpi-danger`, `kpi-info` (không dùng tên cũ như `total`, `progress`, `completed`)
-- `.kpi-unit` là optional, chỉ dùng khi cần hiển thị đơn vị (đ, giờ, lần, v.v.)
+### Implementation Notes
 
-### 3.4. Action Button (Nút hành động)
-Nút bấm có hiệu ứng "Slide-in" màu nền khi hover.
+- Display elements in the following order:
+  - Label
+  - Value
+  - Unit (optional)
+- Use `.kpi-content` instead of `.kpi-info`.
+- Icon backgrounds should use two-color linear gradients.
+- Supported variants:
+  - `kpi-primary`
+  - `kpi-success`
+  - `kpi-warning`
+  - `kpi-danger`
+  - `kpi-info`
+- The `.kpi-unit` element is optional and should only be displayed when a measurement unit is required.
+
+---
+
+## 3.4 Action Button
+
+Action buttons include a left-to-right sliding background animation.
 
 ```scss
 .action-btn {
@@ -225,11 +267,14 @@ Nút bấm có hiệu ứng "Slide-in" màu nền khi hover.
   color: $text-dark;
   border: 1px solid $border-color;
   z-index: 0;
-  
+
   &::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; width: 0; height: 100%;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
     background: $primary;
     z-index: -1;
     transition: width 0.3s ease;
@@ -240,16 +285,19 @@ Nút bấm có hiệu ứng "Slide-in" màu nền khi hover.
     border-color: $primary;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba($primary, 0.2);
-    
-    &::before { 
-      width: 100%; // Background trượt từ trái sang phải
+
+    &::before {
+      width: 100%;
     }
   }
 }
 ```
 
-### 3.5. Loading Overlay (Lớp phủ loading)
-Hiệu ứng loading khi thực hiện các action (tìm kiếm, phân trang, reload, xem chi tiết).
+---
+
+## 3.5 Loading Overlay
+
+A loading overlay is displayed during asynchronous operations such as searching, pagination, refreshing, or loading details.
 
 ```scss
 .loading-overlay {
@@ -265,7 +313,7 @@ Hiệu ứng loading khi thực hiện các action (tìm kiếm, phân trang, re
 
   .spinner-container {
     text-align: center;
-    
+
     .spinner-border {
       width: 40px;
       height: 40px;
@@ -283,45 +331,88 @@ Hiệu ứng loading khi thực hiện các action (tìm kiếm, phân trang, re
 }
 ```
 
-**Sử dụng:**
+### Example
+
 ```html
 <div class="content-card">
   <div class="loading-overlay" *ngIf="loadingList">
     <div class="spinner-container">
       <div class="spinner-border"></div>
-      <div class="loading-text">Đang tải dữ liệu...</div>
+      <div class="loading-text">Loading data...</div>
     </div>
   </div>
-  <!-- Nội dung chính -->
+
+  <!-- Main content -->
 </div>
 ```
 
-## 4. Typography
-- **Font Family**: `'Segoe UI', system-ui, sans-serif`
-- **Page Title**: `1.5rem`, `700` weight, `$text-dark`
-- **Section Title**: `1.1rem`, `700` weight, `$text-dark`
-- **Label**: `0.8rem`, `$text-muted`
-- **Value**: `0.95rem`, `600` weight, `$text-dark`
+---
 
-## 5. Layout Guidelines
-- **Grid System**: Sử dụng Bootstrap Grid (`row`, `col-*`).
-- **Spacing**:
-  - Padding trang: `24px`
-  - Gap giữa các thẻ: `24px` (hoặc `g-4` của Bootstrap)
-  - Padding trong thẻ: `24px`
+# 4. Typography
 
-## 6. Áp dụng cho các Role khác
-Khi phát triển các trang cho HR hoặc Giám đốc, hãy tuân thủ:
-1. Copy file SCSS mẫu từ `dashboard.component.scss` hoặc `ho-so.component.scss`.
-2. Sử dụng cấu trúc HTML:
-   ```html
-   <div class="page-container">
-     <div class="header-card">...</div>
-     <div class="row">
-       <div class="col-md-X">
-         <div class="content-card">...</div>
-       </div>
-     </div>
-   </div>
-   ```
-3. Giữ nguyên các biến màu sắc để đảm bảo tính đồng bộ toàn hệ thống.
+| Element | Font Size | Weight |
+|----------|-----------|--------|
+| Page Title | 1.5rem | 700 |
+| Section Title | 1.1rem | 700 |
+| Label | 0.8rem | Normal |
+| Value | 0.95rem | 600 |
+
+**Font Family**
+
+```scss
+'Segoe UI', system-ui, sans-serif
+```
+
+---
+
+# 5. Layout Guidelines
+
+## Grid System
+
+Use the Bootstrap Grid system (`row`, `col-*`) for page layouts.
+
+## Spacing
+
+| Element | Value |
+|----------|-------|
+| Page padding | 24px |
+| Card spacing | 24px |
+| Card padding | 24px |
+
+---
+
+# 6. Guidelines for New Modules
+
+When developing new pages for HR, Directors, or other modules:
+
+1. Reuse the base SCSS from `dashboard.component.scss` or `ho-so.component.scss`.
+2. Follow the standard page layout:
+
+```html
+<div class="page-container">
+  <div class="header-card">
+    ...
+  </div>
+
+  <div class="row">
+    <div class="col-md-X">
+      <div class="content-card">
+        ...
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+3. Always use the shared color variables defined in this design system to maintain a consistent appearance across the entire application.
+
+---
+
+# Design Principles Summary
+
+- Keep the interface clean and spacious.
+- Use white cards on a light gray background.
+- Apply subtle animations and elevation on hover.
+- Maintain consistent spacing and typography.
+- Reuse shared SCSS components whenever possible.
+- Follow the standardized color palette across all modules.
