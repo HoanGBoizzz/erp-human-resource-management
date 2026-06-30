@@ -1,314 +1,600 @@
 # Hướng Dẫn Tooltip Nâng Cao với Chart.js
 
-Tài liệu này mô tả cách tùy chỉnh tooltip trong Chart.js để hiển thị thông tin chi tiết hơn, bao gồm phần trăm và tổng.
+## Tổng quan
 
-## Tổng Quan
+Tài liệu này hướng dẫn cách tùy chỉnh Tooltip trong **Chart.js** để hiển thị nhiều thông tin hơn khi người dùng di chuột lên biểu đồ.
 
-Tooltip nâng cao cho phép hiển thị nhiều thông tin hơn khi người dùng hover vào biểu đồ, bao gồm:
+Tooltip có thể hiển thị:
+
 - Giá trị gốc
-- Phần trăm so với tổng
-- Tổng cộng (trong footer)
-- Định dạng tùy chỉnh
+- Tỷ lệ phần trăm
+- Tổng cộng
+- Đơn vị dữ liệu
+- Nội dung nhiều dòng
+- Định dạng theo điều kiện
+- HTML Tooltip tùy chỉnh
 
-## Cấu Hình Cơ Bản
+---
 
-### 1. Tooltip Styling
+# Cấu hình cơ bản
+
+## Tooltip mặc định
 
 ```typescript
 tooltip: {
   backgroundColor: 'rgba(0, 0, 0, 0.8)',
   padding: 12,
-  titleFont: { size: 14, weight: 'bold' },
-  bodyFont: { size: 13 },
-  footerFont: { size: 12, weight: 'bold' },
+  titleFont: {
+    size: 14,
+    weight: 'bold'
+  },
+  bodyFont: {
+    size: 13
+  },
+  footerFont: {
+    size: 12,
+    weight: 'bold'
+  },
   displayColors: true,
   borderColor: '#ffffff',
   borderWidth: 1,
 }
 ```
 
-### 2. Custom Label với Phần Trăm
+### Các thuộc tính chính
+
+| Thuộc tính | Mô tả |
+|------------|------|
+| `backgroundColor` | Màu nền Tooltip |
+| `padding` | Khoảng cách nội dung |
+| `titleFont` | Font của tiêu đề |
+| `bodyFont` | Font của nội dung |
+| `footerFont` | Font của footer |
+| `displayColors` | Hiển thị ô màu của Dataset |
+| `borderColor` | Màu viền |
+| `borderWidth` | Độ dày viền |
+
+---
+
+# Hiển thị phần trăm
+
+Thông thường cần hiển thị thêm phần trăm của giá trị so với tổng.
 
 ```typescript
 callbacks: {
   label: (context) => {
     const value = context.parsed.y ?? 0;
-    const total = calculateTotal(); // Tính tổng
-    const percent = total > 0 
-      ? ((value / total) * 100).toFixed(1) 
+    const total = calculateTotal();
+
+    const percent = total > 0
+      ? ((value / total) * 100).toFixed(1)
       : '0';
+
     return `${context.label}: ${value} (${percent}%)`;
   }
 }
 ```
 
-### 3. Footer với Tổng Cộng
+Ví dụ:
+
+```
+Đi làm: 23 (92.0%)
+```
+
+---
+
+# Hiển thị tổng cộng
+
+Footer thường dùng để hiển thị tổng dữ liệu.
 
 ```typescript
 callbacks: {
   footer: (tooltipItems) => {
-    const total = tooltipItems.reduce((sum, item) => sum + item.parsed.y, 0);
+    const total = tooltipItems.reduce(
+      (sum, item) => sum + item.parsed.y,
+      0
+    );
+
     return `Tổng: ${total}`;
   }
 }
 ```
 
-## Ví Dụ Cho Bar Chart
+Ví dụ:
 
-### Bar Chart với Tooltip Nâng Cao
+```
+Tổng: 25
+```
+
+---
+
+# Ví dụ hoàn chỉnh cho Bar Chart
 
 ```typescript
 const totalAttendance = data.diLam + data.vang;
 
 const config: ChartConfiguration<'bar'> = {
   type: 'bar',
+
   data: {
     labels: ['Đi làm', 'Vắng'],
     datasets: [{
       label: 'Ngày',
-      data: [data.diLam, data.vang],
-      backgroundColor: ['#2563eb', '#94a3b8'],
-      borderRadius: 6,
-    }],
+      data: [
+        data.diLam,
+        data.vang
+      ],
+      backgroundColor: [
+        '#2563eb',
+        '#94a3b8'
+      ],
+      borderRadius: 6
+    }]
   },
+
   options: {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: { 
-      legend: { display: false },
+
+    plugins: {
+      legend: {
+        display: false
+      },
+
       tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        padding: 12,
-        titleFont: { size: 14, weight: 'bold' },
-        bodyFont: { size: 13 },
-        footerFont: { size: 12, weight: 'bold' },
-        displayColors: true,
+        backgroundColor: 'rgba(0,0,0,.8)',
+
         callbacks: {
+
           label: (context) => {
+
             const value = context.parsed.y ?? 0;
-            const percent = totalAttendance > 0 
-              ? ((value / totalAttendance) * 100).toFixed(1) 
+
+            const percent = totalAttendance > 0
+              ? ((value / totalAttendance) * 100).toFixed(1)
               : '0';
+
             return `${context.label}: ${value} ngày (${percent}%)`;
           },
+
           footer: () => {
             return `Tổng: ${totalAttendance} ngày`;
           }
         }
       }
-    },
-    scales: {
-      y: { beginAtZero: true },
-      x: { grid: { display: false } }
     }
-  },
+  }
 };
 ```
 
-## Tùy Chỉnh Nâng Cao
+---
 
-### 1. Multi-line Tooltip
+# Tooltip nhiều dòng
+
+Tooltip có thể trả về một mảng chuỗi để hiển thị nhiều dòng.
 
 ```typescript
 callbacks: {
+
   label: (context) => {
+
     return [
+
       `Giá trị: ${context.parsed.y}`,
+
       `Phần trăm: ${calculatePercent(context)}%`,
+
       `Trạng thái: ${getStatus(context)}`
+
     ];
+
   }
+
 }
 ```
 
-### 2. Custom HTML Tooltip (External)
+Kết quả:
+
+```
+Giá trị: 85
+
+Phần trăm: 68%
+
+Trạng thái: Đạt
+```
+
+---
+
+# Tooltip HTML tùy chỉnh
+
+Chart.js cho phép thay Tooltip mặc định bằng HTML.
 
 ```typescript
 tooltip: {
+
   enabled: false,
+
   external: (context) => {
-    // Tạo custom HTML tooltip
+
     let tooltipEl = document.getElementById('chartjs-tooltip');
-    
+
     if (!tooltipEl) {
+
       tooltipEl = document.createElement('div');
+
       tooltipEl.id = 'chartjs-tooltip';
+
       tooltipEl.innerHTML = '<table></table>';
+
       document.body.appendChild(tooltipEl);
     }
-    
-    // Cập nhật nội dung và vị trí
+
     const tooltipModel = context.tooltip;
+
     if (tooltipModel.opacity === 0) {
+
       tooltipEl.style.opacity = '0';
+
       return;
     }
-    
-    // ... custom logic
+
+    // Custom render...
+
   }
+
 }
 ```
 
-### 3. Conditional Formatting
+HTML Tooltip phù hợp khi cần:
+
+- Card đẹp
+- Icon
+- Hình ảnh
+- Button
+- Layout tùy chỉnh
+
+---
+
+# Tooltip theo điều kiện
+
+Có thể hiển thị nội dung khác nhau tùy giá trị.
 
 ```typescript
 callbacks: {
+
   label: (context) => {
+
     const value = context.parsed.y ?? 0;
-    const label = context.label;
-    
-    // Định dạng khác nhau dựa trên giá trị
+
     if (value > 100) {
-      return `⚠️ ${label}: ${value} (Cao)`;
-    } else if (value > 50) {
-      return `✓ ${label}: ${value} (Trung bình)`;
-    } else {
-      return `ℹ️ ${label}: ${value} (Thấp)`;
+
+      return `⚠️ ${context.label}: ${value} (Cao)`;
+
     }
+
+    if (value > 50) {
+
+      return `✓ ${context.label}: ${value} (Trung bình)`;
+
+    }
+
+    return `ℹ️ ${context.label}: ${value} (Thấp)`;
+
   }
+
 }
 ```
 
-### 4. Tooltip với Đơn Vị Tùy Chỉnh
+---
+
+# Tooltip với đơn vị
 
 ```typescript
 callbacks: {
+
   label: (context) => {
+
     const value = context.parsed.y ?? 0;
+
     const unit = getUnit(context.datasetIndex);
+
     return `${context.label}: ${value} ${unit}`;
+
   },
+
   footer: (items) => {
-    const total = items.reduce((sum, item) => sum + item.parsed.y, 0);
+
+    const total = items.reduce(
+      (sum, item) => sum + item.parsed.y,
+      0
+    );
+
     return `Tổng cộng: ${total.toLocaleString('vi-VN')} VNĐ`;
+
   }
+
 }
 ```
 
-## Styling Options
+---
 
-### Background và Border
+# Tùy chỉnh giao diện
+
+## Background và Border
 
 ```typescript
 tooltip: {
-  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+
+  backgroundColor: 'rgba(0,0,0,.9)',
+
   borderColor: '#2563eb',
+
   borderWidth: 2,
+
   cornerRadius: 8,
-  padding: 16,
+
+  padding: 16
+
 }
 ```
 
-### Font Customization
+---
+
+## Font
 
 ```typescript
 tooltip: {
-  titleFont: { 
-    size: 16, 
+
+  titleFont: {
+
+    size: 16,
+
     weight: 'bold',
+
     family: 'Segoe UI'
+
   },
-  bodyFont: { 
-    size: 14,
-    weight: 'normal'
+
+  bodyFont: {
+
+    size: 14
+
   },
-  footerFont: { 
+
+  footerFont: {
+
     size: 12,
+
     weight: 'bold',
+
     style: 'italic'
-  },
+
+  }
+
 }
 ```
 
-### Colors và Spacing
+---
+
+## Màu chữ
 
 ```typescript
 tooltip: {
+
   titleColor: '#ffffff',
+
   bodyColor: '#e0e0e0',
-  footerColor: '#fbbf24',
-  titleSpacing: 8,
-  bodySpacing: 6,
-  footerSpacing: 8,
+
+  footerColor: '#fbbf24'
+
+}
+```
+
+---
+
+## Padding
+
+```typescript
+tooltip: {
+
   padding: {
+
     top: 12,
+
     right: 16,
+
     bottom: 12,
+
     left: 16
+
+  }
+
+}
+```
+
+---
+
+# Callback phổ biến
+
+## beforeTitle / afterTitle
+
+```typescript
+callbacks: {
+
+  beforeTitle: () => 'Thông tin chi tiết',
+
+  title: (items) => items[0].label,
+
+  afterTitle: () => '────────────'
+
+}
+```
+
+---
+
+## beforeBody / afterBody
+
+```typescript
+callbacks: {
+
+  beforeBody: () => ['Dữ liệu'],
+
+  afterBody: () => [
+
+    '',
+
+    'Nhấn để xem chi tiết'
+
+  ]
+
+}
+```
+
+---
+
+## beforeFooter / footer / afterFooter
+
+```typescript
+callbacks: {
+
+  beforeFooter: () => '────────────',
+
+  footer: (items) => `Tổng: ${calculateTotal(items)}`,
+
+  afterFooter: () => {
+
+    return 'Cập nhật: ' +
+      new Date().toLocaleDateString('vi-VN');
+
+  }
+
+}
+```
+
+---
+
+# Ví dụ thực tế
+
+## Tooltip cho Bar Chart
+
+Hiển thị:
+
+- Số ngày
+- Phần trăm
+- Tổng ngày
+
+Ví dụ:
+
+```
+Đi làm: 23 ngày (92%)
+
+--------------------
+
+Tổng: 25 ngày
+```
+
+---
+
+## Tooltip cho Pie Chart
+
+Hiển thị:
+
+```
+Dự án: 15 (37.5%)
+```
+
+---
+
+## Tooltip cho Doughnut Chart
+
+Hiển thị:
+
+```
+OT: 8 giờ (20%)
+
+Đơn phép: 12 (30%)
+
+Dự án: 20 (50%)
+```
+
+---
+
+# Best Practices
+
+## Sử dụng Null Safety
+
+```typescript
+const value = context.parsed.y ?? 0;
+```
+
+---
+
+## Không tính toán trong Callback
+
+Nên tính trước:
+
+```typescript
+const total = calculateTotal();
+```
+
+Thay vì:
+
+```typescript
+callbacks: {
+  label() {
+    calculateTotal();
   }
 }
 ```
 
-## Callbacks Phổ Biến
+---
 
-### 1. beforeTitle / afterTitle
-
-```typescript
-callbacks: {
-  beforeTitle: (items) => 'Thông tin chi tiết',
-  title: (items) => items[0].label,
-  afterTitle: (items) => '─────────────'
-}
-```
-
-### 2. beforeBody / afterBody
+## Làm tròn số
 
 ```typescript
-callbacks: {
-  beforeBody: (items) => ['Dữ liệu:'],
-  afterBody: (items) => ['', 'Nhấn để xem chi tiết']
-}
+const percent =
+  ((value / total) * 100).toFixed(1);
 ```
 
-### 3. beforeFooter / afterFooter
+---
+
+## Định dạng số
 
 ```typescript
-callbacks: {
-  beforeFooter: (items) => '─────────────',
-  footer: (items) => `Tổng: ${calculateTotal(items)}`,
-  afterFooter: (items) => 'Cập nhật: ' + new Date().toLocaleDateString('vi-VN')
-}
+value.toLocaleString('vi-VN');
 ```
 
-## Ví Dụ Thực Tế
+Ví dụ:
 
-### Tooltip cho Biểu Đồ Chấm Công
+```
+1.250.000
+```
 
-Xem implementation trong `dashboard.component.ts`:
-- **Chấm công tháng** (dòng 144-168): Hiển thị số ngày và phần trăm
-- **Trạng thái đơn từ** (dòng 192-216): Hiển thị số đơn và phần trăm
+---
 
-### Tooltip cho Doughnut Chart
+# Các thuộc tính thường dùng của Context
 
-Xem implementation trong `dashboard.component.ts` (dòng 256-268): Hiển thị giá trị và phần trăm cho từng phần của pie chart.
+| Thuộc tính | Ý nghĩa |
+|------------|----------|
+| `context.label` | Nhãn của Data Point |
+| `context.parsed` | Giá trị đã parse |
+| `context.dataset` | Dataset hiện tại |
+| `context.datasetIndex` | Vị trí Dataset |
+| `context.dataIndex` | Vị trí Data Point |
+| `context.chart` | Đối tượng Chart hiện tại |
 
-## Best Practices
+---
 
-1. **Null Safety**: Luôn sử dụng `??` operator để xử lý giá trị null
-   ```typescript
-   const value = context.parsed.y ?? 0;
-   ```
+# Lưu ý
 
-2. **Performance**: Tránh tính toán phức tạp trong callbacks
-   ```typescript
-   // Tính total một lần trước khi tạo chart
-   const total = calculateTotal();
-   ```
-
-3. **Formatting**: Sử dụng `toFixed()` cho số thập phân
-   ```typescript
-   const percent = ((value / total) * 100).toFixed(1);
-   ```
-
-4. **Localization**: Sử dụng `toLocaleString()` cho định dạng số
-   ```typescript
-   return value.toLocaleString('vi-VN') + ' VNĐ';
-   ```
-
-## Lưu Ý
-
-- Tooltip callbacks nhận `context` object chứa thông tin về data point
-- `context.parsed` chứa giá trị đã parse (x, y cho bar/line, value cho pie)
-- `context.label` chứa nhãn của data point
-- `context.dataset` chứa toàn bộ dataset
-- Footer callbacks nhận array of tooltip items thay vì single context
+- Tooltip Callback luôn nhận đối tượng `context`.
+- `context.parsed` khác nhau tùy loại biểu đồ:
+  - Bar Chart: `context.parsed.y`
+  - Line Chart: `context.parsed.y`
+  - Pie Chart: `context.parsed`
+  - Doughnut Chart: `context.parsed`
+- Nên tính toán tổng dữ liệu trước khi khởi tạo Chart để tăng hiệu năng.
+- Luôn sử dụng `??` để tránh lỗi khi dữ liệu null.
+- Sử dụng `toLocaleString('vi-VN')` khi hiển thị tiền hoặc số lớn.
+- Destroy Chart cũ trước khi tạo mới để tránh Memory Leak.
+```
